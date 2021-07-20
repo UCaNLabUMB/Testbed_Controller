@@ -22,4 +22,4 @@ Use `scp` in order to copy the public key over the default file that was specifi
 
 `scp id_rsa.pub pi@staticip:~\.ssh\authorized_keys` where `staticip` is the static ethernet IP address you specified before. 
 
-In order to check and see if the SSH function is truly passwordless, try SSHing into that same Raspberry Pi with the command `ssh pi@staticip` it should bring you to the Raspberry Pi's terminal wihtout asking for a password.
+In order to check and see if the SSH function is truly passwordless, try SSHing into that same Raspberry Pi with the command `ssh pi@staticip` it should bring you to the Raspberry Pi's terminal without asking for a password.
