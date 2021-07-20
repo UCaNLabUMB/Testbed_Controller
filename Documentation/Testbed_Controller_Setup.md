@@ -27,5 +27,8 @@ In order to check and see if the SSH function is truly passwordless, try SSHing 
 Repeat this process for the reamaining `staticip`'s on the Testbed network. 
 
 # Core Functionality 
-Now that all of the Raspberry Pi's and Testbed Controller are able to communicate with each other, we can run through the bash scripts that are needed perform the full function of the Testbed. These bash scripts can be found in the 
-* Scan the available devices on our control network 
+Now that all of the Raspberry Pi's and Testbed Controller are able to communicate with each other, we can run through the bash scripts that are needed perform the full function of the Testbed. These bash scripts can be found in the `Testbed_Scripts` folder of this repository:
+* Scan the available devices on our control network with `check_ip.sh` in the `Configuration` folder 
+* Assign a group of Raspberry Pi's on the control network to a service set that is specified by user input with `multi_connect.sh` in the `Configuration` folder
+* Loop through each Pi to retrieve the name of the Access Point that it is connected to in order to make sure the Test Network is configured correctly with `ap_connected_devices.sh` in the `Configuration` folder
+* Specify the duration and number of trials before running the performance test on each service set with `iperf_bash2.sh` in the `Test` folder
