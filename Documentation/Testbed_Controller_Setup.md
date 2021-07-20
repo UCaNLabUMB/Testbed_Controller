@@ -25,3 +25,7 @@ Use `scp` in order to copy the public key over the default file that was specifi
 In order to check and see if the SSH function is truly passwordless, try SSHing into that same Raspberry Pi with the command `ssh pi@staticip` it should bring you to the Raspberry Pi's terminal without asking for a password.
 
 Repeat this process for the reamaining `staticip`'s on the Testbed network. 
+
+# Core Functionality 
+Now that all of the Raspberry Pi's and Testbed Controller are able to communicate with each other, we can run through the bash scripts that are needed perform the full function of the Testbed. These bash scripts can be found in the 
+* Scan the available devices on our control network 
