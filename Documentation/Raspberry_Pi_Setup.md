@@ -71,18 +71,7 @@ Delete all content except the first three lines, which should be:
 
 `country=US`
 
-You can now exit the file.
-
-# Passwordless SSH for Windows 
-In your windows command prompt, navigate to the ssh folder with `cd ~\.ssh`. Run `ssh-keygen` to generate an ssh key and press `Enter` to save it to the default file. Load the private key into `ssh-agent` so it can retreive the private key and pass it onto any ssh client when required.
-
-`ssh-add ~\.ssh\id_rsa`
-
-Use `scp` in order to copy the public key over the default file that was specified by `ssh-keygen`:
-
-`scp id_rsa.pub pi@staticip:~\.ssh\authorized_keys` where `staticip` is the static ethernet IP address you specified before. 
-
-In order to check and see if the SSH function is truly passwordless, try SSHing into that same Raspberry Pi with the command `ssh pi@staticip` it should bring you to the Raspberry Pi's terminal wihtout asking for a password. 
+You can now exit the file. 
 
 # Finalizing the Setup 
 Your Raspberry Pi is nearly ready to become part of the Testbed network, but it still requires a few more bash scripts which will be covered in another documentation. In order to finalize the configuration settings you have been setting, from the Raspberry Pi terminal run `sudo reboot`. Once the Pi has rebooted, check the static IP of the device with the command `hostname -I`. Only the static ethernet IP address will appear since any wireless network settings were deleted from the `wpa_supplicant` file. 
