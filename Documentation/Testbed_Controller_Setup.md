@@ -4,7 +4,7 @@ Once you are ready to use your central computer as a Testbed Controller, you wil
 *  Select "Network and Internet"
 *  There should be a new list of tabs to select from in "Network and Internet". Select "Ethernet" 
 *  The next steps will accomodate those with an ethernet cable jack and an ethernet-usb adapter. 
-# # Ethernet-USB Adapter
+## Ethernet-USB Adapter
 
 After installation, plug the microSD card reader into your computer with the microSD card in it. Run the Raspberry Pi Imager and make the following selections:
 
