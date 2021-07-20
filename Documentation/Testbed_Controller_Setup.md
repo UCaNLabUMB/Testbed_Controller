@@ -1,11 +1,13 @@
-# Downloading the Operating System
-Once you are ready to set up a Raspberry Pi, you will need to secure a few things:
-* Raspberry Pi
-* Power Supply 
-* microSD card reader for computer
-* Raspberry Pi Imager https://www.raspberrypi.org/software/ 
+# Assigning a Static IP Address on Windows
+Once you are ready to use your central computer as a Testbed Controller, you will need to assign its own ethernet static IP address in order to coomunicate and SSH into Pi's on the same subnet. The following steps show how to assing this address in a Windows operating system:
+*  Go to settings 
+*  Select "Network and Internet"
+*  There should be a new list of tabs to select from in "Network and Internet". Select "Ethernet" 
+*  The next steps will accomodate those with an ethernet cable jack and an ethernet-usb adapter. 
+# # Ethernet-USB Adapter
 
 After installation, plug the microSD card reader into your computer with the microSD card in it. Run the Raspberry Pi Imager and make the following selections:
+
 
 ![](/images/rpi_imager.png)
 
