@@ -13,3 +13,13 @@ Once you are ready to use your central computer as a Testbed Controller, you wil
 * Once complete, select "OK"
 * Reboot your computer 
 
+# Passwordless SSH for Windows 
+In your windows command prompt, navigate to the ssh folder with `cd ~\.ssh`. Run `ssh-keygen` to generate an ssh key and press `Enter` to save it to the default file. Load the private key into `ssh-agent` so it can retreive the private key and pass it onto any ssh client when required.
+
+`ssh-add ~\.ssh\id_rsa`
+
+Use `scp` in order to copy the public key over the default file that was specified by `ssh-keygen`:
+
+`scp id_rsa.pub pi@staticip:~\.ssh\authorized_keys` where `staticip` is the static ethernet IP address you specified before. 
+
+In order to check and see if the SSH function is truly passwordless, try SSHing into that same Raspberry Pi with the command `ssh pi@staticip` it should bring you to the Raspberry Pi's terminal wihtout asking for a password.
