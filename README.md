@@ -6,9 +6,5 @@ The content of this repository includes documentation that covers how to setup t
 * The `Setup Scripts` folder applies to the bash scripts required for the configuration of Raspberry Pi's specific to our control network 
 * The `Testbed Scripts` folder contains the bash scripts that perform the core functionality of the Testbed Controller 
   * This folder requires three subfolders for the different categories of `Testbed Scripts` including `Analysis`, `Configuration` and `Test`  
-
-
-
-Once the steps in this folder are completed and the devices are part of the control network, the Testbed Controller will be able to select a group of Raspberry Pi's and assign them to several neighboring service sets and run performance tests on each one. The amount of service sets, devices per service set, performance test duration and trials will vary as we use the testbed to run different network scenarios to observe how data offloading on one network may impact performance on any of the nighboring service sets in our test network. 
  
 
