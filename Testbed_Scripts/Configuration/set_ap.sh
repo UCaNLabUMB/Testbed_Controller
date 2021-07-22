@@ -6,12 +6,11 @@ read -p "SSID: " uservar
 read -p "Password: " passvar 
 var=(107 108 109 110)
 
-for n in {1}
+
+for (( ip=$firstip; ip<=$lastpi; ip++ ))
 do
-    for ip in "{$firstpi..$lastpi}"
-    do
-	ssh pi@10.1.1.$ip bash A_TO_C.sh $uservar $passvar
-    done
-    sleep 5
-	
+	gnome-terminal --command "ssh pi@10.1.1.$ip bash A_TO_C.sh $uservar $passvar"
 done
+
+	
+
