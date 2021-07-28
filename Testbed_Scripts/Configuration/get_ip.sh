@@ -11,7 +11,7 @@ read -a ip
 echo ${ip[@]}
 for i in "${ip[@]}"
 do
-	ping -n 1 -w 0.1 "10.1.1.$i" > /dev/null
+	ping -c 1 -W 0.1 "10.1.1.$i" > /dev/null
 	if [ $? -eq 0 ]; then
 	echo "10.1.1.$i is up"
 	dev[${#dev[@]}]=1
@@ -30,7 +30,7 @@ case "$1" in
 	i=$var1
 	for (( i=$var1; i<=$var2; i++ ))
 	do
-	ping -n 1 -w 1 "10.1.1.$i" > /dev/null
+	ping -c 1 -W 0.1 "10.1.1.$i" > /dev/null
 	if [ $? -eq 0 ]; then
 	echo "10.1.1.$i is up"
 	else 
@@ -43,7 +43,7 @@ case "$1" in
 	for (( i=1; i<=${#new[@]}-1; i++))
 	do
 	i2=$i+1
-	ping -n 1 -w 1 "10.1.1.${new[i]}" > /dev/null
+	ping -c 1 -W 0.1 "10.1.1.${new[i]}" > /dev/null
 	if [ $? -eq 0 ]; then
 	echo "10.1.1.${new[i]} is up"
 	else 
@@ -55,9 +55,5 @@ esac
 break
 done
 fi
-
-
-
-
 
 

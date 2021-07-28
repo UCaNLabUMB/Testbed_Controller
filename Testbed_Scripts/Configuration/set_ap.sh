@@ -1,16 +1,10 @@
 #!/bin/bash
 
-read -p "First Pi: " firstpi
-read -p "Last Pi: " lastpi
-read -p "SSID: " uservar
-read -p "Password: " passvar 
-var=(107 108 109 110)
-
-
-for (( ip=$firstip; ip<=$lastpi; ip++ ))
-do
-	gnome-terminal --command "ssh pi@10.1.1.$ip bash A_TO_C.sh $uservar $passvar"
+var={$1..$2}
+for ip in $(seq $1 $2); do
+	ssh pi@10.1.1.$ip bash A_TO_C.sh $3 $4 && exit
 done
+exit
 
 	
 
