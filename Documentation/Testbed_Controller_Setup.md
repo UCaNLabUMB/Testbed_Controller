@@ -1,3 +1,17 @@
+# Getting Started 
+## Setting up the Linux Terminal 
+Open the 'Settings' window and select 'Update and Security'.
+Go to the 'For Developers' tab. From here, select 'Enable Developer Mode'. 
+Once that is all set, go to 'Control Panel'. Select the 'Programs' tab. Select 'Turn Windows Feature On or Off'. Once that is open, scroll down until you see the option 'Windows Subsystem for Linux' and enable it. 
+Press 'OK'. Then, you will be prompted to reboot your system. 
+
+Once the system is rebooted, we need a Linux distribution system in order to perform the Testbed scripts provided in this repository. Open the Windows Store and search for Ubuntu and download the application. A link is also provided https://www.microsoft.com/en-us/p/ubuntu/9nblggh4msv6?activetab=pivot:overviewtab 
+
+Upon launching the Linux terminal for the first time, it will finsih the installation process. Once complete, the Window will ask for a new UNIX username 
+## Working with Git
+https://git-scm.com/download/win This link will take you to the download page for installing Git onto your Windows system. Select the version that corresponds to your operating system (32 bit or 64 bit). We will be using the default setup for Git, so you can select follow the default installation process on the installation wizard. 
+Once Git has been installed, we will now download Tortoise Git as a user interface to perform our Git commands. https://tortoisegit.org/download/. Select the version that corresponds to your operating system (32 bit or 64 bit). You can select follow the default installation process on the installation wizard. Once the installation is complete, you will be prompted to start the "First Start Wizard" where you will be prompted to put in your Git username and email. Seleceting 'Next' will complete the setup  
+
 # Assigning a Static IP Address on Windows
 Once you are ready to use your central computer as a Testbed Controller, you will need to assign its own ethernet static IP address in order to coomunicate and SSH into Pi's on the same subnet. The following steps show how to assing this address in a Windows operating system:
 *  Go to settings 
