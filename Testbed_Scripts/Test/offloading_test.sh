@@ -3,7 +3,7 @@
 function run_tests {
 
 # Variables
-ip_server="192.168.1.200"
+ip_server="192.168.1.229"
 ip_server2="192.168.2.200"
 base_port=5000
 ip_prefix="10.1.1"
@@ -13,8 +13,12 @@ r1=$3
 r2=$4
 
 # List of available IP
-num=("$@")
-echo $num
+declare -a num
+for (( i=$r1; i<=$r2; i++ ))
+do
+num+=($i)
+done
+echo ${num[@]}
 
 # Type of iperf
 type="-c"
@@ -27,7 +31,7 @@ do
 	((counter++))
 	echo "This is trial " $counter
 	for i in "${num[@]}"; do
-		sshpass -p muffin ssh pi@"$ip_prefix.$i" iperf $type $ip_server -t $dur | awk 'END{print $7","}'>> $ip_prefix.$i.csv &
+		sshpass -p lightcomms5556 ssh pi@"$ip_prefix.$i" iperf $type $ip_server -t $dur | awk 'END{print $7","}'>> $ip_prefix.$i.csv &
 	done
 	sleep $dur
 done
@@ -48,37 +52,44 @@ trial=0
 dur=0
 r1=0
 r2=0
-while getopts ":d:t:r:" options; do
+while getopts ":d:t:s:i:r:" options; do
 	case "${options}" in 
 		d ) dur=${OPTARG}
 			echo $dur
 			;;
+                s ) set -f
+                    IFS=' '
+            	    ip=($OPTARG)
 
 		t ) trial=${OPTARG}
 			echo $trial
 			;;
 		
 		r ) set -f
-            IFS=' '
-            array=($OPTARG)
-            r1=${array[0]} 
-            r2=${array[1]}
-            declare -a narr
-            for (( i=$r1; i<=$r2; i++ ))
-            do
-            narr+=($i)
-            done
-            echo $r1
-            echo $r2
+            	    IFS=' '
+            	    array=($OPTARG)
+            	    r1=${array[0]} 
+            	    r2=${array[1]}
+		    echo ${array[@]}
+            	    declare -a narr
+            	    for (( i=$r1; i<=$r2; i++ ))
+            	    do
+            	    	narr+=($i)
+            	    done
+            	    echo $r1
+            	    echo $r2
             
-            ;;
-        i ) set -f          
-            narr=($OPTARG) 
-            set +f
-            echo ${narr[@]}
-            ;;
+           	    ;;
+       	        i ) set -f
+                    IFS=' '
+            	    narr=($OPTARG)
+            	    echo ${narr[@]}
+            	    ;;
 	esac
 done
+
+#run_tests $trial $dur $narr[@] $r2
+fi
 shift $((OPTIND -1))
 
 
