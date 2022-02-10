@@ -7,4 +7,7 @@ The content of this repository includes documentation that covers how to setup t
 * The `Testbed Scripts` folder contains the bash scripts that perform the core functionality of the Testbed Controller 
   * This folder requires three subfolders for the different categories of `Testbed Scripts` including `Analysis`, `Configuration` and `Test`  
  
-
+| Command | Description |
+| --- | --- |
+| git status | List all new or modified files |
+| git diff | Show file differences that haven't been staged |
