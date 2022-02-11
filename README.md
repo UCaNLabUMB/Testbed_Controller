@@ -15,4 +15,8 @@ The content of this repository includes documentation that covers how to setup t
 | Chapter | Topic | Image | Link | Summary 
 | --- | --- | --- | --- | --- |
 | 1 | Configuring the Raspberry Pi for Testbed | --- | --- | The Raspberry Pi's will require a specific operating system and certain network configurations for Testbed functionality. 
-| 2 | Show file differences that haven't been staged |
+| 2 | Checking the Status of Raspberry Pi's  | --- | --- | Once our Raspberry Pi's are configured from the steps followed in Chapter 1, we will need to verify the assigned IP addresses along with the indivdual functionality of the node 
+| 3 | Software Defined Radio | --- | --- | The Pi's will be using USRP b200 minis in order to utilize GNURadio and create our own custom network traffic. The Pi's will be responsible for transmitting this traffic while others are responsible for receiving this interference. 
+| 4 | Building the Mobile Raspberry Pi Cart | --- | --- | This Testbed is designed to run a variety of netwrok performance tests and an important aspect of this performance is based on a devices position from an access point. Rather than manuallly changing the position of the Pi after each trial , we can control it's location from the Testbed Controller by making the Raspberry Pi into a remote controlled mobile device to emulate a person walking around a room with a device. 
+| 5 | Setting Up the Testbed Controller | --- | --- | There will be so many Raspberry Pi's for these performance test that it would be counter productive to check the configurations of these Pi's individually. We can condense this process into a centralized computer that can check the status of our Pi  
+| 6 | Testing  | --- | --- | We can now run some netwrok performance tests with this setup equipment. 
