@@ -8,8 +8,12 @@ The content of this repository includes documentation that covers how to setup t
 * The `Testbed Scripts` folder contains the bash scripts that perform the core functionality of the Testbed Controller 
   * This folder requires three subfolders for the different categories of `Testbed Scripts` including `Analysis`, `Configuration` and `Test` 
 
-# Functionality of Raspberry Pi Node 
-![GitHub Logo](/Images/mobile_node.png) 
+# Equipment  
+* Raspberry Pi's (3B+ or 4, two different USB inputs for power supply) 
+* Linux or  Windows OS 
+* WiFi Routers 
+* Network Switch 
+* Ethernet cables (for connecting # of Raspberry Pi's and PC with the network switch)
 
 # Chapters
 | Chapter | Topic | Image | Link | Summary 
