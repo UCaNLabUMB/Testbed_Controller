@@ -9,7 +9,9 @@ The content of this repository includes documentation that covers how to setup t
   * This folder requires three subfolders for the different categories of `Testbed Scripts` including `Analysis`, `Configuration` and `Test` 
 
 # Equipment  
-* Raspberry Pi's (3B+ or 4, two different USB inputs for power supply) 
+* Raspberry Pi's (3B+ or 4, two different USB inputs for power supply)
+* Power Supply
+* microSD card reader for computer
 * Linux or  Windows OS 
 * WiFi Routers 
 * Network Switch 
