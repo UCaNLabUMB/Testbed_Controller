@@ -74,7 +74,9 @@ Delete all content except the first three lines, which should be:
 You can now exit the file. 
 
 # Script for Service Set Configuration
-Each Raspberry Pi on the control network will have to be assigned to a service set specified by the user. In order to make this process efficient by assigning a group of Pi's to a service set simultaneously, each Pi will need its own bash script that takes user input from the Testbed Controller and connects it the the specified access point. This script can be found in the this folder of this repository and it is titled `A_TO_C.sh`. Save this bash script to the main directory of every Raspberry Pi. 
+Each Raspberry Pi on the control network will have to be assigned to a service set specified by the user. In order to make this process efficient by assigning a group of Pi's to a service set simultaneously, each Pi will need its own bash script that takes user input from the Testbed Controller and passes these parameters (SSID and Password) to this bash script stored on the Pi. In order to save this script onto your Raspberry Pi 
+
+connects it the the specified access point. This script can be found in the this folder of this repository and it is titled `A_TO_C.sh`. Save this bash script to the main directory of every Raspberry Pi. 
 # Finalizing the Setup 
 Your Raspberry Pi is nearly ready to become part of the Testbed network, but it still requires a few more bash scripts which will be covered in another documentation. In order to finalize the configuration settings you have been setting, from the Raspberry Pi terminal run `sudo reboot`. Once the Pi has rebooted, check the static IP of the device with the command `hostname -I`. Only the static ethernet IP address will appear since any wireless network settings were deleted from the `wpa_supplicant` file. 
 
