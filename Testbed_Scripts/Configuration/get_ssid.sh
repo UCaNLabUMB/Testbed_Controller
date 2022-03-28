@@ -11,7 +11,7 @@ read -a ip
 echo ${ip[@]}
 for i in "${ip[@]}"
 do
-	ssh ucan@"10.1.1.$i" nmcli dev wifi
+	ssh pi@"10.1.1.$i" nmcli dev wifi
 done
 
 else
@@ -32,7 +32,7 @@ case "$1" in
 	for (( i=1; i<=${#new[@]}-1; i++))
 	do
 	i2=$i+1
-	ssh ucan@"10.1.1.${new[i]}" nmcli dev wifi
+	ssh pi@"10.1.1.${new[i]}" nmcli dev wifi
 	done
 	;;
 esac
