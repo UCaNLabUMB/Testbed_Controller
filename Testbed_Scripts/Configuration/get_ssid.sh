@@ -32,6 +32,8 @@ case "$1" in
 	ssh pi@"10.1.1.$i" nmcli dev wifi
 	done
 	;;
+	# In order to check the SSID's of the an individual node in our system , run this command with the flag -l and the the specific node
+	# value. Ex: For node 101, run "bash get_ap.sh -l 101" 
 	-l) new=( "$@" )
 	echo ${new[@]}
 	for (( i=1; i<=${#new[@]}-1; i++))
