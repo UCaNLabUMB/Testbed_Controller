@@ -28,8 +28,8 @@ else
 while [ "$#" -gt 0 ];
 do
 case "$1" in 
-	# This section is meant for 
-	-r) var1="$2"; 
+	# In order to check the status of the nodes in our system, run this command with the flag -r and the maximum and minumum values of the node range. Ex: For nodes 101 
+	# through 106, run "bash get_ip.sh -r 101 for 106"-r) var1="$2"; 
 	var2="$3";
 	i=$var1
 	for (( i=$var1; i<=$var2; i++ ))
