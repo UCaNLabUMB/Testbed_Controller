@@ -1,9 +1,12 @@
 #!/bin/bash
 
+# This script is meant to check the status of all the nodes in our system (whether or not they are connected to the control network) 
+
 dev=()
 if [ -z "$@" ]
 then
-	
+
+# This section is mean to run with no arguments in the Testbed Controllers terminal. Once the script is run, it will ask for the user to input the nodes to check the status of
 echo "Naming convention is 10.1.1.x"
 echo "Input each corresponding ip to be pinged"
 echo "i.e., for devices 10.1.1.101 to 10.1.1.104, input 101 102 103 104"
@@ -25,6 +28,7 @@ else
 while [ "$#" -gt 0 ];
 do
 case "$1" in 
+	# This section is meant for 
 	-r) var1="$2"; 
 	var2="$3";
 	i=$var1
