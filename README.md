@@ -20,7 +20,7 @@ The content of this repository includes documentation that covers how to setup t
 # Chapters
 | Chapter | Topic | Image | Link | Summary 
 | --- | --- | --- | --- | --- |
-| 1 | Configuring the Raspberry Pi for Testbed | <img src="/Images/raspberry_pi.png" /> | [Read Now](https://github.com/UCaNLabUMB/Testbed_Controller/blob/main/Documentation/Raspberry_Pi_Setup.md) | The Raspberry Pi's will require a specific operating system and certain network configurations for Testbed functionality. 
+| 1 | Configuring the Raspberry Pi for Testbed | <img src="/Images/raspberry_pi.jpg" /> | [Read Now](https://github.com/UCaNLabUMB/Testbed_Controller/blob/main/Documentation/Raspberry_Pi_Setup.md) | The Raspberry Pi's will require a specific operating system and certain network configurations for Testbed functionality. 
 | 2 | Setting Up the Testbed Controller | --- |  [Read Now (for Windows)](https://github.com/UCaNLabUMB/Testbed_Controller/blob/main/Documentation/Testbed_Controller_Windows_Setup.md) | There will be so many Raspberry Pi's for these performance test that it would be counter productive to check the configurations of these Pi's individually. We can condense this process into a centralized computer that can check the status of our Pi 
 | 3 | Checking the Status of Raspberry Pi's  | --- | [Read Now](https://github.com/UCaNLabUMB/Testbed_Controller/blob/main/Documentation/Testbed_Controller.md) | Once our Raspberry Pi's are configured from the steps followed in Chapter 1, we will need to verify the assigned IP addresses along with the indivdual functionality of the node 
 | 4 | Testing  | --- | --- | We can now run some netwrok performance tests with this setup equipment. 
