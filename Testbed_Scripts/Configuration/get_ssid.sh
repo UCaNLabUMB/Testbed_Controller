@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# Th nodes in this sytem will have two connections to two separate networks (ethernet switch and Wi-Fi). This script will communicate with the nodes via ethenet connection
+# and will obtain the SSID of the access point that it is connected to before proper tests are started 
 
 if [ -z "$@" ]
 then
