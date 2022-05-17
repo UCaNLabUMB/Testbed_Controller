@@ -42,6 +42,8 @@ case "$1" in
 	fi
 	done
 	;;
+	# In order to check the status of the an individual node in our system , run this command with the flag -l and the the specific node value. Ex: For node 101, 
+	# run "bash get_ap.sh -l 101"
 	-l) new=( "$@" )
 	echo ${new[@]}
 	for (( i=1; i<=${#new[@]}-1; i++))
