@@ -22,6 +22,8 @@ else
 while [ "$#" -gt 0 ];
 do
 case "$1" in 
+	# In order to check the SSID's of a large group of our nodes, run this command with the flag -r and the maximum and minumum values of 
+	# the node range. Ex: For nodes 101 through 106, run "bash get_ssid.sh -r 101 for 106"-r) var1="$2";
 	-r) var1="$2"; 
 	var2="$3";
 	i=$var1
