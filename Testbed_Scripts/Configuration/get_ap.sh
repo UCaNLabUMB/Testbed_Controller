@@ -6,7 +6,7 @@ dev=()
 if [ -z "$@" ]
 then
 
-# This section is meant to run if the script is run without any command line arguments that specify the range of nodes
+# This section is meant to run if the script is run without any command line arguments and will ask for user input that specify the range of nodes
 echo "Naming convention is 10.1.1.x"
 echo "Input each corresponding ip to be pinged"
 echo "i.e., for devices 10.1.1.101 to 10.1.1.104, input 101 102 103 104"
