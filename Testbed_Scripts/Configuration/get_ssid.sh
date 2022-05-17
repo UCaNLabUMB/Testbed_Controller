@@ -5,7 +5,8 @@
 
 if [ -z "$@" ]
 then
-	
+# This section is mean to run with no arguments in the Testbed Controllers terminal. Once the script is run, it will ask for the user to input the nodes to 
+# check the SSID of their access points 	
 echo "Naming convention is 10.1.1.x"
 echo "Input each corresponding ip to obtain available SSIDs"
 echo "i.e., for devices 10.1.1.101 to 10.1.1.104, input 101 102 103 104"
