@@ -1,10 +1,11 @@
 # Testbed Controller
 ![GitHub Logo](Documentation/Images/tethered_architecture.png) 
-This repository is meant to be the the central location of configuration scripts used for UCaN Lab's Testbed Controller. This tool is designed to analyze the impact of data offloading across multiple service sets under various scenarios. Rather than using real world devices with various internet based applications, these data rates will be emulated by Raspberry Pi's since these devices are easy to control/manipulate than commercial devices. All of these devices will be part of the same ethernet switch network so that a central computer acting as the Testbed Controller will be able to communicate with any of the available devices at any given time.
+This repository is meant to be the the central location of configuration scripts used for UCaN Lab's Wireless Network Testbed. This tool is designed to analyze the impact of network configurations and traffic characteristics in a variety of scenarios. Rather than using real world devices with various internet based applications, the devices will be emulated with Raspberry Pis (RPis). All of the RPi nodes will be connected to a single computer acting as the Testbed Controller (TC), allowing the network to be centrally configured and controlled.
+
+The testbed architecture consists of a Control Network and Test Network(s). The control network connects all RPi nodes to the TC and uses the 10.1.1.X subnet. The Test Network(s) are formed with one ore more wireless access points (APs) that the RPi nodes can connect to. Test Network(s) are where traffic is generated and performance is analyzed using iperf network performance tools. RPi nodes on the Test Network(s) can be configured as iperf servers (typically connected to an AP via Ethernet) or iperf clients.
 
 The content of this repository includes documentation that covers how to setup the individual devices that make up this testbed and the scripts that perform the core functionality before incorporating a GUI. 
 * The `Documentation` folder shows how to configure the Raspberry Pi's specific to our control network (siwtch network) and the computer that will function as the Testbed Controller. 
-* The `Setup Scripts` folder applies to the bash scripts required for the configuration of Raspberry Pi's specific to our control network 
 * The `Testbed Scripts` folder contains the bash scripts that perform the core functionality of the Testbed Controller 
   * This folder requires three subfolders for the different categories of `Testbed Scripts` including `Analysis`, `Configuration` and `Test` 
 
