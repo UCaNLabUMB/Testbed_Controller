@@ -7,7 +7,7 @@ Once you are ready to set up a Raspberry Pi, you will need to secure a few thing
 
 After installation, plug the microSD card reader into your computer with the microSD card in it. Run the Raspberry Pi Imager and make the following selections:
 
-![](/images/rpi_imager.png)
+![](/Documentation/Images/rpi_imager.png)
 
 * For 'Choose OS': We will be using Raspbian PI OS 32-bit for the rest of this repository 
 * For 'Choose Storage': Select the storage option that applies to your microSD card reader 
@@ -45,7 +45,7 @@ This testbed network consists of a collection of Raspberry Pi's that are interco
 
 It should bring you to a file that looks like:
 
-![](/images/dhcpcd.png)
+![](/Documentation/Images/dhcpcd.png)
 
 Go to the end of this file and add the following lines:
 
