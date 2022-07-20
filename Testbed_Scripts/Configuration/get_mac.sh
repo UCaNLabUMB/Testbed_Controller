@@ -23,5 +23,6 @@ for i in "${ip[@]}"
 do
         echo "MAC Address:"
 	ssh ucanlab@"10.1.1.$i" cat /sys/class/net/eth0/address
+	ssh ucanlab@"10.1.1.$i" cat /sys/class/net/wlan0/address
 done
 fi
