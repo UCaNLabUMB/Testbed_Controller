@@ -12,9 +12,9 @@ echo ${ip[@]}
 for i in "${ip[@]}"
 do
 	echo "IP Address:"
-	ssh pi@"10.1.1.$i" ifconfig wlan0 | grep "inet" | grep "broadcast" | awk '{print $2}'
+	ssh ucanlab@"10.1.1.$i" ifconfig wlan0 | grep "inet" | grep "broadcast" | awk '{print $2}'
 	echo "MAC Address:"
-	ssh pi@"10.1.1.$i" ifconfig wlan0 | grep "ether" | grep "txqueuelen" | awk '{print $2}'
+	ssh ucanlab@"10.1.1.$i" ifconfig wlan0 | grep "ether" | grep "txqueuelen" | awk '{print $2}'
 done
 
 else
@@ -28,9 +28,9 @@ case "$1" in
 	for (( i=$var1; i<=$var2; i++ ))
 	do
 	echo "IP Address:"
-	ssh pi@"10.1.1.$i" ifconfig wlan0 | grep "inet" | grep "broadcast" | awk '{print $2}'
+	ssh ucanlab@"10.1.1.$i" ifconfig wlan0 | grep "inet" | grep "broadcast" | awk '{print $2}'
 	echo "MAC Address:"
-	ssh pi@"10.1.1.$i" ifconfig wlan0 | grep "ether" | grep "txqueuelen" | awk '{print $2}'
+	ssh ucanlab@"10.1.1.$i" ifconfig wlan0 | grep "ether" | grep "txqueuelen" | awk '{print $2}'
 	done
 	;;
 	-l) new=( "$@" )
@@ -39,9 +39,9 @@ case "$1" in
 	do
 	i2=$i+1
 	echo "IP Address:"
-	ssh pi@"10.1.1.${new[i]}" ifconfig wlan0 | grep "inet" | grep "broadcast" | awk '{print $2}'
+	ssh ucanlab@"10.1.1.${new[i]}" ifconfig wlan0 | grep "inet" | grep "broadcast" | awk '{print $2}'
 	echo "MAC Address:"
-	ssh pi@"10.1.1.${new[i]}" ifconfig wlan0 | grep "ether" | grep "txqueuelen" | awk '{print $2}'
+	ssh ucanlab@"10.1.1.${new[i]}" ifconfig wlan0 | grep "ether" | grep "txqueuelen" | awk '{print $2}'
 	done
 	;;
 esac
