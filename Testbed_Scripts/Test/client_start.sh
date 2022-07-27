@@ -122,7 +122,7 @@ do
 	x=$(($x+1))
 	i=0
 	while [[ $i -lt ${#my_address[@]} ]]; do # loop for number of clients
-		echo ssh $uname@10.1.1.${my_address[$i]}  "iperf3 -c 192.168.${my_server_array[$i]}.$ip -t $time s${my_s[$i]} -p ${my_ports[$i]} > $dir/R_$x.txt" &
+		ssh $uname@10.1.1.${my_address[$i]}  "iperf3 -c 192.168.${my_server_array[$i]}.$ip -t $time s${my_s[$i]} -p ${my_ports[$i]} > $dir/R_$x.txt" &
 	i=$((i + 1))
 	done
 	sleep $time
