@@ -21,8 +21,11 @@ echo "For example: For IP 10.1.1.103, enter 103. For multiple addresses type: 10
 read -a ip
 for i in "${ip[@]}"
 do
-        echo "MAC Address:"
+        echo "eth0 MAC Address:"
 	ssh ucanlab@"10.1.1.$i" cat /sys/class/net/eth0/address
+	echo "eth1 MAC Address:"
+	ssh ucanlab@"10.1.1.$i" cat /sys/class/net/eth1/address
+	echo "wlan0 MAC Address:"
 	ssh ucanlab@"10.1.1.$i" cat /sys/class/net/wlan0/address
 done
 fi
