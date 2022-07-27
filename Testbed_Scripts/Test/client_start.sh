@@ -12,7 +12,7 @@
 #		of trials to be run and the name of the folder where the results will be saved in the pi. The script will run with the deffault
 #		username, in this case "ucanlab", in case of another please specify using its respective flag.
 #
-# Input: bash client_start.sh -n 3 -i 201 -t 5 -l 5 -f <<folder name>>
+# Input: bash client_start.sh -n 3 -i 201 -t 5 -l 5 -f <<folder name>> -s <<< "server address"
 #
 # **For Help, enter -h**
 #
@@ -30,6 +30,7 @@ help()
 	echo "	-a = input <<< followed by the specific addresses to start in double quotation marks separated by a space. (-p <<< \"103 106 108\" )"
 	echo "	-f = input the name of the folder where the results will be save in the pis"
 	echo "	-u = input client's username if the deffault one (ucanlab) is not used"
+	echo "	-s = input server's address. e.g: 1 or 2"
 }
 
 address() # takes array from base_address to base_address + 1. e.g if N=3, then 101, 102, 103 clients will start.
@@ -52,11 +53,25 @@ address2() # creates array from command line. If the inputs entered are <<< "102
 
 uname=ucanlab # deffault username to use
 
+setup_server_array()
+{
+	read -a my_input
+	
+	if [ ${#my_input[@]} -eq 1 ]; then # checks if the array equals to 1
+		i=0
+		while [ $i -lt $N ]; do
+			my_server_array[$i]=$my_input # assigns the only input value to the array of lentgh N
+			i=$((i + 1))
+		done
+	else
+		my_server_array=("${my_input[@]}") # creates array with more than one value
+	fi
+}
 
 #### MAIN CODE 
 
 
-while getopts 'ht:n:a:i:f:l:u:' OPTION; do
+while getopts 'ht:n:a:i:f:l:u:s' OPTION; do
 	case "$OPTION" in
 		h)
 			help;;
@@ -74,13 +89,14 @@ while getopts 'ht:n:a:i:f:l:u:' OPTION; do
 			trial=$OPTARG;; # takes number of trials
 		u)
 			uname=$OPTARG;; # in case the username is not the deffault one, use this flag to user another username
+		s)
+			setup_server_array;;
 
 	esac
 done
 
 
 dir=~/TB_Results/$folder_name
-
 
 i=0
 error=0
@@ -98,14 +114,15 @@ done
 
 
 if [ $error -lt 1 ] # if the error count is zero, then the iperf test in the following loop will be executed
-then 
+then
+
 x=0
 while [[ $x -lt $trial ]] # loop for number of trials
 do
 	x=$(($x+1))
 	i=0
 	while [[ $i -lt ${#my_address[@]} ]]; do # loop for number of clients
-		ssh $uname@10.1.1.${my_address[$i]}  "iperf3 -c 192.168.1.$ip -t $time s${my_s[$i]} -p ${my_ports[$i]} > $dir/R_$x.txt" &
+		ssh $uname@10.1.1.${my_address[$i]}  "iperf3 -c 192.168.${my_server_array[$i]}.$ip -t $time s${my_s[$i]} -p ${my_ports[$i]} > $dir/R_$x.txt" &
 	i=$((i + 1))
 	done
 	sleep $time
