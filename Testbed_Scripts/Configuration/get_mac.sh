@@ -13,19 +13,30 @@
 ####################################################################
 
 
-if [ -z "$@" ]
-then
-
 echo "Input pi's IP address suffix to get MAC Address. For muliple IPs enter them separated by a space."
 echo "For example: For IP 10.1.1.103, enter 103. For multiple addresses type: 102 103 105 106"
+
 read -a ip
+
+network_interface=eth0 # deffault
+
+while getopts 'hni:' OPTION; do
+	case "$OPTION" in
+		h)
+			help;;
+		ni)
+			network_interface=$OPTARG;; 
+	esac
+done
+
 for i in "${ip[@]}"
 do
-        echo "eth0 MAC Address:"
-	ssh ucanlab@"10.1.1.$i" cat /sys/class/net/eth0/address
-	echo "eth1 MAC Address:"
-	ssh ucanlab@"10.1.1.$i" cat /sys/class/net/eth1/address
-	echo "wlan0 MAC Address:"
-	ssh ucanlab@"10.1.1.$i" cat /sys/class/net/wlan0/address
+	if ssh ucanlab@"10.1.1.$i" [ ! -d /sys/class/net/$network_interface ]
+	then
+		echo "Network Interface not found"
+	else
+		echo "$network_interface MAC Address for $i:"
+		ssh ucanlab@"10.1.1.$i" cat /sys/class/net/$network_interface/address
+	fi
+	i=$((i + 1))
 done
-fi
