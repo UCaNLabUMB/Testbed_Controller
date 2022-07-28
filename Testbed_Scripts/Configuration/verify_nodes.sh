@@ -8,9 +8,19 @@
 # Description: This script is meant to check the status of all the nodes 
 #    in our system (whether or not they are connected to the control network)
 #
-# Input: 
+# Input: If no arguments are passed, run bash verify_nodes.sh and then enter the IPs.
+#	 For a node range, run bash verify_nodes.sh -r 101 106
+#	 For specific nodes, run bash verify_nodes.sh -l 103 or -l 103 105 108
 #
 ####################################################################
+
+
+help()
+{
+	echo "	if no arguments are passed, run the script and then enter either one node IP or multiple IPs separated by a space"
+	echo "		-r = input nodes range. Ex: For nodes 101 through 106, run (bash get_ip.sh -r 101 106)"
+	echo "		-l = input one single node or multiple nodes separated by a space. (bash get_ip.sh -l 103, or, -l 103 106 108)"
+}
 
 dev=()
 if [ -z "$1" ] # $1 has a length of 0 if no arguments are passed in.
@@ -67,6 +77,9 @@ else
 				echo "10.1.1.${new[i]} is down"
 			fi
 		done
+		;;
+		-h)
+			help
 		;;
 	esac
 	break
