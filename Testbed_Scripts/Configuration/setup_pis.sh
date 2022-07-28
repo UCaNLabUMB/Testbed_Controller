@@ -8,10 +8,11 @@
 #
 #############################################################################
 	
-if ssh $ucanlab@10.1.1.{$1} [ ! -d $/TB_Results ] # checks if the given directory folder exists in the pis
+if ssh $ucanlab@10.1.1.$1 
+	[ ! -d ~/TB_Results ] # checks if the given directory folder exists in the pis
 then
 	echo "Directory does not exist"
-	ssh $ucanlab@10.1.1.{$1} mkdir $/TB_Results # if they don't exist, it creates the given directory
+	ssh $ucanlab@10.1.1.$1 mkdir ~/TB_Results # if they don't exist, it creates the given directory
 else
 	echo "Directory exists" # if they exist, the error count goes up by one
 fi
