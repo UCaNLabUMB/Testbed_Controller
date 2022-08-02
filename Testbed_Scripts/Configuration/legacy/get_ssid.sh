@@ -42,6 +42,7 @@ case "$1" in
 	i=$var1
 	for (( i=$var1; i<=$var2; i++ ))
 	do
+	echo "pi $i SSID"
 	ssh ucanlab@"10.1.1.$i" /usr/sbin/iwgetid -r
 	done
 	;;
@@ -52,6 +53,7 @@ case "$1" in
 	for (( i=1; i<=${#new[@]}-1; i++))
 	do
 	i2=$i+1
+	echo "pi $i SSID"
 	ssh ucanlab@"10.1.1.${new[i]}" /usr/sbin/iwgetid -r
 	done
 	;;
