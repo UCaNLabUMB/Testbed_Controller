@@ -20,6 +20,7 @@ help()
 	echo "-a = input the suffix of the IP address. (-a 201 for IP: 10.1.1.201)"
 	echo "-n = input how many ports to start beginning at 5201 by default. (-n 3 will start ports 5201, 5202 and 5203)"
 	echo "-p = input <<< followed by the specific ports to start in double quotation marks separated by a space. (-p <<< \"5202 5205 5208 5210 5214\" )"
+	echo "-u = input the username of the pi"
 }
 
 server() # takes array from base_port to base_port + 1. e.g if N=3, then ports 5201, 5202 and 5303 will be started.
