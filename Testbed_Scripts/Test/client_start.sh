@@ -30,7 +30,7 @@ help()
 	echo "	-n = input number of pis to be run. (-n 3 will open pis 10.1.1.101, 10.1.1.102, 10.1.1.103. Also, ports numbers 5201, 5202, 5203)"
 	echo "	-a = input <<< followed by the specific addresses to start in double quotation marks separated by a space. (-a <<< \"103 106 108\" )"
 	echo "	-f = input the name of the folder where the results will be save in the pis"
-	echo "	-u = input client's username if the deffault one (ucanlab) is not used"
+	echo "	-u [OPTIONAL] = input client's username if the deffault one (ucanlab) is not used"
 	echo "	-s = input server's address. e.g: 1 or 2"
 }
 
