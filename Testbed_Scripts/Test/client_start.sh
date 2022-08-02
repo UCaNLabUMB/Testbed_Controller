@@ -32,6 +32,7 @@ help()
 	echo "	-f = input the name of the folder where the results will be save in the pis"
 	echo "	-u [OPTIONAL] = input client's username if the deffault one (ucanlab) is not used"
 	echo "	-s = input server's address. e.g: 1 or 2"
+	echo "	-l = input number of iterations for the test to run"
 }
 
 address() # takes array from base_address to base_address + 1. e.g if N=3, then 101, 102, 103 clients will start.
@@ -66,6 +67,8 @@ setup_server_array()
 
 uname=ucanlab # deffault username to use
 
+
+
 #### MAIN CODE 
 
 while getopts 'ht:n:ai:f:l:u:s' OPTION; do
@@ -97,30 +100,31 @@ while [[ $i -lt ${#my_address[@]} ]]; do
 	temp_number=$((${my_address[$i]}-100))
 	my_ports[$i]=$((5200+$temp_number))
 	my_s[$i]=$temp_number
+	
 	i=$((i + 1))
 done
 
-
-#dir=~/TB_Results/$folder_name
-: << 'comment'
 i=0
 error=0
 while [[ $i -lt ${#my_address[@]} ]]; do # loop for number of clients
-if ssh $uname@10.1.1.${my_address[$i]} [ ! -d $dir ] # checks if the given directory folder exists in the pis
+
+if ssh $uname@10.1.1.${my_address[$i]} [ ! -d ~/TB_Results/${folder_name}_pi${my_address[$i]} ] # checks if the given directory folder exists in the pis
 then
 	echo "Directory does not exist"
-	ssh $uname@10.1.1.${my_address[$i]} mkdir $dir # if they don't exist, it creates the given directory
+	ssh $uname@10.1.1.${my_address[$i]} mkdir -p ~/TB_Results/${folder_name}_pi${my_address[$i]} # if they don't exist, it creates the given directory
+	
 else
 	echo "Directory exists" # if they exist, the error count goes up by one
 	error=$((error + 1))
 fi
+
 i=$((i + 1))
+#dir=~/TB_Results/${folder_name}_pi${my_address[$i]}
 done
 
 
 if [ $error -lt 1 ] # if the error count is zero, then the iperf test in the following loop will be executed
 then
-comment
 
 x=0
 while [[ $x -lt $trial ]] # loop for number of trials
@@ -128,17 +132,15 @@ do
 	x=$(($x+1))
 	i=0
 	while [[ $i -lt ${#my_address[@]} ]]; do # loop for number of clients
-		ssh $uname@10.1.1.${my_address[$i]}  "iperf3 -c 192.168.${my_server_array[$i]}.$ip -t $time s${my_s[$i]} -p ${my_ports[$i]} > test.txt" &	
+		ssh $uname@10.1.1.${my_address[$i]}  "iperf3 -c 192.168.${my_server_array[$i]}.$ip -t $time s${my_s[$i]} -p ${my_ports[$i]} > ~/TB_Results/${folder_name}_pi${my_address[$i]}/Results_$x.txt" &	
 	i=$((i + 1))
 	done
 	sleep $time
 	sleep 5
 done
-: << 'comment'
-# $dir/R_$x.txt
+
 # if the error count is greater than zero, the iperf test will not be executed and will display a message indicating how many pis the directory already exists in
 else
 	echo "Directory exists in $error pis"
 fi
-comment
 echo "Test is completed"
