@@ -18,7 +18,7 @@ help()
 {
 	echo "	-u [OPTIONAL] = input the RPis username"
 	echo "	-i = input either 192 for the wlan0 IP address or 10 for the eth0 IP address of the RPis"
-	echo "	-r = input the maximum and minimum values of the node range. Ex: For nodes 101 through 106, type -r 101 for 106"
+	echo "	-r = input the maximum and minimum values of the node range. Ex: For nodes 101 through 106, type -r 101 106"
 	echo "  -a = type in -a with no inputs, enter, and then enter specific RPis"
 }
 
