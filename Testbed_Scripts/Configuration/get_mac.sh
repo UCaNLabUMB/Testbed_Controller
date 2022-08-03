@@ -5,37 +5,60 @@
 #
 # Author: Victoria Planchart
 #
-# Description: This script indicates the eth0, eth1 or wlan0 MAC address of the given IP addresses.
+# Description: This script indicates the eth0, eth1 or wlan0 MAC address of the given node's IP addresses.
 #
-# Input: bash get_mac.sh enter, then enter the IP address suffix. 
-# Example: for IP:10.1.1.102 enter 102. For multiple IP addresses enter 102 103 104
+# Input: bash get_mac.sh -n (either eth0, eth1 or wlan0) -a (for specific nodes) or -r (for node's range)
+# Example: for range from 101 to 115 type -r 101 115
+#	   for specific nodes type -a, enter, 101 104 107 112 115
 #	   for a specific network interface parameter, enter "-n" followed by either eth0, eth1 or wlan0. e.g: bash get_mac.sh -n eth1
 #
 ####################################################################
 
-
-echo "Input pi's IP address suffix to get MAC Address. For muliple IPs enter them separated by a space."
-echo "For example: For IP 10.1.1.103, enter 103. For multiple addresses type: 102 103 105 106"
-
 help()
 {
-	echo "	-n [OPTIONAL] = input the network interface (eth1, eth0 or wlan0)"
-	echo "	If no input is entered, the deffault network interface will be eth0"
+	echo "	-n = input the network interface (eth1, eth0 or wlan0)"
+	echo "	-r = input the maximum and minimum values of the node range. Ex: For nodes 101 through 106, type -r 101 106"
+	echo "	-a = type in -a with no inputs, enter, and then enter specific RPis (101 103 105 108)"
+	echo "	-u [OPTIONAL] = input client's username if the deffault one (ucanlab) is not used"
 }
 
-read -a ip
+# creates array from command line
+no_range()
+{
+	read -a ip
+}
 
-network_interface=eth0 # deffault
+# creates array from $var1 to $var2
+range()
+{
+	for (( i=$var1; i<=$var2; i++ ))
+	do
+		ip[$i]=$i
+	done
+}
 
-while getopts 'hn:' OPTION; do
+var1="$4"; 
+var2="$5";
+i=$var1
+
+uname=ucanlab # deffault
+
+while getopts 'hn:ur:a' OPTION; do
 	case "$OPTION" in
 		h)
 			help;;
 		n)
-			network_interface=$OPTARG;; 
+			network_interface=$OPTARG;;
+		r)
+			range;;
+		a)
+			no_range;;
+		u)
+			uname=$OPTARG;;
 	esac
 done
 
+i=0
 for i in "${ip[@]}"
 do
 # if statement checks which pi is in server mode by looking for eth1 address
@@ -44,7 +67,7 @@ then
 	echo "Network Interface not found for $i"
 else
 	echo "$network_interface MAC Address for $i:"
-	ssh ucanlab@"10.1.1.$i" cat /sys/class/net/$network_interface/address
+	ssh $uname@"10.1.1.$i" cat /sys/class/net/$network_interface/address
 fi
 i=$((i + 1))
 done
