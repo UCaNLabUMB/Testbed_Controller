@@ -35,6 +35,21 @@ help()
 	echo "	-l = input number of iterations for the test to run"
 }
 
+setup_server_array()
+{
+	read -a my_input
+	
+	if [ ${#my_input[@]} -eq 1 ]; then # checks if the array equals to 1
+		i=0
+		while [ $i -lt ${#my_address[@]} ]; do
+			my_server_array[$i]=$my_input # assigns the only input value to the array of lentgh N
+			i=$((i + 1))
+		done
+	else
+		my_server_array=("${my_input[@]}") # creates array with more than one value
+	fi
+}
+
 address() # takes array from base_address to base_address + 1. e.g if N=3, then 101, 102, 103 clients will start.
 {
 	N=$OPTARG
@@ -49,25 +64,7 @@ address2() # creates array from command line. If the inputs entered are <<< "102
 }
 
 
-setup_server_array()
-{
-	read -a my_input
-	
-	if [ ${#my_input[@]} -eq 1 ]; then # checks if the array equals to 1
-		i=0
-		while [ $i -lt $N ]; do
-			my_server_array[$i]=$my_input # assigns the only input value to the array of lentgh N
-			i=$((i + 1))
-		done
-	else
-		my_server_array=("${my_input[@]}") # creates array with more than one value
-	fi
-}
-
-
 uname=ucanlab # deffault username to use
-
-
 
 #### MAIN CODE 
 
@@ -108,10 +105,10 @@ i=0
 error=0
 while [[ $i -lt ${#my_address[@]} ]]; do # loop for number of clients
 
-if ssh $uname@10.1.1.${my_address[$i]} [ ! -d ~/TB_Results/${folder_name}_pi${my_address[$i]} ] # checks if the given directory folder exists in the pis
+if echo ssh $uname@10.1.1.${my_address[$i]} [ ! -d ~/TB_Results/${folder_name}_pi${my_address[$i]} ] # checks if the given directory folder exists in the pis
 then
 	echo "Directory does not exist"
-	ssh $uname@10.1.1.${my_address[$i]} mkdir -p ~/TB_Results/${folder_name}_pi${my_address[$i]} # if they don't exist, it creates the given directory
+	echo ssh $uname@10.1.1.${my_address[$i]} mkdir -p ~/TB_Results/${folder_name}_pi${my_address[$i]} # if they don't exist, it creates the given directory
 	
 else
 	echo "Directory exists" # if they exist, the error count goes up by one
@@ -132,7 +129,7 @@ do
 	x=$(($x+1))
 	i=0
 	while [[ $i -lt ${#my_address[@]} ]]; do # loop for number of clients
-		ssh $uname@10.1.1.${my_address[$i]}  "iperf3 -c 192.168.${my_server_array[$i]}.$ip -t $time s${my_s[$i]} -p ${my_ports[$i]} > ~/TB_Results/${folder_name}_pi${my_address[$i]}/Results_$x.txt" &	
+		echo ssh $uname@10.1.1.${my_address[$i]}  "iperf3 -c 192.168.${my_server_array[$i]}.$ip -t $time s${my_s[$i]} -p ${my_ports[$i]} > ~/TB_Results/${folder_name}_pi${my_address[$i]}/Results_$x.txt" &	
 	i=$((i + 1))
 	done
 	sleep $time
