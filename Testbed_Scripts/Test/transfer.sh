@@ -46,8 +46,10 @@ while getopts 'ha:nf:' OPTION; do
 	esac
 done
 
+mkdir  ~/TB_Results/${folder_name}
+
 i=0
 while [ $i -lt ${#pis[@]} ]; do
-	scp -pr ucanlab@10.1.1.${pis[$i]}:~/TB_Results/${folder_name}_pi${pis[$i]} ~/TB_Results
+	scp -pr ucanlab@10.1.1.${pis[$i]}:~/TB_Results/${folder_name}_pi${pis[$i]} ~/TB_Results/${folder_name}
 	i=$((i + 1))
 done
