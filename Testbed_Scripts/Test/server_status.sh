@@ -15,20 +15,24 @@
 ####################################################################
 
 #------------------------------------------------------------------------------------
-# Functions
-
 
 help()
 {
-	echo "-a = input the suffix of the pi's IP address. (-a 201 for IP: 10.1.1.201)"
-	echo "-u = input pi's username"
+	echo "	-a = input the suffix of the pi's IP address. (-a 201 for IP: 10.1.1.201)"
+	echo "	-u [OPTIONAL] = input pi's username"
+	exit
 }
 
+
+#---------------------------------------------------------------------------------------------
+# Set default parameters
+
+uname=ucanlab # default
 
 #------------------------------------------------------------------------------------
 # Get arguments and set appropriate parameters
 
-while getopts 'ha:u:' OPTION; do
+while getopts 'ha:u' OPTION; do
 	case "$OPTION" in
 		h)
 			help;;

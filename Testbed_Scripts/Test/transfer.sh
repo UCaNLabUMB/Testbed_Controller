@@ -14,8 +14,6 @@
 #####################################################################################
 
 #------------------------------------------------------------------------------------
-# Functions
-
 
 help()
 {
@@ -24,6 +22,7 @@ help()
 	echo "-f = input the folder name in the pi to be transferred"
 }
 
+#------------------------------------------------------------------------------------
 address()
 {
 	N=$OPTARG
@@ -31,17 +30,22 @@ address()
 	pis=($(seq $(($base_port+1)) 1 $(($base_port+$N))))
 }
 
+#------------------------------------------------------------------------------------
 address2()
 {
 	read -a pis
 }
 
 
+#---------------------------------------------------------------------------------------------
+# Set default parameters
+
+uname=ucanlab # default
+
 #------------------------------------------------------------------------------------
 # Get arguments and set appropriate parameters
 
-
-while getopts 'ha:nf:' OPTION; do
+while getopts 'ha:nf:u' OPTION; do
 	case "$OPTION" in
 		h)
 			help;;
@@ -51,6 +55,8 @@ while getopts 'ha:nf:' OPTION; do
 			address2;;
 		f)
 			folder_name=$OPTARG;;
+		u)
+			uname=$OPTARG;;
 	esac
 done
 
@@ -65,6 +71,6 @@ mkdir  ~/TB_Results/${folder_name}
 
 i=0
 while [ $i -lt ${#pis[@]} ]; do
-	scp -pr ucanlab@10.1.1.${pis[$i]}:~/TB_Results/${folder_name}_pi${pis[$i]} ~/TB_Results/${folder_name}
+	scp -pr $uname@10.1.1.${pis[$i]}:~/TB_Results/${folder_name}_pi${pis[$i]} ~/TB_Results/${folder_name}
 	i=$((i + 1))
 done

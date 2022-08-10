@@ -14,14 +14,13 @@
 ####################################################################
 
 #------------------------------------------------------------------------------------
-# Functions
-
 
 help()
 {
-	echo "-a = input the suffix of the pi's IP address. (-a 201 for IP: 10.1.1.201)"
-	echo "-u [OPTIONAL] = input pi's username"
-	echo "enter ports' numbers separted by a space"
+	echo "	-a = input the suffix of the pi's IP address. (-a 201 for IP: 10.1.1.201)"
+	echo "	-p = input the ports' number to be killed. (-p 3031,3032,3239,3458)"
+	echo "	-u [OPTIONAL] = input pi's username"
+	exit
 }
 
 
@@ -34,12 +33,15 @@ uname=ucanlab # default
 #------------------------------------------------------------------------------------
 # Get arguments and set appropriate parameters
 
-while getopts 'ha:u' OPTION; do
+while getopts 'ha:up:' OPTION; do
 	case "$OPTION" in
 		h)
 			help;;
 		a)
 			ip=$OPTARG;;
+		p)
+			IFS=','
+			read -ra ports <<< "$OPTARG";;
 		u)
 			uname=$OPTARG;;
 	esac
@@ -51,6 +53,5 @@ done
 #############################
 #------------------------------------------------------------------------------------
 
-read -a ip
+ssh $uname@10.1.1.$ip kill -9 ${ports[@]}
 
-ssh $uname@10.1.1.$ip kill -9 ${ip[@]}
