@@ -20,22 +20,21 @@
 ##############################################################################################
 
 #---------------------------------------------------------------------------------------------
-# Functions
-
 
 help()
 {
 	echo "	-i = input the suffix of the server's IP address. (-a 201 for IP: 192.168.1.201 or 192.168.2.201)"
 	echo "	-t = input test duration. (-n 15 will run the test for 15 seconds)"
 	echo "	-n = input number of RPis to be run. (-n 3 will start RPis 10.1.1.101, 10.1.1.102, 10.1.1.103 and automatically connect to ports 5201, 5202, 5203)"
-	echo "	-a = input <<< followed by the specific addresses to start in double quotation marks separated by a space. (-a <<< \"103 106 108\" ) or, hit enter and then type in the address"
+	echo "	-a = input specific addresses to start. (-a \"103 106 108\" )"
 	echo "	-f = input the name of the folder where the results will be saved in the RPis"
 	echo "	-u [OPTIONAL] = input client's username if the deffault one (ucanlab) is not used"
-	echo "	-s = input server's network address. e.g: 1 for 192.168.1.201 or 2 for 192.168.2.201, (hit enter first, then type either an array (2 1 1 2) or 1 or 2"
+	echo "	-s = input server's network address. e.g: 1 for 192.168.1.201 or 2 for 192.168.2.201, (-s \"2 1 1 2\" or -s 1 or -s 2"
 	echo "	-l = input number of iterations for the test to run"
+	exit
 }
 
-
+#---------------------------------------------------------------------------------------------
 # takes array from base_address to base_address + 1. e.g if N=3, then 101, 102, 103 clients will start.
 address_single_setup() 
 {
@@ -44,7 +43,7 @@ address_single_setup()
 	my_address=($(seq $((base_address+1)) 1 $((base_address+$N))))
 }
 
-
+#---------------------------------------------------------------------------------------------
 # reads "my_address_array", remove the blank spaces and creates a new "my_addess" array.
 address_array_setup()
 {
@@ -54,7 +53,7 @@ address_array_setup()
 	read -ra my_address <<< "$my_address_array"
 }
 
-
+#---------------------------------------------------------------------------------------------
 # reads "setup_server_array", remove the blank spaces and creates a new "temp_server_array" array.
 server_array_setup()
 {
@@ -90,16 +89,12 @@ while getopts 'ht:n:a:i:f:l:u:s:' OPTION; do
 		l)
 			trial=$OPTARG;; # takes number of trials
 		u)
-			uname=$OPTARG;; # in case the username is not the deffault one, use this flag to user another username
+			uname=$OPTARG;; # in case the username is not the default one, use this flag to user another username
 		s)
 			server_array_setup;;
 	esac
 done
 
-
-#############################
-#####     Main Code     #####
-#############################
 #-------------------------------------------------------------------
 
 # while loop creates values for temp_number by subtracting 100 from the entered IP (103 106 112 will create values 3 6 12)
@@ -112,30 +107,40 @@ while [[ $i -lt ${#my_address[@]} ]]; do
 	i=$((i + 1))
 done
 
+#-------------------------------------------------------------------
 
 # if statement checks if the array length equals to 1
 if [ ${#temp_server_array[@]} -eq 1 ]; then
 	i=0
-	while [ $i -lt ${#my_address[@]} ]; do # if the array length is 1, it assigns the only value to the array of lentgh $my_address
+	# if the array length is 1, it assigns the only value to the array of lentgh $my_address
+	while [ $i -lt ${#my_address[@]} ]; do 
 		my_server_array[$i]=$temp_server_array
 		i=$((i + 1))
 	done
 else
-	my_server_array=("${temp_server_array[@]}") # if the array length is more than 1, it creates the array with more than one value.
+	# if the array length is more than 1, it creates the array with more than one value.
+	my_server_array=("${temp_server_array[@]}")
 fi
 
+
+#############################
+#####     Main Code     #####
+#############################
+#-------------------------------------------------------------------
 
 i=0
 error=0
 while [[ $i -lt ${#my_address[@]} ]]; do # loop through number of clients
 
-if ssh $uname@10.1.1.${my_address[$i]} [ ! -d ~/TB_Results/${folder_name}_pi${my_address[$i]} ] # checks if the given directory folder exists in the client nodes
+# checks if the given directory folder exists in the client nodes
+if ssh $uname@10.1.1.${my_address[$i]} [ ! -d ~/TB_Results/${folder_name}_pi${my_address[$i]} ] 
 then
 	echo "Directory does not exist in pi ${my_address[$i]}"
-	ssh $uname@10.1.1.${my_address[$i]} mkdir -p ~/TB_Results/${folder_name}_pi${my_address[$i]} # if it does not exist, it creates the given directory
-	
+	# if it does not exist, it creates the given directory
+	ssh $uname@10.1.1.${my_address[$i]} mkdir -p ~/TB_Results/${folder_name}_pi${my_address[$i]} 
 else
-	echo "Directory exists in pi ${my_address[$i]}" # if it exists, the error count goes up by one
+	echo "Directory exists in pi ${my_address[$i]}"
+	# if it exists, the error count goes up by one
 	error=$((error + 1))
 fi
 i=$((i + 1))
@@ -160,8 +165,8 @@ do
 	sleep 5
 done
 echo "Test is completed"
-# if the error count is greater than zero, the iperf test will not be executed and will display a message indicating how many RPis the directory already exists in
+# if the error count is greater than zero, the iperf test will not be executed.
 else
 	echo "Directory exists in $error pis"
-
 fi
+

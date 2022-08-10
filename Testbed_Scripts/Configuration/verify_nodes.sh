@@ -18,8 +18,8 @@
 help()
 {
 	echo "	if no arguments are passed, run the script and then enter either one node IP or multiple IPs separated by a space"
-	echo "		-r = input nodes range. Ex: For nodes 101 through 106, run (bash get_ip.sh -r 101 106)"
-	echo "		-l = input one single node or multiple nodes separated by a space. (bash get_ip.sh -l 103, or, -l 103 106 108)"
+	echo "	-r = input nodes range. Ex: For nodes 101 through 106, run (bash get_ip.sh -r 101 106)"
+	echo "	-l = input one single node or multiple nodes separated by a space. (bash get_ip.sh -l 103, or, -l 103 106 108)"
 }
 
 dev=()
