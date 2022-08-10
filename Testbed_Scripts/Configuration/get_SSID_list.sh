@@ -1,15 +1,15 @@
 #!/bin/bash
 
 #################################################################### 
-# get_SSIDs.sh
+# get_SSID_list.sh
 #
 # Author: MR
 #
 # Description: list all available WLAN SSIDs on a specified testbed node
 #
-# Input:       bash get_SSIDs.sh -a arg
+# Input:       bash get_SSID_list.sh -a arg
 #
-# Example:     use "bash get_SSIDs.sh -a 101" to list WLAN SSIDs availble to node 101
+# Example:     use "bash get_SSID_list.sh -a 101" to list WLAN SSIDs availble to node 101
 #
 ####################################################################
 
