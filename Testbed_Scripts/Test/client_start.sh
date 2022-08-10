@@ -19,8 +19,8 @@
 #
 ##############################################################################################
 
-
-#### FUNCTIONS
+#---------------------------------------------------------------------------------------------
+# Functions
 
 
 help()
@@ -65,11 +65,13 @@ server_array_setup()
 }
 
 
-#### DEFFAULT VALUES
+#---------------------------------------------------------------------------------------------
+# Set default parameters
 
-uname=ucanlab
+uname=ucanlab # default
 
-#### SETUP CODE
+#---------------------------------------------------------------------------------------------
+# Get arguments and set appropriate parameters
 
 while getopts 'ht:n:a:i:f:l:u:s:' OPTION; do
 	case "$OPTION" in
@@ -94,7 +96,11 @@ while getopts 'ht:n:a:i:f:l:u:s:' OPTION; do
 	esac
 done
 
-#### MAIN CODE
+
+#############################
+#####     Main Code     #####
+#############################
+#-------------------------------------------------------------------
 
 # while loop creates values for temp_number by subtracting 100 from the entered IP (103 106 112 will create values 3 6 12)
 # creates values for my_ports by adding 5200 and the temp_number. my_s values will equal temp_number values.

@@ -15,6 +15,10 @@
 #
 ####################################################################
 
+#------------------------------------------------------------------------------------
+# Functions
+
+
 help()
 {
 	echo "-a = input the suffix of the IP address. (-a 201 for IP: 10.1.1.201)"
@@ -36,6 +40,9 @@ server2() # creates array from command line. If the inputs entered are <<< "5204
 	read -a my_ports
 }
 
+#------------------------------------------------------------------------------------
+# Get arguments and set appropriate parameters
+
 while getopts 'ha:n:pu:' OPTION; do
 	case "$OPTION" in
 		h)
@@ -50,6 +57,12 @@ while getopts 'ha:n:pu:' OPTION; do
 			uname=$OPTARG;;
 	esac
 done
+
+
+#############################
+#####     Main Code     #####
+#############################
+#------------------------------------------------------------------------------------
 
 i=0
 while [ $i -lt ${#my_ports[@]} ]; do # loop for number of ports
