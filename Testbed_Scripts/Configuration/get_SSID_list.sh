@@ -13,6 +13,7 @@
 #
 ####################################################################
 
+#-------------------------------------------------------------------
 help()
 {
 	echo "	### Bash script to list available wlan SSIDs on a specified testbed node ###"
@@ -23,12 +24,14 @@ help()
 	exit
 }
 
+#-------------------------------------------------------------------
 # Set default parameters
 network_interface=wlan0 # default
 uname=ucanlab   # default
 debug=0
 
 
+#-------------------------------------------------------------------
 # Get arguments and set appropriate parameters
 while getopts 'ha:n:u:d' OPTION; do
 	case "$OPTION" in
@@ -44,6 +47,12 @@ while getopts 'ha:n:u:d' OPTION; do
 			debug=1;;
 	esac
 done
+
+
+#############################
+#####     Main Code     #####
+#############################
+#-------------------------------------------------------------------
 
 if [ $debug -gt 0 ]
 then
