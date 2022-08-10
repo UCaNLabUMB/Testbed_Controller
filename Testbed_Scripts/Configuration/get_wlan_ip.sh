@@ -14,47 +14,69 @@
 #
 ####################################################################
 
+#-------------------------------------------------------------------
+
 help()
 {
+	echo "	### Bash script to get eth0 or wlan0 IP addresses for testbed nodes ###"
+	echo "	---------------------------------------------------------------------------------------"
+	echo "	-i = input 192 for the wlan0 IP address or 10 for the eth0 IP address of the nodes"
+	echo "	-r = range of testbed node addresses (e.g., bash get_wlan_ip.sh -r 103,107)"
+	echo "	-l = list of testbed node addresses (e.g., bash get_wlan_ip.sh -l 103,105,109)"
 	echo "	-u [OPTIONAL] = input the RPis username"
-	echo "	-i = input either 192 for the wlan0 IP address or 10 for the eth0 IP address of the RPis"
-	echo "	-r = input the maximum and minimum values of the node range. Ex: For nodes 101 through 106, type -r 101 106"
-	echo "  -a = type in -a with no inputs, enter, and then enter specific RPis"
+	exit
 }
 
-no_range()
+#-------------------------------------------------------------------
+
+addresses_no_range()
 {
-	read -a ip
+	IFS=','
+	read -ra ip <<< "$OPTARG"
 }
 
-range()
+#-------------------------------------------------------------------
+
+addresses_range()
 {
-	for (( i=$var1; i<=$var2; i++ ))
+	IFS=','
+	read -ra temp <<< "$OPTARG"
+	index=0
+	for (( i=${temp[0]}; i<=${temp[1]}; i++ ))
 	do
-		ip[$i]=$i
+		ip[$index]=$i
+		index=$((index+1))
 	done
 }
 
-var1="$4"; 
-var2="$5";
-i=$var1
+#-------------------------------------------------------------------
+# Set default parameters
 
-uname=ucanlab
+uname=ucanlab # default
 
-while getopts 'hi:ur:a' OPTION; do
+#-------------------------------------------------------------------
+# Get arguments and set appropriate parameters
+
+while getopts 'hi:ur:l:' OPTION; do
 	case "$OPTION" in
 		h)
 			help;;
 		i)
 			interface=$OPTARG;;
 		r)
-			range;;
-		a)
-			no_range;;
+			addresses_range;;
+		l)
+			addresses_no_range;;
 		u)
 			uname=$OPTARG;;
 	esac
 done
+
+
+#############################
+#####     Main Code     #####
+#############################
+#-------------------------------------------------------------------
 
 i=0
 for i in "${ip[@]}"
