@@ -8,8 +8,8 @@
 # Description: This script transfers iperf results files from the RPis to the TC.
 #		It can take a range of clients from 101 to N, or specific number of clients.
 #
-# Input: for range: bash transfer.sh -a 103 -f 3 -t <folder name>
-#        specific: bash transfer.sh -n -g -t <folder name>, enter, and then enter the values
+# Input: for range: bash transfer.sh -a 103 -f <folder name>
+#        specific: bash transfer.sh -n -f <folder name>, enter, and then enter the values
 #
 #####################################################################################
 
@@ -17,9 +17,11 @@
 
 help()
 {
-	echo "-a = input the number of RPis to transfer from. (-a 3 will transfer from RPis 101, 102 and 103)"
-	echo "-n = input the suffix of the IP address to transfer from. (-n enter, then 102 104 106 108 110)"
-	echo "-f = input the folder name in the pi to be transferred"
+	echo "	-a = input the number of RPis to transfer from. (-a 3 will transfer from RPis 101, 102 and 103)"
+	echo "	-n = input the suffix of the IP address to transfer from. (-n enter, then 102 104 106 108 110)"
+	echo "	-f = input the folder name in the pi to be transferred"
+	echo "	-u [OPTIONAL] = input client's username if the deffault one (ucanlab) is not used"
+	exit
 }
 
 #------------------------------------------------------------------------------------

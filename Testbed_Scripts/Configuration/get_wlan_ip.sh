@@ -7,8 +7,8 @@
 #
 # Description: This script indicates the wlan0 or eth0 IP address of the given nodes.
 #
-# Input: bash get_wlan_ip.sh -i 192 or 10 -r 101 115 (this will get the IPs of the nodes from 101 to 115)
-#	 bash get_wlan_ip.sh -i 192 or 10 -a, enter, then type specific node's IP (101 104 107 112)
+# Input: bash get_wlan_ip.sh -i 192 or 10 -r 101,115 (this will get the IPs of the nodes from 101 to 115)
+#	 bash get_wlan_ip.sh -i 192 or 10 -l 101,103,105,107,111 (for specific node's IP)
 #
 # **For Help, enter -h**
 #
