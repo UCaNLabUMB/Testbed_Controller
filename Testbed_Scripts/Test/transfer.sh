@@ -6,59 +6,83 @@
 # Author: Victoria Planchart
 #
 # Description: This script transfers iperf results files from the RPis to the TC.
-#		It can take a range of clients from 101 to N, or specific number of clients.
+#		It can take a range of clients, or specific number of clients.
 #
-# Input: for range: bash transfer.sh -a 103 -f <folder name>
-#        specific: bash transfer.sh -n -f <folder name>, enter, and then enter the values
+# Input: for range: bash transfer.sh -r 103,107 -f <folder name>
+#        specific: bash transfer.sh -l 101,103 -f <folder name>, enter, and then enter the values
 #
 #####################################################################################
 
+#############################
+#####     Functions     #####
+#############################
 #------------------------------------------------------------------------------------
 
 help()
 {
-	echo "	-a = input the number of RPis to transfer from. (-a 3 will transfer from RPis 101, 102 and 103)"
-	echo "	-n = input the suffix of the IP address to transfer from. (-n enter, then 102 104 106 108 110)"
-	echo "	-f = input the folder name in the pi to be transferred"
+	echo ""
+	echo "	### Bash script to transfer results from RPi nodes to TC ###"
+	echo "	---------------------------------------------------------------------------------------"
+	echo "	-l = list of client node addresses (e.g., 'bash transfer.sh -l 103,105,109')"
+	echo "	-r = range of client node addresses (e.g., 'bash transfer.sh -r 103,107')"
+	echo "	-f = input the folder name in the pis to be transferred"
 	echo "	-u [OPTIONAL] = input client's username if the deffault one (ucanlab) is not used"
+	echo ""
 	exit
 }
 
-#------------------------------------------------------------------------------------
-address()
+#-------------------------------------------------------------------
+
+# Creates array from command line inputs
+addresses_list()
 {
-	N=$OPTARG
-	base_port=100
-	pis=($(seq $(($base_port+1)) 1 $(($base_port+$N))))
+	IFS=','
+	read -ra addresses <<< "$OPTARG"
 }
 
-#------------------------------------------------------------------------------------
-address2()
+#-------------------------------------------------------------------
+
+# Parse input and create ip array from arg1 through arg2
+addresses_range()
 {
-	read -a pis
+	IFS=','
+	read -ra temp <<< "$OPTARG"
+	index=0
+	for (( i=${temp[0]}; i<=${temp[1]}; i++ ))
+	do
+		addresses[$index]=$i
+		index=$((index+1))
+	done
 }
 
 
+#############################
+#####   Setup Params    #####
+#############################
 #---------------------------------------------------------------------------------------------
 # Set default parameters
 
 uname=ucanlab # default
+top_dir=~/ucan_TB/TB_Results
+debug=0
 
 #------------------------------------------------------------------------------------
 # Get arguments and set appropriate parameters
 
-while getopts 'ha:nf:u' OPTION; do
+while getopts 'hl:r:f:u:d' OPTION; do
 	case "$OPTION" in
 		h)
 			help;;
-		a)
-			address;;
-		n)
-			address2;;
+		l)
+			addresses_list;;
+		r)
+			addresses_range;;
 		f)
 			folder_name=$OPTARG;;
 		u)
 			uname=$OPTARG;;
+		d)
+			debug=1;;			
 	esac
 done
 
@@ -67,12 +91,29 @@ done
 #####     Main Code     #####
 #############################
 #------------------------------------------------------------------------------------
+if [ $debug -gt 0 ]
+then
+	# for debugging... use -d flag
+	echo ""
+	echo "  ##### Debug Info: #####"
+	echo "  Nodes: ${addresses[@]}"
+	echo "  Results Folder: $top_dir/$folder_name"
+	echo "  Pi Folder: $top_dir/${folder_name}_piXXX"
+	echo "  UName: $uname"
+	echo ""
+	exit
+fi
 
 
-mkdir  ~/TB_Results/${folder_name}
+if [ ! -d $top_dir/${folder_name} ] 
+then
+	mkdir -p $top_dir/${folder_name}
+	
+	for i in "${addresses[@]}"
+	do
+		scp -pr $uname@10.1.1.$i:$top_dir/${folder_name}_pi$i $top_dir/${folder_name}
+	done
 
-i=0
-while [ $i -lt ${#pis[@]} ]; do
-	scp -pr $uname@10.1.1.${pis[$i]}:~/TB_Results/${folder_name}_pi${pis[$i]} ~/TB_Results/${folder_name}
-	i=$((i + 1))
-done
+else
+	echo "Directory already exists on the TC"
+fi
