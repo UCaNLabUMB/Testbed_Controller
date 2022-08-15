@@ -8,22 +8,32 @@
 # Description: This script checks for open ports in the specified pi.
 #
 # Input: enter username and IP suffix with their respective flags.
-# example: bash server_status.sh -u ucanlab -a 201 (for address 10.1.1.201)
+# example: bash server_status.sh -u ucanlab -a 101 (for address 10.1.1.101)
 #
 # **For Help, enter -h**
 #
 ####################################################################
 
+#############################
+#####     Functions     #####
+#############################
 #------------------------------------------------------------------------------------
 
 help()
 {
-	echo "	-a = input the suffix of the pi's IP address. (-a 201 for IP: 10.1.1.201)"
-	echo "	-u [OPTIONAL] = input pi's username"
+	echo ""
+	echo "	### Bash script to check for active iperf servers (pid shown in last col) ###"
+	echo "	-a = input the suffix of the pi's IP address. (-a 101 for IP: 10.1.1.101)"
+	echo "	-u [OPTIONAL] = client's username (e.g., '-u uname') (default: ucanlab)"
+	echo ""
 	exit
 }
 
 
+
+#############################
+#####   Setup Params    #####
+#############################
 #---------------------------------------------------------------------------------------------
 # Set default parameters
 
@@ -32,7 +42,7 @@ uname=ucanlab # default
 #------------------------------------------------------------------------------------
 # Get arguments and set appropriate parameters
 
-while getopts 'ha:u' OPTION; do
+while getopts 'ha:u:' OPTION; do
 	case "$OPTION" in
 		h)
 			help;;
@@ -42,6 +52,7 @@ while getopts 'ha:u' OPTION; do
 			uname=$OPTARG;;
 	esac
 done
+
 
 
 #############################

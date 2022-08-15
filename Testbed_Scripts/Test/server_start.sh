@@ -15,14 +15,20 @@
 #
 ####################################################################
 
+#############################
+#####     Functions     #####
+#############################
 #---------------------------------------------------------------------------------------------
 
 help()
 {
-	echo "	-a = input the suffix of the IP address. (-a 201 for IP: 10.1.1.201)"
+	echo ""
+	echo "	### Bash script to initiate iperf3 servers on desired node ###"
+	echo "	-a = input the suffix of the IP address. (-a 101 for IP: 10.1.1.101)"
 	echo "	-n = input how many ports to start beginning at 5201 by default. (-n 3 will start ports 5201, 5202 and 5203)"
 	echo "	-p = input specific ports to start. (-p 5202,5205,5208,5210,5214 )"
-	echo "	-u [OPTIONAL] = input the username of the pi"
+	echo "	-u [OPTIONAL] = client's username (e.g., '-u uname') (default: ucanlab)"
+	echo ""
 	exit
 }
 
@@ -45,15 +51,20 @@ server2()
 }
 
 
+
+#############################
+#####   Setup Params    #####
+#############################
 #---------------------------------------------------------------------------------------------
 # Set default parameters
 
 uname=ucanlab # default
+debug=0
 
 #---------------------------------------------------------------------------------------------
 # Get arguments and set appropriate parameters
 
-while getopts 'ha:n:p:u' OPTION; do
+while getopts 'ha:n:p:u:d' OPTION; do
 	case "$OPTION" in
 		h)
 			help;;
@@ -65,8 +76,11 @@ while getopts 'ha:n:p:u' OPTION; do
 			server2;;
 		u)
 			uname=$OPTARG;;
+		d)
+			debug=1;;
 	esac
 done
+
 
 
 #############################
@@ -74,8 +88,19 @@ done
 #############################
 #---------------------------------------------------------------------------------------------
 
-i=0
-while [ $i -lt ${#my_ports[@]} ]; do # loop for number of ports
-	ssh $uname@10.1.1.$ip iperf3 -s -p ${my_ports[$i]} &
-	i=$((i + 1))
-done
+if [ $debug -gt 0 ]
+then
+	# for debugging... use -d flag
+	echo ""
+	echo "  ##### Debug Info: #####"
+	echo "  Address: 10.1.1.$ip"
+	echo "  Ports: ${my_ports[@]}"
+	echo "  UName: $uname"
+	echo ""
+else
+	i=0
+	while [ $i -lt ${#my_ports[@]} ]; do # loop for number of ports
+		ssh $uname@10.1.1.$ip iperf3 -s -p ${my_ports[$i]} &
+		i=$((i + 1))
+	done
+fi
