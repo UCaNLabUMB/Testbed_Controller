@@ -7,8 +7,8 @@
 #
 # Description: This script indicates the wlan0 or eth0 IP address of the given nodes.
 #
-# Input: bash get_wlan_ip.sh -i 192 or 10 -r 101,115 (this will get the IPs of the nodes from 101 to 115)
-#	 bash get_wlan_ip.sh -i 192 or 10 -l 101,103,105,107,111 (for specific node's IP)
+# Input: bash get_ip.sh -i 192 or 10 -r 101,115 (this will get the IPs of the nodes from 101 to 115)
+#	 bash get_ip.sh -i 192 or 10 -l 101,103,105,107,111 (for specific node's IP)
 #
 # **For Help, enter -h**
 #
@@ -24,8 +24,8 @@ help()
 	echo ""
 	echo "	### Bash script to get eth0 or wlan0 IP addresses for testbed nodes ###"
 	echo "	---------------------------------------------------------------------------------------"
-	echo "	-r = range of testbed node addresses (e.g., bash get_wlan_ip.sh -r 103,107)"
-	echo "	-l = list of testbed node addresses (e.g., bash get_wlan_ip.sh -l 103,105,109)"
+	echo "	-r = range of testbed node addresses (e.g., bash get_ip.sh -r 103,107)"
+	echo "	-l = list of testbed node addresses (e.g., bash get_ip.sh -l 103,105,109)"
 	echo "	-u [OPTIONAL] = client's username (e.g., '-u uname') (default: ucanlab)"
 	echo "	-n [OPTIONAL] = input '-n 192' for the wlan0 IP address (test network)"
 	echo "	                   or '-n 10' for the eth0 IP address (control network) (default: 192)"
