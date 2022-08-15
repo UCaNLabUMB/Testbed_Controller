@@ -16,11 +16,13 @@
 #-------------------------------------------------------------------
 help()
 {
+	echo ""
 	echo "	### Bash script to list available wlan SSIDs on a specified testbed node ###"
 	echo "	----------------------------------------------------------------------------"
 	echo "	-a = specific address for the client"
 	echo "	-n [OPTIONAL] = input the network interface (default: wlan0)"
 	echo "	-u [OPTIONAL] = input client's username (default: ucanlab)"
+	echo ""
 	exit
 }
 
@@ -57,10 +59,12 @@ done
 if [ $debug -gt 0 ]
 then
 	# for debugging... use -d flag
+	echo ""
 	echo "##### Debug Info: #####"
 	echo "Address: 10.1.1.$address"
 	echo "Interface: $network_interface"
 	echo "UName: $uname"
+	echo ""
 else	
 	# SSH into node and list SSIDs. Remove all empty SSIDs, and print the second col (i.e., the SSID)
 	ssh $uname@10.1.1.$address sudo iw dev $network_interface scan | grep 'SSID:' | grep -v ': $' | awk '{print $2}'

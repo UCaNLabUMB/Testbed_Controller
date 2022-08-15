@@ -12,14 +12,19 @@
 #
 ####################################################################
 
+#############################
+#####     Functions     #####
+#############################
 #-------------------------------------------------------------------
 help()
 {
+	echo ""
 	echo "	### Bash script to list SSIDs of WLAN connections for testbed nodes ###"
 	echo "	----------------------------------------------------------------------------"
 	echo "	-l = list of testbed node addresses (e.g., get_SSIDs.sh -l 103,105,109)"
 	echo "	-r = range of testbed node addresses (e.g., get_SSIDs.sh -r 103,107)"
-	echo "	-u [OPTIONAL] = input client's username (default: ucanlab)"
+	echo "	-u [OPTIONAL] = client's username (e.g., '-u uname') (default: ucanlab)"
+	echo ""
 	exit
 }
 
@@ -38,6 +43,12 @@ addresses_range()
 
 }
 
+
+
+
+#############################
+#####   Setup Params    #####
+#############################
 #-------------------------------------------------------------------
 # Set default parameters
 uname=ucanlab   # default
@@ -73,9 +84,9 @@ done
 if [ $debug -gt 0 ]
 then
 	# for debugging... use -d flag
-	echo "##### Debug Info: #####"
-	echo "Nodes: ${addresses[@]}"
-	echo "UName: $uname"
+	echo "  ##### Debug Info: #####"
+	echo "  Nodes: ${addresses[@]}"
+	echo "  UName: $uname"
 else	
 	# Loop through addresses and get the SSID for each node
 	for i in "${addresses[@]}"

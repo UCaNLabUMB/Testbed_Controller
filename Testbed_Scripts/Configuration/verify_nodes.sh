@@ -14,76 +14,90 @@
 #
 ####################################################################
 
-
+#############################
+#####     Functions     #####
+#############################
+#-------------------------------------------------------------------
 help()
 {
-	echo "	if no arguments are passed, run the script and then enter either one node IP or multiple IPs separated by a space"
-	echo "	-r = input nodes range. Ex: For nodes 101 through 106, run (bash get_ip.sh -r 101 106)"
-	echo "	-l = input one single node or multiple nodes separated by a space. (bash get_ip.sh -l 103, or, -l 103 106 108)"
+	echo ""
+	echo "	### Bash script to verify connection to testbed nodes ###"
+	echo "	----------------------------------------------------------------------------"
+	echo "	-l = single node or list of nodes. (e.g., 'bash verify_nodes.sh -l 103', or, -l 103,106,108)"	
+	echo "	-r = nodes range (e.g., 'bash verify_nodes.sh -r 101,106' for nodes 101 through 106)"
+	echo ""
+	exit
 }
 
-dev=()
-if [ -z "$1" ] # $1 has a length of 0 if no arguments are passed in.
-then
-# This section is runs when no arguments are passed to the Testbed Controller terminal. 
-# Once the script is run, it will ask for the user to input the nodes to verify
+#-------------------------------------------------------------------
+# Parse input and create addresses array from arg1 through arg2
+addresses_range()
+{
+	IFS=','
+	read -ra temp <<< "$OPTARG"
+	index=0
+	for (( i=${temp[0]}; i<=${temp[1]}; i++ ))
+	do
+		addresses[$index]=$i
+		index=$((index+1))
+	done
 
-	echo "Naming convention is 10.1.1.x"
-	echo "Input each corresponding ip to be pinged"
-	echo "i.e., for devices 10.1.1.101 to 10.1.1.104, input 101 102 103 104"
-	read -a ip
-	echo ${ip[@]}
-	for i in "${ip[@]}"
+}
+
+
+
+#############################
+#####   Setup Params    #####
+#############################
+#-------------------------------------------------------------------
+# Set default parameters
+debug=0
+
+
+#-------------------------------------------------------------------
+# Get arguments and set appropriate parameters
+while getopts 'hl:r:d' OPTION; do
+	case "$OPTION" in
+		h)
+			help;;
+		l)
+			IFS=','
+			read -ra addresses <<< "$OPTARG"
+			;;
+		r)
+			addresses_range;;			
+		d)
+			debug=1;;
+	esac
+done
+
+
+
+#############################
+#####     Main Code     #####
+#############################
+#-------------------------------------------------------------------
+
+if [ $debug -gt 0 ]
+then
+	# for debugging... use -d flag
+	echo ""
+	echo "  ##### Debug Info: #####"
+	echo "  Nodes: ${addresses[@]}"
+	echo ""
+else	
+	# Loop through addresses and ping nodes to verify status
+	for i in "${addresses[@]}"
 	do
 		ping -c 1 -W 0.1 "10.1.1.$i" > /dev/null
 		if [ $? -eq 0 ]; then
 			echo "10.1.1.$i is up"
-			dev[${#dev[@]}]=1
 		else 
 			echo "10.1.1.$i is down"
 		fi
 	done
-else
-# This section is runs when a flag / arguments are passed in the command
 
-	while [ "$#" -gt 0 ];
-	do
-	case "$1" in 
-		# run this command with the flag -r and the maximum and minumum values of 
-		# the node range. Ex: For nodes 101 through 106, run "bash get_ip.sh -r 101 106"
-		-r) 
-		var1="$2"; 
-		var2="$3";
-		for (( i=$var1; i<=$var2; i++ ))
-		do
-			ping -c 1 -W 0.1 "10.1.1.$i" > /dev/null
-			if [ $? -eq 0 ]; then
-				echo "10.1.1.$i is up"
-			else 
-				echo "10.1.1.$i is down"
-			fi
-		done
-		;;
-		# To check a specific list of nodes, run this command with the flag -l and the the specific node
-		# value. Ex: For nodes 101, 106, and 107, run "bash get_ap.sh -l 101 106 107"
-		-l) 
-		new=( "$@" )
-		for (( i=1; i<=${#new[@]}-1; i++))
-		do
-			ping -c 1 -W 0.1 "10.1.1.${new[i]}" > /dev/null
-			if [ $? -eq 0 ]; then
-				echo "10.1.1.${new[i]} is up"
-			else 
-				echo "10.1.1.${new[i]} is down"
-			fi
-		done
-		;;
-		-h)
-			help
-		;;
-	esac
-	break
-	done
 fi
+
 
 
