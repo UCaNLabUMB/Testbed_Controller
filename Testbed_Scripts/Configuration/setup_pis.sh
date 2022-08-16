@@ -1,14 +1,13 @@
 #!/bin/bash
 #############################################################################
-# Author: Lenny Martinez
+# Initial Author: Lenny Martinez
 #
-# Description: Takes one command line input for the last 3 digits of the Pis 
-#   IP. It then checks tp see if the TB_Results directory exists. If it does 
-#   then it echos that it exists. If it does not exist then it will tell you 
-#   it doesnt exist then creates the directory
+# Description: Takes a list or range of Pi node addresses, and creates the 
+# 		relevant directories on each Pi for results and local
+#		scripts. Then, it moves relevant scripts to the local scripts
+# 		directory on each Pi.
 #
-# Input: call the file and add the last 3 digits of the IP address to the 
-#   command line as a positional argument ie: bash setup_pis.sh 101
+# Input: 
 #
 #############################################################################
 	
@@ -142,7 +141,9 @@ else
 	do
 		ssh $uname@10.1.1.$i mkdir $top_dir/TB_Results -p
 		ssh $uname@10.1.1.$i mkdir $top_dir/TB_Scripts -p
-		#TODO: Move any relevant python (or other) scripts to TB_Scripts directory			
+		
+		# Move any relevant python (or other) scripts to TB_Scripts directory	
+		scp -pr Pi_Scripts/set_wlan_local.sh $uname@10.1.1.$i:$top_dir/TB_Scripts > /dev/null		
 	done
 fi
 
