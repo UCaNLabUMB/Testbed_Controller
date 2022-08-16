@@ -85,19 +85,17 @@ then
 	echo "  ##### Debug Info: #####"
 	echo "  Nodes: ${addresses[@]}"
 	echo ""
-else	
-	# Loop through addresses and ping nodes to verify status
-	for i in "${addresses[@]}"
-	do
-		ping -c 1 -W 0.1 "10.1.1.$i" > /dev/null
-		if [ $? -eq 0 ]; then
-			echo "10.1.1.$i is up"
-		else 
-			echo "10.1.1.$i is down"
-		fi
-	done
-
+	exit
 fi
 
-
+# Loop through addresses and ping nodes to verify status
+for i in "${addresses[@]}"
+do
+	ping -c 1 -W 0.1 "10.1.1.$i" > /dev/null
+	if [ $? -eq 0 ]; then
+		echo "10.1.1.$i is up"
+	else 
+		echo "10.1.1.$i is down"
+	fi
+done
 

@@ -104,25 +104,20 @@ then
 	echo "  Interface: $network_interface"
 	echo "  UName: $uname"
 	echo ""
-else	
-	# Loop through addresses and get the desired MAC address for each node
-	for i in "${addresses[@]}"
-	do
-		# if statement checks if interface exists (e.g., eth1 might not exist for non-server nodes)
-		if ssh ucanlab@"10.1.1.$i" [ ! -d /sys/class/net/$network_interface ]
-		then
-			echo "Network Interface not found for $i"
-		else
-			echo "$network_interface MAC Address for $i:"
-			ssh $uname@"10.1.1.$i" cat /sys/class/net/$network_interface/address
-		fi
-
-	done
-
+	exit
 fi
 
-
-
-
+# Loop through addresses and get the desired MAC address for each node
+for i in "${addresses[@]}"
+do
+	# if statement checks if interface exists (e.g., eth1 might not exist for non-server nodes)
+	if ssh ucanlab@"10.1.1.$i" [ ! -d /sys/class/net/$network_interface ]
+	then
+		echo "Network Interface not found for $i"
+	else
+		echo "$network_interface MAC Address for $i:"
+		ssh $uname@"10.1.1.$i" cat /sys/class/net/$network_interface/address
+	fi
+done
 
 

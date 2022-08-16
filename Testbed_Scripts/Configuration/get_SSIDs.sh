@@ -87,15 +87,15 @@ then
 	echo "  ##### Debug Info: #####"
 	echo "  Nodes: ${addresses[@]}"
 	echo "  UName: $uname"
-else	
-	# Loop through addresses and get the SSID for each node
-	for i in "${addresses[@]}"
-	do
-		echo "pi $i SSID:"
-		ssh $uname@"10.1.1.$i" /usr/sbin/iwgetid -r
-	done
-
+	exit
 fi
+
+# Loop through addresses and get the SSID for each node
+for i in "${addresses[@]}"
+do
+	echo "pi $i SSID:"
+	ssh $uname@"10.1.1.$i" /usr/sbin/iwgetid -r
+done
 
 
 

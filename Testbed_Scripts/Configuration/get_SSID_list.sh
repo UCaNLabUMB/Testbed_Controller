@@ -65,9 +65,9 @@ then
 	echo "Interface: $network_interface"
 	echo "UName: $uname"
 	echo ""
-else	
-	# SSH into node and list SSIDs. Remove all empty SSIDs, and print the second col (i.e., the SSID)
-	ssh $uname@10.1.1.$address sudo iw dev $network_interface scan | grep 'SSID:' | grep -v ': $' | awk '{print $2}'
+	exit
 fi
 
+# SSH into node and list SSIDs. Remove all empty SSIDs, and print the second col (i.e., the SSID)
+ssh $uname@10.1.1.$address sudo iw dev $network_interface scan | grep 'SSID:' | grep -v ': $' | awk '{print $2}'
 

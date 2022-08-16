@@ -23,6 +23,7 @@ help()
 {
 	echo ""
 	echo "	### Bash script to check for active iperf servers (pid shown in last col) ###"
+	echo "	---------------------------------------------------------------------------------------"
 	echo "	-a = input the suffix of the pi's IP address. (-a 101 for IP: 10.1.1.101)"
 	echo "	-u [OPTIONAL] = client's username (e.g., '-u uname') (default: ucanlab)"
 	echo ""

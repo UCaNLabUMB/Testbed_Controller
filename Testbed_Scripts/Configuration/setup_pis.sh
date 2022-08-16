@@ -105,43 +105,45 @@ then
 	echo "  Top Level Directory: $top_dir" 
 	echo "  UName: $uname"
 	echo ""
+	exit
+fi
+
+# Main code to setup desired RPis
+
+# Check RPis for top directory, and either clear it or throw error (depending on -c flag)
+#-------------------------------------------------------------------
+for i in "${addresses[@]}"
+do
+	if ssh $uname@10.1.1.$i [ -d $top_dir ] # checks if the given directory folder exists on ith Pi
+	then
+		#echo "TB Directory exists on Pi $i"
+		if (( $clear_dir == 1))
+		then
+			# Remove the directory and all contents
+			ssh $uname@10.1.1.$i rm -r $top_dir
+		else
+			ERR=1
+		fi
+	#else
+		#echo "No TB Directory found on Pi $i"
+	fi
+
+done	
+
+# If no errors, then create the TB_Results and TB_Scripts directories for all Pis
+#-------------------------------------------------------------------
+if (( $ERR > 0 ))
+then
+	# Do not setup if any Pis have the directory already
+	echo "The Directory already exists on one or more Pis" 
 else
-	# Main code to setup desired RPis
-	
-	# Check RPis for top directory, and either clear it or throw error (depending on -c flag)
-	#-------------------------------------------------------------------
+	# Loop through and setup Pis
 	for i in "${addresses[@]}"
 	do
-		if ssh $uname@10.1.1.$i [ -d $top_dir ] # checks if the given directory folder exists on ith Pi
-		then
-			#echo "TB Directory exists on Pi $i"
-			if (( $clear_dir == 1))
-			then
-				# Remove the directory and all contents
-				ssh $uname@10.1.1.$i rm -r $top_dir
-			else
-				ERR=1
-			fi
-		#else
-			#echo "No TB Directory found on Pi $i"
-		fi
-
-	done	
-
-	# If no errors, then create the TB_Results and TB_Scripts directories for all Pis
-	#-------------------------------------------------------------------
-	if (( $ERR > 0 ))
-	then
-		# Do not setup if any Pis have the directory already
-		echo "The Directory already exists on one or more Pis" 
-	else
-		# Loop through and setup Pis
-		for i in "${addresses[@]}"
-		do
-			ssh $uname@10.1.1.$i mkdir $top_dir/TB_Results -p
-			ssh $uname@10.1.1.$i mkdir $top_dir/TB_Scripts -p
-			#TODO: Move any relevant python (or other) scripts to TB_Scripts directory			
-		done
-	fi
-	
+		ssh $uname@10.1.1.$i mkdir $top_dir/TB_Results -p
+		ssh $uname@10.1.1.$i mkdir $top_dir/TB_Scripts -p
+		#TODO: Move any relevant python (or other) scripts to TB_Scripts directory			
+	done
 fi
+
+

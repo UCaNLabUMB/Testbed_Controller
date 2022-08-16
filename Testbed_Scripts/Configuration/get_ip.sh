@@ -104,14 +104,16 @@ then
 	echo "  Interface: $net_interface"
 	echo "  UName: $uname"
 	echo ""
-else
-	for i in "${addresses[@]}"
-	do
-		echo "$net_interface IP Address for $i:"
-		ssh $uname@"10.1.1.$i" ip addr | grep "inet $net_interface" | awk '{print $2}'
-		
-		#OLD METHOD
-		#ssh $uname@"10.1.1.$i" ifconfig wlan0 | grep "inet" | grep "broadcast" | awk '{print $2}'
-	done
+	exit
 fi
+
+for i in "${addresses[@]}"
+do
+	echo "$net_interface IP Address for $i:"
+	ssh $uname@"10.1.1.$i" ip addr | grep "inet $net_interface" | awk '{print $2}'
+	
+	#OLD METHOD
+	#ssh $uname@"10.1.1.$i" ifconfig wlan0 | grep "inet" | grep "broadcast" | awk '{print $2}'
+done
+
 

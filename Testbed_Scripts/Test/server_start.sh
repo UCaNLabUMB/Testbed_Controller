@@ -24,8 +24,10 @@ help()
 {
 	echo ""
 	echo "	### Bash script to initiate iperf3 servers on desired node ###"
+	echo "	---------------------------------------------------------------------------------------"
 	echo "	-a = input the suffix of the IP address. (-a 101 for IP: 10.1.1.101)"
-	echo "	-n = input how many ports to start beginning at 5201 by default. (-n 3 will start ports 5201, 5202 and 5203)"
+	echo "	-n = input how many ports to start beginning at 5201 by default. "
+	echo "	       (-n 3 will start ports 5201, 5202 and 5203)"
 	echo "	-p = input specific ports to start. (-p 5202,5205,5208,5210,5214 )"
 	echo "	-u [OPTIONAL] = client's username (e.g., '-u uname') (default: ucanlab)"
 	echo ""
@@ -97,10 +99,13 @@ then
 	echo "  Ports: ${my_ports[@]}"
 	echo "  UName: $uname"
 	echo ""
-else
-	i=0
-	while [ $i -lt ${#my_ports[@]} ]; do # loop for number of ports
-		ssh $uname@10.1.1.$ip iperf3 -s -p ${my_ports[$i]} &
-		i=$((i + 1))
-	done
+	exit
 fi
+
+i=0
+while [ $i -lt ${#my_ports[@]} ]; do # loop for number of ports
+	ssh $uname@10.1.1.$ip iperf3 -s -p ${my_ports[$i]} &
+	i=$((i + 1))
+done
+
+
