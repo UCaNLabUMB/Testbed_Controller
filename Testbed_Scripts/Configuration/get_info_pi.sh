@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #################################################################### 
-# get_info.sh
+# get_info_pi.sh
 #
 # Initial Authors: Humza Ali / Myles Toole
 #
@@ -24,8 +24,8 @@ help()
 	echo ""
 	echo "	### Bash script to get general information about Pi nodes ###"
 	echo "	---------------------------------------------------------------------------------------"
-	echo "	-l = list of testbed node addresses (e.g., 'bash get_info.sh -l 103,105,109')"
-	echo "	-r = range of testbed node addresses (e.g., 'bash get_info.sh -r 103,107')"
+	echo "	-l = list of testbed node addresses (e.g., 'bash get_info_pi.sh -l 103,105,109')"
+	echo "	-r = range of testbed node addresses (e.g., 'bash get_info_pi.sh -r 103,107')"
 	echo "	-m [OPTIONAL] = List the RAM size for each specified node"
 	echo "	-p [OPTIONAL] = List the WiFi Tx power for each specified node"
 	echo "	-o [OPTIONAL] = List the installed OS for each specified node"
