@@ -42,6 +42,7 @@ help()
 	echo "	# iperf settings #"
 	echo "	-t [OPTIONAL] = input test duration. (-t 15 will run tests for 15 seconds) (default: 5)"
 	echo "	-k [OPTIONAL] = input number of iterations for the test to run (default: 2)"
+	echo "	-i [OPTIONAL] = input iperf reporting interval in seconds (default: 1)"
 	echo ""
 	exit
 }
@@ -119,12 +120,13 @@ uname=ucanlab # default
 ip=201
 time=5
 trials=2
+interval=1
 debug=0
 
 #---------------------------------------------------------------------------------------------
 # Get arguments and set appropriate parameters
 
-while getopts 'hl:r:s:a:f:u:t:k:d' OPTION; do
+while getopts 'hl:r:s:a:f:u:t:k:i:d' OPTION; do
 	case "$OPTION" in
 		h)
 			help;;
@@ -144,6 +146,8 @@ while getopts 'hl:r:s:a:f:u:t:k:d' OPTION; do
 			time=$OPTARG;; # takes test durantion in seconds
 		k)
 			trials=$OPTARG;; # takes number of trials
+		i)
+			interval=$OPTARG;; #iperf reporting interval
 		d)
 			debug=1;;
 	esac
@@ -170,6 +174,7 @@ then
 	echo "  Results Folder: $top_dir/${folder_name}_piXXX"
 	echo "  iperf time: $time"
 	echo "  iperf trials: $trials"
+	echo "  iperf interval: $interval"
 	echo "  UName: $uname"
 	echo ""
 	exit
@@ -205,7 +210,7 @@ then
 		i=0
 		while [[ $i -lt ${#my_addresses[@]} ]]; do # loop through number of clients
 			# ssh in the client nodes, start the clients and run the test
-			ssh $uname@10.1.1.${my_addresses[$i]}  "iperf3 -c 192.168.${my_server_array[$i]}.$ip -t $time s${my_s[$i]} -p ${my_ports[$i]} > $top_dir/${folder_name}_pi${my_addresses[$i]}/Results_$x.txt" &	
+			ssh $uname@10.1.1.${my_addresses[$i]}  "iperf3 -c 192.168.${my_server_array[$i]}.$ip -t $time s${my_s[$i]} -p ${my_ports[$i]} -i $interval > $top_dir/${folder_name}_pi${my_addresses[$i]}/Results_$x.txt" &	
 			i=$((i + 1))
 		done
 		
