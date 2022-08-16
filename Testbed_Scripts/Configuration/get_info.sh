@@ -27,6 +27,7 @@ help()
 	echo "	-l = list of testbed node addresses (e.g., 'bash get_info.sh -l 103,105,109')"
 	echo "	-r = range of testbed node addresses (e.g., 'bash get_info.sh -r 103,107')"
 	echo "	-m [OPTIONAL] = List the RAM size for each specified node"
+	echo "	-p [OPTIONAL] = List the WiFi Tx power for each specified node"
 	echo "	-o [OPTIONAL] = List the installed OS for each specified node"
 	echo "	-v [OPTIONAL] = List the Pi type for each specified node"
 	echo "	-u [OPTIONAL] = client's username (e.g., '-u uname') (default: ucanlab)"
@@ -76,6 +77,13 @@ setup_col_titles()
 	fi
 	
 	#------------------
+	if (( $power_check == 1 ))
+	then
+		temp1="$temp1   Tx Power "
+		temp2="$temp2  ----------"
+	fi
+	
+	#------------------
 	if (( $os_check == 1 ))
 	then
 		temp1="$temp1      OS    "
@@ -103,13 +111,14 @@ setup_col_titles()
 ver_check=0
 ram_check=0
 os_check=0	
+power_check=0
 uname=ucanlab # default
 debug=0
 
 #-------------------------------------------------------------------
 # Get arguments and set appropriate parameters
 
-while getopts 'hl:r:vmou:' OPTION; do
+while getopts 'hl:r:mpovu:' OPTION; do
 	case "$OPTION" in
 		h)
 			help;;
@@ -119,6 +128,8 @@ while getopts 'hl:r:vmou:' OPTION; do
 			addresses_range;;
 		m)
 			ram_check=1;;
+		p)
+			power_check=1;;
 		o)
 			os_check=1;;			
 		v)
@@ -151,6 +162,20 @@ do
 		temp="$temp   $(ssh $uname@"10.1.1.$i" cat /proc/meminfo | grep "MemTotal" | awk '{print $2 " " $3}')"
 	fi
 	
+	#------------------
+	# check for Tx Power
+	if (( $power_check == 1 ))
+	then
+		#NOTE: Requires sudo to access iwconfig
+		my_power=$(ssh $uname@"10.1.1.$i" sudo iwconfig wlan0 | grep "Tx-Power" | awk -F[\=] '{print $3}')
+		if [ -z "$my_power" ]
+		then
+			my_power="WiFi Off "
+		fi
+		
+		temp="$temp     $my_power"
+	fi
+		
 	#------------------
 	# check for os
 	if (( $os_check == 1 ))
