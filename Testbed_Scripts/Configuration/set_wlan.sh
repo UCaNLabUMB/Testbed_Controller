@@ -13,13 +13,17 @@
 #
 ####################################################################
 
+#############################
+#####     Functions     #####
+#############################
 #-------------------------------------------------------------------
 help()
 {
 	echo ""
 	echo "	### Bash script to set the wlan for a given testbed node ###"
 	echo "	----------------------------------------------------------------------------"
-	echo "	-a = testbed node address (e.g., set_wlan.sh -a 105)"
+	echo "	-l = list of testbed node addresses (e.g., 'bash get_info.sh -l 103,105,109')"
+	echo "	-r = range of testbed node addresses (e.g., 'bash get_info.sh -r 103,107')"
 	echo "	-s = Specify SSID of desired WLAN (e.g., set_wlan.sh -s UCaNLab_5G)"
 	echo "	-p = Specify passphrase for desired WLAN (e.g., set_wlan.sh -p password123)"
 	echo "	-u [OPTIONAL] = input client's username (default: ucanlab)"
@@ -27,6 +31,34 @@ help()
 	exit
 }
 
+#-------------------------------------------------------------------
+
+# Creates array from command line inputs
+addresses_list()
+{
+	IFS=','
+	read -ra addresses <<< "$OPTARG"
+}
+
+#-------------------------------------------------------------------
+
+# Parse input and create ip array from arg1 through arg2
+addresses_range()
+{
+	IFS=','
+	read -ra temp <<< "$OPTARG"
+	index=0
+	for (( i=${temp[0]}; i<=${temp[1]}; i++ ))
+	do
+		addresses[$index]=$i
+		index=$((index+1))
+	done
+}
+
+
+#############################
+#####   Setup Params    #####
+#############################
 #-------------------------------------------------------------------
 # Set default parameters
 uname=ucanlab   # default
@@ -36,12 +68,14 @@ debug=0
 
 #-------------------------------------------------------------------
 # Get arguments and set appropriate parameters
-while getopts 'ha:s:p:d' OPTION; do
+while getopts 'hl:r:s:p:d' OPTION; do
 	case "$OPTION" in
 		h)
 			help;;
-		a)
-			address=$OPTARG;;
+		l)
+			addresses_list;;
+		r)
+			addresses_range;;
 		s)
 			SSID=$OPTARG;;			
 		p)
@@ -61,16 +95,21 @@ done
 if [ $debug -gt 0 ]
 then
 	# for debugging... use -d flag
-	echo "##### Debug Info: #####"
-	echo "Address: $address"
-	echo "SSID: $SSID"
-	echo "Password: $pw"
-	echo "UName: $uname"
+	echo ""
+	echo "  ##### Debug Info: #####"
+	echo "  Nodes: ${addresses[@]}"
+	echo "  SSID: $SSID"
+	echo "  Password: $pw"
+	echo "  UName: $uname"
+	echo ""
 	exit
 fi
 
-ssh $uname@10.1.1.$address bash $top_dir/TB_Scripts/set_wlan_local.sh -s $SSID -p $pw
-ssh $uname@10.1.1.$address sudo reboot
+for i in "${addresses[@]}"
+do
+	ssh $uname@10.1.1.$i bash $top_dir/TB_Scripts/set_wlan_local.sh -s $SSID -p $pw
+	ssh $uname@10.1.1.$i sudo reboot
+done
 
 
 
