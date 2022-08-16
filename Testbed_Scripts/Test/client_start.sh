@@ -115,7 +115,6 @@ server_array_setup()
 #---------------------------------------------------------------------------------------------
 # Set default parameters
 
-top_dir=~/ucan_TB/TB_Results
 uname=ucanlab # default
 ip=201
 time=5
@@ -153,7 +152,8 @@ while getopts 'hl:r:s:a:f:u:t:k:i:d' OPTION; do
 	esac
 done
 
-
+# Setup Pi's top directory after input, in case Pi username is not default
+top_dir=/home/$uname/ucan_TB/TB_Results
 
 
 #############################

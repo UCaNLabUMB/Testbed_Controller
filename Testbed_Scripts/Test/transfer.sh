@@ -63,7 +63,6 @@ addresses_range()
 # Set default parameters
 
 uname=ucanlab # default
-top_dir=~/ucan_TB/TB_Results
 debug=0
 
 #------------------------------------------------------------------------------------
@@ -86,6 +85,9 @@ while getopts 'hl:r:f:u:d' OPTION; do
 	esac
 done
 
+# Setup Pi's top directory after input, in case Pi username is not default
+top_dir=/home/$uname/ucan_TB/TB_Results
+top_dir_TC=~/ucan_TB/TB_Results
 
 #############################
 #####     Main Code     #####
@@ -105,13 +107,13 @@ then
 fi
 
 
-if [ ! -d $top_dir/${folder_name} ] 
+if [ ! -d $top_dir_TC/${folder_name} ] 
 then
-	mkdir -p $top_dir/${folder_name}
+	mkdir -p $top_dir_TC/${folder_name}
 	
 	for i in "${addresses[@]}"
 	do
-		scp -pr $uname@10.1.1.$i:$top_dir/${folder_name}_pi$i $top_dir/${folder_name}
+		scp -pr $uname@10.1.1.$i:$top_dir/${folder_name}_pi$i $top_dir_TC/${folder_name}
 	done
 
 else

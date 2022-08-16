@@ -62,7 +62,6 @@ addresses_range()
 #-------------------------------------------------------------------
 # Set default parameters
 uname=ucanlab   # default
-top_dir=~/ucan_TB
 debug=0
 
 
@@ -85,7 +84,8 @@ while getopts 'hl:r:s:p:d' OPTION; do
 	esac
 done
 
-
+# Setup Pi's top directory after input, in case Pi username is not default
+top_dir=/home/$uname/ucan_TB
 
 #############################
 #####     Main Code     #####

@@ -37,7 +37,6 @@ help()
 #---------------------------------------------------------------------------------------------
 # Set default parameters
 
-top_dir=~/ucan_TB/TB_Results
 debug=0
 sender=0
 
@@ -57,13 +56,16 @@ while getopts 'hd:f:s' OPTION; do
 	esac
 done
 
+# OK to use relative home, ~, for TC location
+top_dir_TC=~/ucan_TB/TB_Results
+
 
 #############################
 #####     Main Code     #####
 #############################
 #------------------------------------------------------------------------------------
 echo $folder_name
-if [ ! -d $top_dir/$dir_name ] 
+if [ ! -d $top_dir_TC/$dir_name ] 
 then
 	echo "Directory does not exist on the TC"	
 elif [ -a $file_name ]
@@ -75,7 +77,7 @@ else
 
 	# Find all the Pi directories
 	# NOTE: The extra () make sure results are stored as an array, not a single value
-	my_dirs=($(ls -d $top_dir/$dir_name/${dir_name}*/))
+	my_dirs=($(ls -d $top_dir_TC/$dir_name/${dir_name}*/))
 	#echo "Size: ${#my_dirs[@]}"
 	
 	i=0
@@ -88,7 +90,10 @@ else
 		#echo "Size: ${#my_files[@]}"		
 
 		j=0
-		temp=${my_dirs[$i]}
+		
+		# Start each line with the pi number (pulled from the directory name)
+		temp=$(echo ${my_dirs[$i]} | awk -F "${dir_name}_pi" '{print $2}')
+		
 		while [[ $j -lt ${#my_files[@]} ]]; 
 		do # loop through results files	
 			#echo "  ${my_files[$j]}"
