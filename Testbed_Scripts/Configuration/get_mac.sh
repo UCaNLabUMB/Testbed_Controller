@@ -57,6 +57,22 @@ addresses_range()
 	done
 }
 
+# function to setup the top row of the output
+setup_col_titles()
+{
+	#TODO: Find a way to auto-adjust the column widths
+	
+	temp1="   Node  "	
+	temp2="  ------ "
+	
+	# Keeping get_info structure in case we add optional info 
+	temp1="$temp1     $network_interface MAC     "
+	temp2="$temp2 -----------------"
+	
+	echo ""
+	echo $temp1
+	echo $temp2
+}
 
 
 #############################
@@ -107,17 +123,26 @@ then
 	exit
 fi
 
+# Call function to setup top row of output
+setup_col_titles
+
 # Loop through addresses and get the desired MAC address for each node
 for i in "${addresses[@]}"
 do
+
+	# Put Pi number in first column
+	temp="    $i"
+	
 	# if statement checks if interface exists (e.g., eth1 might not exist for non-server nodes)
 	if ssh ucanlab@"10.1.1.$i" [ ! -d /sys/class/net/$network_interface ]
 	then
-		echo "Network Interface not found for $i"
+		temp="$temp   Network Interface not found"
 	else
-		echo "$network_interface MAC Address for $i:"
-		ssh $uname@"10.1.1.$i" cat /sys/class/net/$network_interface/address
+		temp="$temp   $(ssh $uname@"10.1.1.$i" cat /sys/class/net/$network_interface/address)"
 	fi
+	
+	# Print information for each Pi on a single Row
+	echo $temp	
 done
 
-
+echo ""

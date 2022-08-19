@@ -44,7 +44,22 @@ addresses_range()
 
 }
 
-
+# function to setup the top row of the output
+setup_col_titles()
+{
+	#TODO: Find a way to auto-adjust the column widths
+	
+	temp1="   Node  "	
+	temp2="  ------ "
+	
+	# Keeping get_info structure in case we add optional info 
+	temp1="$temp1   Status  "
+	temp2="$temp2 ----------"
+	
+	echo ""
+	echo $temp1
+	echo $temp2
+}
 
 #############################
 #####   Setup Params    #####
@@ -88,14 +103,18 @@ then
 	exit
 fi
 
+# Call function to setup top row of output
+setup_col_titles
+
 # Loop through addresses and ping nodes to verify status
 for i in "${addresses[@]}"
 do
 	ping -c 1 -W 0.1 "10.1.1.$i" > /dev/null
 	if [ $? -eq 0 ]; then
-		echo "10.1.1.$i is up"
+		echo "    $i       up"
 	else 
-		echo "10.1.1.$i is down"
+		echo "    $i      down"
 	fi
 done
 
+echo ""

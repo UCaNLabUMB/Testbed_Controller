@@ -56,6 +56,29 @@ addresses_range()
 	done
 }
 
+# function to setup the top row of the output
+setup_col_titles()
+{
+	#TODO: Find a way to auto-adjust the column widths
+	
+	temp1="   Node  "	
+	temp2="  ------ "
+	
+	# Keeping get_info structure in case we add optional info 
+	#------------------
+	if (( $net_interface == 192 ))
+	then
+		temp1="$temp1      Test IP     "
+		temp2="$temp2 -----------------"
+	else
+		temp1="$temp1    Control IP    "
+		temp2="$temp2 -----------------"	
+	fi
+	
+	echo ""
+	echo $temp1
+	echo $temp2
+}
 
 
 #############################
@@ -107,13 +130,20 @@ then
 	exit
 fi
 
+# Call function to setup top row of output
+setup_col_titles
+
 for i in "${addresses[@]}"
 do
-	echo "$net_interface IP Address for $i:"
-	ssh $uname@"10.1.1.$i" ip addr | grep "inet $net_interface" | awk '{print $2}'
+
+	# Put Pi number in first column
+	temp="    $i    $(ssh $uname@"10.1.1.$i" ip addr | grep "inet $net_interface" | awk '{print $2}')"
+	
+	# Print information for each Pi on a single Row
+	echo $temp	
 	
 	#OLD METHOD
 	#ssh $uname@"10.1.1.$i" ifconfig wlan0 | grep "inet" | grep "broadcast" | awk '{print $2}'
 done
 
-
+echo ""
