@@ -26,10 +26,12 @@ help()
 	echo "	---------------------------------------------------------------------------------------"
 	echo "	-l = list of testbed node addresses (e.g., 'bash get_info_pi.sh -l 103,105,109')"
 	echo "	-r = range of testbed node addresses (e.g., 'bash get_info_pi.sh -r 103,107')"
+	echo "	-d [OPTIONAL] = List the microSD memory size for each specified node"
 	echo "	-m [OPTIONAL] = List the RAM size for each specified node"
 	echo "	-p [OPTIONAL] = List the WiFi Tx power for each specified node"
 	echo "	-o [OPTIONAL] = List the installed OS for each specified node"
-	echo "	-v [OPTIONAL] = List the Pi type for each specified node"
+	echo "	-v [OPTIONAL] = List the Pi type or software version for each specified node"
+	echo "                    (e.g., '-v Pi' for Pi type or '-v python3' for python3 version)"
 	echo "	-u [OPTIONAL] = client's username (e.g., '-u uname') (default: ucanlab)"
 	echo ""
 	exit
@@ -61,6 +63,17 @@ addresses_range()
 
 #-------------------------------------------------------------------
 
+# Determine what software version is being requested
+version_check()
+{
+	ver_check=1
+	ver_option=$OPTARG
+	#TODO: Add a warning/error for invalid options
+	
+}
+
+#-------------------------------------------------------------------
+
 # function to setup the top row of the output
 setup_col_titles()
 {
@@ -69,6 +82,13 @@ setup_col_titles()
 	temp1="   Node  "	
 	temp2="  ------ "
 	
+	#------------------
+	if (( $mem_check == 1 ))
+	then
+		temp1="$temp1   MEM  "
+		temp2="$temp2 -------"
+	fi
+
 	#------------------
 	if (( $ram_check == 1 ))
 	then
@@ -93,8 +113,8 @@ setup_col_titles()
 	#------------------
 	if (( $ver_check == 1 ))
 	then
-		temp1="$temp1   Pi Version "
-		temp2="$temp2  ------------"
+		temp1="$temp1   $ver_option Version "
+		temp2="$temp2  ------------------"
 	fi
 	
 	echo ""
@@ -109,6 +129,7 @@ setup_col_titles()
 # Set default parameters
 
 ver_check=0
+mem_check=0
 ram_check=0
 os_check=0	
 power_check=0
@@ -118,7 +139,7 @@ debug=0
 #-------------------------------------------------------------------
 # Get arguments and set appropriate parameters
 
-while getopts 'hl:r:mpovu:' OPTION; do
+while getopts 'hl:r:dmpov:u:' OPTION; do
 	case "$OPTION" in
 		h)
 			help;;
@@ -126,6 +147,8 @@ while getopts 'hl:r:mpovu:' OPTION; do
 			addresses_list;;
 		r)
 			addresses_range;;
+		d)
+			mem_check=1;;
 		m)
 			ram_check=1;;
 		p)
@@ -133,7 +156,7 @@ while getopts 'hl:r:mpovu:' OPTION; do
 		o)
 			os_check=1;;			
 		v)
-			ver_check=1;;
+			version_check;;
 		u)
 			uname=$OPTARG;;	
 	esac
@@ -155,6 +178,15 @@ do
 	# Put Pi number in first column
 	temp="    $i"
 	
+	#------------------
+	# check for microSD memory sie
+	if (( $mem_check == 1 ))
+	then
+		my_mem=$(ssh $uname@"10.1.1.$i" df -H | grep "root" | awk '{print $2}')
+		temp="$temp     $my_mem"
+	fi
+
+
 	#------------------
 	# check for ram
 	if (( $ram_check == 1 ))
@@ -181,13 +213,22 @@ do
 	if (( $os_check == 1 ))
 	then
 		temp="$temp    $(ssh $uname@"10.1.1.$i" cat /etc/os-release | grep "^ID=" | awk -F'[/=]' '{print $2}')"
+		temp="$temp $(ssh $uname@"10.1.1.$i" getconf LONG_BIT)"
 	fi
 		
 	#------------------
 	# check for version
 	if (( $ver_check == 1 ))
 	then
-		temp="$temp  $(ssh $uname@"10.1.1.$i" cat /proc/cpuinfo | grep "Model" | awk '{$1=$2=""; print $0}')"
+		if [ $ver_option = "Pi" ] #NOTE: Use 'if [ ]' for string comparison
+		then
+			temp="$temp  $(ssh $uname@"10.1.1.$i" cat /proc/cpuinfo | grep "Model" | awk '{$1=$2=""; print $0}')"
+		fi
+
+		if [ $ver_option = "python3" ] #NOTE: Use 'if [ ]' for string comparison
+		then
+			temp="$temp    $(ssh $uname@"10.1.1.$i" python3 -V)"
+		fi
 	fi
 	
 	# Print information for each Pi on a single Row
