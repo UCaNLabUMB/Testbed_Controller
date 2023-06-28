@@ -1,22 +1,25 @@
 # Testbed Controller
 ![GitHub Logo](Documentation/Images/tethered_architecture.png) 
-This repository is meant to be the the central location of configuration scripts used for UCaN Lab's Wireless Network Testbed. This tool is designed to analyze the impact of network configurations and traffic characteristics in a variety of scenarios. Rather than using real world devices with various internet based applications, the devices will be emulated with Raspberry Pis (RPis). All of the RPi nodes will be connected to a single computer acting as the Testbed Controller (TC), allowing the network to be centrally configured and controlled.
+This repository is developed and maintained by the Ubiquitous Communications and Networking Lab (UCaN Lab) at UMass Boston. The code provides a set of documentation and scripts for configuring distributed nodes from a central location, and offers test capabilities for analyzing throughput in dense multi-access point and multi-user environments.
 
-The testbed architecture consists of a Control Network and Test Network(s). The control network connects all RPi nodes to the TC and uses the 10.1.1.X subnet. The Test Network(s) are formed with one ore more wireless access points (APs) that the RPi nodes can connect to. Test Network(s) are where traffic is generated and performance is analyzed using iperf network performance tools. RPi nodes on the Test Network(s) can be configured as iperf servers (typically connected to an AP via Ethernet) or iperf clients.
+This tool is designed to analyze the impact of network configurations and traffic characteristics in a variety of scenarios. Rather than using real world devices with various internet based applications, device usage is emulated with Raspberry Pi (RPi) microcontrollers. All of the **RPi nodes** will be connected to a single computer acting as the **Testbed Controller (TC)**, allowing the network to be centrally configured and controlled.
 
-The content of this repository includes documentation that covers how to setup the individual devices that make up this testbed and the scripts that perform the core functionality before incorporating a GUI. 
-* The `Documentation` folder shows how to configure the Raspberry Pi's specific to our control network (siwtch network) and the computer that will function as the Testbed Controller. 
-* The `Testbed Scripts` folder contains the bash scripts that perform the core functionality of the Testbed Controller 
-  * This folder requires three subfolders for the different categories of `Testbed Scripts` including `Analysis`, `Configuration` and `Test` 
+The testbed architecture consists of a _Control Network_ and _Test Network(s)_ as shown above. The control network connects all RPi nodes to the TC. The Test Network(s) consist of WiFi router(s) that the RPi nodes can connect to. The iperf network performance analysis tool is used to generate traffic and analyze performance of the Test Network(s). RPi nodes on the Test Network(s) can be configured as iperf servers (connected to APs via Ethernet) or iperf clients (connected wirelessly to the APs).
+
+This repository includes documentation that covers how to setup an instance of this testbed, scripts to perform the the testbed's core functionality, and a graphical user interface (GUI) to simplify the use of provided scripts. 
+* The `Documentation` folder includes detailed information describing how to configure the TC/RPi nodes, execute performance analysis tests, and aggregate/analyze test results.   
+* The `Testbed Scripts` folder contains the bash scripts that perform the core functionality of the TC
+  * This folder includes three subfolders for the different categories of scripts, including `Configuration` scripts, `Test` scripts, and `Analysis` scripts. 
 
 # Equipment  
-* Raspberry Pi's (3B+ or 4, two different USB inputs for power supply)
-* Power Supply
-* microSD card reader for computer
-* Linux or  Windows OS 
-* WiFi Routers 
-* Network Switch 
-* Ethernet cables (for connecting # of Raspberry Pi's and PC with the network switch)
+* Raspberry Pi microcontrollers (3B+ or 4, ideally 4G RAM or higher)
+  - microSD cards  
+  - Power cables
+* PC for Testbed Controller (Ideally, running Ubuntu Linux) 
+* Networking Equipment
+  - WiFi Router(s) 
+  - Network Switches 
+  - Ethernet cables
 
 # Chapters
 | Chapter | Topic | Image | Link | Summary 
