@@ -1,3 +1,8 @@
+# Control Network Configuration
+## Overview
+_coming soon_
+
+
 # Getting the Connected Access Point (get_ap.sh)
 
 This script is used to determine which Access Point a selected Pi is connected to. The script can take in a range of ip addresses, given that it has the prefix "10.1.1.x" (x is the ip from arguments)

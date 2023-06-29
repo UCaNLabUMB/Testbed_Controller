@@ -1,3 +1,8 @@
+# Control Network Configuration
+## Overview
+_coming soon_
+
+
 # Verifying Connection Status of Each Pi on the Control Network (get_ip.sh)
 Before we begin testing, it is important that we check if we are able to communicate with all devices on our local access network (LAN). To do this, we can create a script which takes in the last three digits of an IP address (assuming that we are working with the subnet 255.255.255.0). The IP convention for this testbed is 10.1.1.x, with ranging from the values 0 to 255, so the IP prefix for this script will be 10.1.1.  
 
