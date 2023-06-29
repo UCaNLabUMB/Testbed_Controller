@@ -1,5 +1,5 @@
 # Testbed Architecture
-![GitHub Logo](Documentation/Images/TB_Architecture2.png)
+![GitHub Logo](Images/TB_Architecture2.png)
 
 ## Overview
 The architecture includes a Control Network, which connects the Testbed Controller (TC) with all the RPi nodes, and a Test Network which connects the wireless AP to the server nodes (usually via Ethernet) and to the clients nodes via WiFi. The iperf tests evaluate performance of the Test Network.
