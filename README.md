@@ -31,7 +31,7 @@ This repository includes documentation that covers how to setup an instance of t
 # Chapters
 | Chapter | Topic | Image | Summary 
 | --- | --- | --- | --- |
-|  0  | [Testbed Architecture](https://github.com/UCaNLabUMB/Testbed_Controller/blob/main/Documentation/TB_Architecture.md)              | <img src="/Documentation/Images/TB_Architecture.png" /> | Overview and Description of the testbed architecture and network conventions. 
+|  0  | [Testbed Architecture](https://github.com/UCaNLabUMB/Testbed_Controller/blob/main/Documentation/TB_Architecture2.md)             | <img src="/Documentation/Images/TB_Architecture.png" /> | Overview and Description of the testbed architecture and network conventions. 
 |  1  | [Setting Up the TC](https://github.com/UCaNLabUMB/Testbed_Controller/blob/main/Documentation/Setup_TC.md)                        | <img src="/Documentation/Images/TC.png" />              | Setup necessary software and network configuration settings for the TC to communicate with RPi Nodes and execute configuration / test commands.
 |  2  | [Setting Up RPi Nodes](https://github.com/UCaNLabUMB/Testbed_Controller/blob/main/Documentation/Setup_RPi_Node.md)               | <img src="/Documentation/Images/RPi_node.jpg" />        | Setup necessary software and network configuration settings for the RPi Nodes to communicate with the TC. 
 |  3  | [Control Network Configuration](https://github.com/UCaNLabUMB/Testbed_Controller/blob/main/Documentation/Config_Control_Net.md)  | <img src="/Documentation/Images/Control_Net.png" />     | Configure the control network to verify that IP conventions are correctly set and passwordless SSH is setup to interact with RPi nodes via scripts.
