@@ -1,24 +1,48 @@
-# Running the Testbed 
-## Cloning the Repository
-Navigate to the directory on your device that you would like to save this repository. Right click in that directory and select 'Git Clone...' 
-After you have downloaded the repository grom Github...
-## Configuring the Testbed Through the Terminal 
-Once your Raspberry Pi's are setup on the network switch and ready to be configured, search 'Bash' in the Windows search bar. Selecting this application will open up an Ubuntu terminal that is set in the default directory. You will need to cd into the directory that the Testbed Rpository is stored. Once you are in this directory from the Ubuntu terminal, cd into the `Testbed_Scripts` folder and then into the `Configuration` folder. From this point, there are three configuration scripts to run from the terminal. These scripts are used to verify and configure these Raspberry Pi's to operate in the testbed accordingly. First, you will check the available Raspberry Pi's on the network switch with the `get_ip.sh` script. 
-Before we begin testing, it is important that we check if we are able to communicate with all devices on our local access network (LAN). To do this, we can create a script which takes in the last three digits of an IP address (assuming that we are working with the subnet 255.255.255.0). The IP convention for this testbed is 10.1.1.x, with ranging from the values 0 to 255, so the IP prefix for this script will be 10.1.1.
+# Setting Up the Testbed Controller (TC)
+## Overview
+The TC is the primary device for configuring the testbed nodes, initiating tests, and aggregating data. We suggest using Ubuntu Linux as the OS for your TC (setup described below), but we also provide documentation for setting up your TC in a [Windows machine](https://github.com/UCaNLabUMB/Testbed_Controller/blob/main/Documentation/Setup_TC_Windows.md).
 
-To begin, we must first connect each device to a LAN with the use of a switch. Each device must be set to the IP convention and subnet mentioned above (10.1.1.x and 255.255.255.0). Some devices may not have the option to input a subnet mask such as the Raspberry Pi, so another way of creating a subnet would be to type "/24" at the end of the IP address (i.e., 10.1.1.5/24).
-
-The name of the bash script we will be using is "check_ip.sh," which will be run in the terminal. The functionality of this script is as follows:
-
-This script uses two flag parameters, which are –r and –l.
-
-· -r: This flag parameter allows the user to input a range of addresses to be checked. For example, if we had 10 devices, ranging from 10.1.1.1 to 10.1.1.10, the command to check this range using this flag would be "bash check_ip.sh -r 1 10"
-
-· -l: This flag parameter allows the user to create a list of individual IP addresses to be checked. For example, if we wanted to check the addresses 10.1.1.1, 10.1.1.4, 10.1.1.7, and 10.1.1.9, we'd use the following command: "bash check_ip.sh -l 1 4 7 9"
-
-· Note: If no flag is set upon running the bash script, the script will default to checking individual IP addresses, prompting the user to input individual IP addresses.
-
-When this script is run given the commands above, it pings each device and determines whether we are able to establish a connection to the selected device. If we are able to establish a connection with the devices, it outputs a message stating that the device is up (I.e., 10.1.1.1 is up). If not, then it outputs the message, "10.1.1.1 is down.
+To describe the TC setup, we describe the following steps:
+* Ubuntu Installation
+* TC IP Assignment
+* Testbed Code Setup
+* _FUTURE_ GUI Setup
 
 
-Once the connected devices on the network switch have been determined, we will select groups of Raspberry Pi and designate which Access Point they will be connceted to. At this point you can run the `set_ap.sh` script with command line arguments. The first and second command line arguments have to do with the range of Raspberry Pi's you will be configuring. The third and forth command line arguments will be the SSID and Password of the Access Point you want to connect this group of advices to. For example, if I wanted to have the group of Pi's, 10.1.1.101, 10.1.1.102, 10.1.1.103, 10.1.1.104, connect to the same Access Point, I would run the command `bash set_ap.sh 101 104 SSID password`. Once this script is complete, the Raspberry Pi's will reboot and connect to the specified SSID. The script may still be running after the Pi's are rebooted, but you can stop this process with `Ctrl + C'. 
+** Ubuntu Installation
+We suggest installing Ubuntu OS rather than using a virtual machine. For current testing, we use Ubuntu version 22.04 LTS. To do this, follow the [Ubuntu Installation tutorial](https://ubuntu.com/tutorials/install-ubuntu-desktop#1-overview) for Ubuntu Desktop.
+
+
+** IP Assignment
+Once you have a computer with Ubuntu installed, you should assign a static IP address to the Ethernet interface that you will use to connect to the testbed control network. In Ubuntu 22.04, you can do this as follows:
+* Go to Settings -> Network and click on the gear symbol next to the desired network interface.
+* Select the "IP v4" tab and assign "IPv4 Method" to "Manual"
+* Enter the TC's IP address as `10.1.1.1` with a Netmask of `255.255.255.0`
+* Select Apply
+
+**NOTE:** We will verify the TC network settings after setting up the RPi Nodes.
+
+
+** Testbed Code Setup
+While the testbed code can be directly downloaded from the Github repository, we suggest using GitHub Desktop to clone the testbed repository so that you can easily pull future updates into your local repository. Since Github Desktop is not officially supported by Github, it needs to be installed with the GDebi Package Installer. Follow these steps to install GitHub Desktop on Ubuntu:
+* Open the "Ubuntu Software" and install _GDebi Package Installer_.
+* Download the most recent GitHub desktop release as a .deb file from:
+  - [https://github.com/shiftkey/desktop/releases/](https://github.com/shiftkey/desktop/releases/)
+* Open GDebi Package Installer and install the downloaded .deb package
+  - File -> Open and select the downloaded .deb file
+  - Select "Install Package"
+* Open GitHub Desktop and login to your Github account
+
+Once you have GitHub Desktop installed/setup, you can clone the Testbed Repository to a local repository. After cloning the repository, you should find the following directories in the location where the local repository was created:
+* `Documentation` where can be found description about the scripts and how to implement them. 
+* `GUI_Code` which is a MATLAB graphical user interface that helps interact with the testbed scripts in a more user-friendly format, and 
+* `Testbed_Scripts` that contains two subfolders, Configuration and Test.
+  - `Configuration`: Holds scripts to get general information about the nodes, verify connection between the Testbed Controller, APs, clients and servers, and check for the AP information.
+  - `Test`: Contains scripts to run the testbed by initiating the server (server_start.sh) and the clients (client_start.sh), and to aggregate / parse collected data.
+
+
+## Next Chapter
+[Testbed Architecture](https://github.com/UCaNLabUMB/Testbed_Controller/blob/main/Documentation/TB_Architecture.md)
+
+## Previous Chapter
+[Setting Up RPi Nodes](https://github.com/UCaNLabUMB/Testbed_Controller/blob/main/Documentation/Setup_RPi_Node.md)

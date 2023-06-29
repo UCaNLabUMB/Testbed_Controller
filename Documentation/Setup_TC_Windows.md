@@ -1,4 +1,7 @@
 # Getting Started 
+
+**NOTE:** The information below is legacy documentation, and has not been tested with recent edits to the testbed architecture.
+
 ## Setting up the Linux Terminal 
 Open the 'Settings' window and select 'Update and Security'.
 Go to the 'For Developers' tab. From here, select 'Enable Developer Mode'. 
