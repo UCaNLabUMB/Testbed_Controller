@@ -1,17 +1,36 @@
-# Control Network Configuration
+# Test Network Configuration
 ## Overview
 _coming soon_
 
+* Setup Access Points (APs)
+* Configure DHCP Reservations
+* iperf Server Node Setup
+* Client Node WiFi Setup
+* Verify Test Network Settings
 
-# Getting the Connected Access Point (get_ap.sh)
 
-This script is used to determine which Access Point a selected Pi is connected to. The script can take in a range of ip addresses, given that it has the prefix "10.1.1.x" (x is the ip from arguments)
-The flags are as follows:
-* -r <val1> <val2>
+## Setup APs
+_coming soon_
 
-This flag takes in two integer arguments. The first value is the starting range and the second is the last value in the range. The output will print the SSID of the Access Point it is connected to.
 
-* -i <val1>
+## Configure DHCP Reservations
+_coming soon_
 
-This flag is for getting Access Point information for a single Pi. 
 
+## iperf Server Node Setup
+_coming soon_
+
+
+## Client Node WiFi Setup
+_coming soon_
+
+
+## Verify Test Network Settings
+_coming soon_
+
+
+## Previous Chapter
+[Control Network Configuration](https://github.com/UCaNLabUMB/Testbed_Controller/blob/main/Documentation/Config_Control_Net.md)
+
+## Next Chapter
+[Testing and Analysis](https://github.com/UCaNLabUMB/Testbed_Controller/blob/main/Documentation/Testing.md)
