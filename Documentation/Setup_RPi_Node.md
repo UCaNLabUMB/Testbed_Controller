@@ -3,10 +3,10 @@
 The RPi nodes are the test points that will be configured/controlled by the TC and used as test points within the testbed. While we define the setup for test nodes as Raspberry Pi microcontrollers, the nodes could technically be any linux device configured with the relevant software and network configuration.
 
 To describe the RPi node setup, we describe the following steps:
-* OS Installation
-* Install Relevant Software
-* Pi Node IP Assignment
-* Set Intital Wireless Network settings
+* [OS Installation](https://github.com/UCaNLabUMB/Testbed_Controller/blob/main/Documentation/Setup_RPi_Node.md#installing-the-operating-system-os)
+* [Install Relevant Software](https://github.com/UCaNLabUMB/Testbed_Controller/blob/main/Documentation/Setup_RPi_Node.md#test-pi-and-install-relevant-software)
+* [Pi Node IP Assignment](https://github.com/UCaNLabUMB/Testbed_Controller/blob/main/Documentation/Setup_RPi_Node.md#rpi-node-configuration)
+* [Set Intital Wireless Network settings](https://github.com/UCaNLabUMB/Testbed_Controller/blob/main/Documentation/Setup_RPi_Node.md#pi-wireless-setup)
 
 
 ## Installing the Operating System (OS)
@@ -43,6 +43,8 @@ For simplicity, we describe how to setup the RPi node's static IP address with t
 * Click Apply and then Close
   - If the ethernet cable is connected when you change the IP address, it will not reflect until you disconnect and reconnect the cable!
 
+
+## Pi Wireless Setup
 After you have set the static IP, you can now disconnect the Ethernet cable (if using a wired connection to the Internet). To prepare the node for wireless connection in the testbed, click on the network icon again (from the Desktop) and select "Turn on WLAN". After this selection, if you click on the network icon again it will ask to "Click here to select wireless LAN country". Select this set your country (this will impact the available WLAN channels that the RPi node can use).
 
 Your pi is now configured, and you shouldn't need to connect it to a monitor again! You can shut down the Pi and repeat this process for the set of Pis you will be using in your testbed. Just remember to uniquely identify each node with a different device address (i.e., value of "X" in your IP address). If you have access to a label maker, it is helpful to indicate the number that you used for each node on the Pis.

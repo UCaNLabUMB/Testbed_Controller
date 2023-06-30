@@ -3,9 +3,9 @@
 The TC is the primary device for configuring the testbed nodes, initiating tests, and aggregating data. We suggest using Ubuntu Linux as the OS for your TC (setup described below), but we also provide documentation for setting up your TC in a [Windows machine](https://github.com/UCaNLabUMB/Testbed_Controller/blob/main/Documentation/Setup_TC_Windows.md).
 
 To describe the TC setup, we describe the following steps:
-* Ubuntu Installation
-* TC IP Assignment
-* Testbed Code Setup
+* [Ubuntu Installation](https://github.com/UCaNLabUMB/Testbed_Controller/blob/main/Documentation/Setup_TC.md#ubuntu-installation)
+* [TC IP Assignment](https://github.com/UCaNLabUMB/Testbed_Controller/blob/main/Documentation/Setup_TC.md#ip-assignment)
+* [Testbed Code Setup](https://github.com/UCaNLabUMB/Testbed_Controller/blob/main/Documentation/Setup_TC.md#testbed-code-setup)
 * _FUTURE_ GUI Setup
 
 
@@ -42,6 +42,10 @@ Once you have GitHub Desktop installed/setup, you can clone the Testbed Reposito
 
 To verify that the TC is able to run the scripts, you can test by going to the `Testbed_Scripts/Configuration` directory in a terminal and running `bash verify_nodes.sh -h`. This should display help information about the first script that we will use after setting the RPi Nodes.
 ![GitHub Logo](Images/verify_nodes_help.png)
+
+
+## GUI Setup
+_Coming Soon_
 
 
 ## Previous Chapter

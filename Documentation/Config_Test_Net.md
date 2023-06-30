@@ -2,11 +2,11 @@
 ## Overview
 _coming soon_
 
-* Setup Access Points (APs)
-* Configure DHCP Reservations
-* iperf Server Node Setup
-* Client Node WiFi Setup
-* Verify Test Network Settings
+* [Setup Access Points (APs)](https://github.com/UCaNLabUMB/Testbed_Controller/blob/main/Documentation/Config_Test_Net.md#setup-aps)
+* [Configure DHCP Reservations](https://github.com/UCaNLabUMB/Testbed_Controller/blob/main/Documentation/Config_Test_Net.md#configure-dhcp-reservations)
+* [iperf Server Node Setup](https://github.com/UCaNLabUMB/Testbed_Controller/blob/main/Documentation/Config_Test_Net.md#iperf-server-node-setup)
+* [Client Node WiFi Setup](https://github.com/UCaNLabUMB/Testbed_Controller/blob/main/Documentation/Config_Test_Net.md#client-node-wifi-setup)
+* [Verify Test Network Settings](https://github.com/UCaNLabUMB/Testbed_Controller/blob/main/Documentation/Config_Test_Net.md#verify-test-network-settings)
 
 
 ## Setup APs

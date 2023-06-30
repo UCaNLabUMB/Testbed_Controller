@@ -2,16 +2,20 @@
 ![GitHub Logo](Images/TB_Architecture2.png)
 
 ## Overview
-The architecture includes a Control Network, which connects the Testbed Controller (TC) with all the RPi nodes, and a Test Network which connects the wireless AP to the server nodes (usually via Ethernet) and to the clients nodes via WiFi. The iperf tests evaluate performance of the Test Network.
+The architecture includes a Control Network, which connects the Testbed Controller (TC) with all the RPi nodes, and a Test Network which connects the RPi nodes to access point(s) in the test environment. The RPi nodes run iperf tests to evaluate performance of the Test Network.
 
-The base architecture for this testbed uses a wired Ethernet network to connect the TC and RPi nodes in order to implement the control network. The Test network is formed by RPi nodes connected to one of the WiFi access points (APs) and enabled as either an iperf server or iperf client.
-* Client nodes connect to AP via WiFi
-* Server nodes are wired to the AP
+The base architecture for this testbed uses a wired Ethernet network to connect the TC and RPi nodes in order to implement the Control Network. The Test Network is formed by RPi nodes connected to one of the WiFi access points (APs) and enabled as either an iperf server or iperf client. Client nodes connect to AP via WiFi. Server nodes are wired to the AP.
+
+In this section, we will provide general information about the testbed structure, including:
+* [Testbed Components](https://github.com/UCaNLabUMB/Testbed_Controller/blob/main/Documentation/TB_Architecture.md#testbed-components)
+* [Network Conventions and Addresses](https://github.com/UCaNLabUMB/Testbed_Controller/blob/main/Documentation/TB_Architecture.md#network-conventions)
+* [Software Tools](https://github.com/UCaNLabUMB/Testbed_Controller/blob/main/Documentation/TB_Architecture.md#software-tools)
+* [Data Collection Procedure](https://github.com/UCaNLabUMB/Testbed_Controller/blob/main/Documentation/TB_Architecture.md#data-collection-procedure)
 
 
 ## Testbed Components
 * **Testbed Controller (TC):** Centralized station (PC) that allows access and control to all nodes remotely via ssh across a dedicated control network.
-* **Testbed Nodes (Clients and Servers):** Raspberry Pi microcontrollers with iperf tool installed to test network performance for given configurations.
+* **RPi Nodes (Clients and Servers):** Raspberry Pi microcontrollers with iperf tool installed to test network performance for given configurations.
 * **Access Points (APs):** COTS WiFi router(s) for testing network connectivity and performance analysis. 
 * **Other Components:**
   - Pi Components (SSD Cards and Power Cables)
@@ -20,7 +24,7 @@ The base architecture for this testbed uses a wired Ethernet network to connect 
   - Monitor/Keyboad/Mouse is needed for setting up RPi Nodes
 
 
-## Network Conventions
+## Network Conventions and Addresses
 The Control Network and Test network use a 10.1.1.X subnet and 192.168.Y.X subnet, respectively, where: 
 * Y = AP number
 * X = Device address (i.e., node number)

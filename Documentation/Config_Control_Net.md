@@ -1,13 +1,13 @@
 # Control Network Configuration
 ## Overview
 Before running performance analysis tests on the wireless network, we will first configure the control network and verify that the network conventions are setup appropriately. The process for this configuration is as follows:
-* Network Setup
+* [Network Setup](https://github.com/UCaNLabUMB/Testbed_Controller/blob/main/Documentation/Config_Control_Net.md#control-network-setup)
   - Connect Control Network Hardware
   - Verify Network Connections using the `verify_nodes.sh` Testbed Script
-* Setup passwordless SSH between TC and RPi Nodes
-* Verify SSH Connections using the `get_info_pi.sh` Testbed Script
-* Complete Setup/Installation of Testbed Software on RPi Nodes 
-* Setup VNC Viewer (Optional)
+* [Setup passwordless SSH between TC and RPi Nodes](https://github.com/UCaNLabUMB/Testbed_Controller/blob/main/Documentation/Config_Control_Net.md#setup-passwordless-ssh)
+* [Verify SSH Connections using the `get_info_pi.sh` Testbed Script](https://github.com/UCaNLabUMB/Testbed_Controller/blob/main/Documentation/Config_Control_Net.md#verify-ssh-configuration)
+* [Complete Setup/Installation of Testbed Software on RPi Nodes](https://github.com/UCaNLabUMB/Testbed_Controller/blob/main/Documentation/Config_Control_Net.md#install-testbed-software-on-rpi-nodes)
+* [Setup VNC Viewer](https://github.com/UCaNLabUMB/Testbed_Controller/blob/main/Documentation/Config_Control_Net.md#setup-vnc-viewer-optional) (Optional)
 
 **NOTE:** Once the hardware connection is complete, you should be able to complete all remaining tasks from the TC.
 
