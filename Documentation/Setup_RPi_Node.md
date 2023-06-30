@@ -1,50 +1,54 @@
 # Setting Up the Raspberry Pi Nodes (RPi Nodes)
 ## Overview
-_COMING SOON_
+The RPi nodes are the test points that will be configured/controlled by the TC and used as test points within the testbed. While we define the setup for test nodes as Raspberry Pi microcontrollers, the nodes could technically be any linux device configured with the relevant software and network configuration.
+
+To describe the RPi node setup, we describe the following steps:
+* OS Installation
+* Install Relevant Software
+* Pi Node IP Assignment
+* Set Intital Wireless Network settings
 
 
-## Downloading the Operating System
-Once you are ready to set up a Raspberry Pi, you will need to secure a few things:
-* Raspberry Pi
-* Power Supply 
-* microSD card reader for computer
-* Raspberry Pi Imager https://www.raspberrypi.org/software/ 
+## Installing the Operating System (OS)
+The OS for an RPi microcontroller (Pi 3 B+ or Pi 4) is stored on a microSD card. Accordingly, we must first configure a microSD card with the relevant OS. We will describe the setup for using _Pi OS_, however we have also tested the system with RPis running Ubuntu OS. To configure the microSD card, we suggest using Raspberry Pi Imager as described here.
+* First, download the [Raspberry Pi Imager](https://www.raspberrypi.org/software/) software for the computer you will be using to setup your microSD card.
+* Next, run Raspberry Pi Imager (see image below)
+  - Select the desired OS (ideally, `64 bit Pi OS`)
+  - Select the desired storage (i.e., your microSD card)
+  - Select _Settings_ (lower right corner) and choose "Enable SSH" with the "Use password authentication" option so you don’t have to type in the public key. The key will be added later through the TC.
+  - In the _Settings_ menu, select "Set Username and Password" and provide a username/password that _should be the same for all RPi nodes in the testbed_.
+  - Select "Set locale settings" and set your location
+  - Select "Save" to save the settings
+  - Select "WRITE" to begin writing the OS onto the microSD card, and select "yes" to confirm that you want to format the microSD card.
 
-After installation, plug the microSD card reader into your computer with the microSD card in it. Run the Raspberry Pi Imager and make the following selections:
-
-![](/Documentation/Images/rpi_imager.png)
-
-* For 'Choose OS': We will be using Raspbian PI OS 32-bit for the rest of this repository 
-* For 'Choose Storage': Select the storage option that applies to your microSD card reader 
-* Press Ctrl + Shift + X 
-  * Select 'Enable SSH'
-  *  Select 'Use Password Authentication' and verify the password if you want to SSH into these Pi's later on rather than a monitor 
-  *  Since we want to start installing modules once we start our Raspberry Pi, select 'Configure WiFi
-    * Write the SSID and Password of the Access Point you would like to connect to (must have an internet connection for module installations)
-  * Select the correct 'Time Locale Settings'
-  * There is no need to edit 'Persistent Settings' 
-* Exit this window and Press 'Write' 
-
-# Modules 
-Now that the Operating System is installed, put your microSD card into the slot of the Raspberry Pi. If you are using a monitor, hook up the HDMI cable with a mouse and keyboard to the Raspberry Pi. Otherwise, make sure your computer is on the same WiFi network as the one you specified for the Raspberry Pi and go to the command line of your computer and type
-`ssh pi@raspberrypi` where 'raspberrypi' is the hostname of the Raspberry Pi which was congiured in the Raspberry Pi imager. Enter the SSH password you set earlier once you are asked. 
-
-You are now in the terminal of the Raspberry Pi which can also be accomplished through a monitor. The terminal is vital for the rest of this devices setup and you can download the required modules for this testbed. We will need iPerf, hostapd and dnsmasq which can be installed with the following commands:
-
-`sudo apt install iperf`
-
-`sudo apt install iperf3`
-
-Once these are installed, we are ready to configure the Raspberry Pi specifically for the testbed. 
+**NOTE** If you will be setting up multiple RPi nodes, it is helpful to change setting for Image custumization options to "Always Use" so that you do not need to update the settings for every node you are programming.
+![](/Documentation/Images/RPi_Setup.png)
 
 
+## Test Pi and Install Relevant Software 
+Now that the OS is installed, put your microSD card into the slot of the Raspberry Pi. It is possible to setup the Pis so that you never need to connect to a monitor, but (for simplicity) we suggest connecting each node to a monitor/keyboard/mouse and connect to the Internet (ideally via an Ethernet connection) for this one-time configuration. Once the RPi is powered up, open a terminal (CTRL+ALT+t) and install `iperf` with the following commands:
+* `sudo apt install iperf`
+* `sudo apt install iperf3`
 
-# Configuration 
+You can verify the installations are successful by typing `iperf -v` and/or `iperf3 -v` to get the software version that you have just installed.
 
 
+## RPi Node Configuration 
+For simplicity, we describe how to setup the RPi node's static IP address with the Pi OS graphical interface, although this can also be done in the terminal. To start, _right click_ on the arrows in the top right corner of the Desktop, then select "Wireless & Wired Network Settings" and enter the following settings:
+* Set "configure" to _interface_ and _eth0_
+* Disable the option to "Automatically configure empty options"
+* Disable IPv6 
+* Set IP IPv4 Address (`10.1.1.X`) and add subnet mask by including /24 at the end of the address
+  - Note that the "X" in the address should be replaced with a unique number for each node, starting at 101 for the first node.
+* Click Apply and then Close
+  - If the ethernet cable is connected when you change the IP address, it will not reflect until you disconnect and reconnect the cable!
 
+After you have set the static IP, you can now disconnect the Ethernet cable (if using a wired connection to the Internet). To prepare the node for wireless connection in the testbed, click on the network icon again (from the Desktop) and select "Turn on WLAN". After this selection, if you click on the network icon again it will ask to "Click here to select wireless LAN country". Select this set your country (this will impact the available WLAN channels that the RPi node can use).
 
+Your pi is now configured, and you shouldn't need to connect it to a monitor again! You can shut down the Pi and repeat this process for the set of Pis you will be using in your testbed. Just remember to uniquely identify each node with a different device address (i.e., value of "X" in your IP address). If you have access to a label maker, it is helpful to indicate the number that you used for each node on the Pis.
 
-# Finalizing the Setup 
-Your Raspberry Pi is nearly ready to become part of the Testbed network, but it still requires a few more bash scripts which will be covered in another documentation. In order to finalize the configuration settings you have been setting, from the Raspberry Pi terminal run `sudo reboot`. Once the Pi has rebooted, check the static IP of the device with the command `hostname -I`. Only the static ethernet IP address will appear since any wireless network settings were deleted from the `wpa_supplicant` file. 
+## Previous Chapter
+[Setting Up the TC](https://github.com/UCaNLabUMB/Testbed_Controller/blob/main/Documentation/Setup_TC.md)
 
+## Next Chapter
+[Control Network Configuration](https://github.com/UCaNLabUMB/Testbed_Controller/blob/main/Documentation/Config_Control_Net.md)

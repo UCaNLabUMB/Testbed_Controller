@@ -34,13 +34,13 @@ While the testbed code can be directly downloaded from the Github repository, we
 * Open GitHub Desktop and login to your Github account
 
 Once you have GitHub Desktop installed/setup, you can clone the Testbed Repository to a local repository. After cloning the repository, you should find the following directories in the location where the local repository was created:
-* `Documentation` where can be found description about the scripts and how to implement them. 
+* `Documentation` where you can find descriptions of the setup procedure and the various scripts for configuration, testing, and analysis
 * `GUI_Code` which is a MATLAB graphical user interface that helps interact with the testbed scripts in a more user-friendly format, and 
 * `Testbed_Scripts` that contains two subfolders, Configuration and Test.
   - `Configuration`: Holds scripts to get general information about the nodes, verify connection between the Testbed Controller, APs, clients and servers, and check for the AP information.
   - `Test`: Contains scripts to run the testbed by initiating the server (server_start.sh) and the clients (client_start.sh), and to aggregate / parse collected data.
 
-To verify that the TC is able to run the scripts, you can test by going to the `Testbed_Scripts/Configuration` directory in a terminal and running `bash verify_nodes-sh -h`. This should display help information about the first script that we will use after setting the RPi Nodes.
+To verify that the TC is able to run the scripts, you can test by going to the `Testbed_Scripts/Configuration` directory in a terminal and running `bash verify_nodes.sh -h`. This should display help information about the first script that we will use after setting the RPi Nodes.
 ![GitHub Logo](Images/verify_nodes_help.png)
 
 
