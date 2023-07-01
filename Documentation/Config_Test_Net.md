@@ -15,6 +15,7 @@ The main goal here is to configure your AP(s) to align with the testbed conventi
 
 If you have not configured a router before, the first step is to connect to the router (either wirelessly or via Ethernet) and find the router's configuration page. In most cases, this can be accessed through a web browser by typing `192.168.1.1` in the address bar, but this may differ for various routers (or if the router has already been configured as a different subnet). Once you access the configuration page, you will need to enter the router's password to login. 
 * **NOTE:** If you are using the TC to connect to the router, keep in mind that your wired interface has been assigned a static IP and will not be able to communicate with the router! This is also true if you are attempting to connect an RPi node to the router using the Ethernet interface that was assigned a static IP.
+
 ![GitHub Logo](Images/wlan_login.png)
 
 Once you have logged into the router, there are some LAN settings that need to be configured for the testbed, and some WiFi settings that can be configured for whatever test you are running. The description for setting these parameters is described below for a **LinkSYS WRT3200ACM** router, but the parameter options should be similar for whatever router you are using.
@@ -22,12 +23,14 @@ Once you have logged into the router, there are some LAN settings that need to b
 After logging in, we start by selecting "Connectivity" and going the Local Network tab in order to configure the LAN parameters as follows:
 * **Router's IP address/Subnet mask:** The Subnet mask should be 255.255.255.0 and the IP address should be `192.168.Y.1` where Y is unique for each AP in your testbed (e.g., 192.168.1.1, 192.168.2.1, and 192.168.3.1 if you are using three APs in your test environment).
 * **DHCP Server:** Modify the DHCP Server Settings to make sure that the DHCP server can allocate device addresses from `192.168.Y.100` through `192.168.Y.201`. This is to account for the iperf clients (starting at `192.168.Y.101`) and the server (at `192.168.Y.201`). In our router's configuration settings (shown below) this is done by setting the start address as `192.168.Y.100` and maximum DHCP users to a number greater than 101.
+
 ![GitHub Logo](Images/wlan_LAN_settings.png)
 
 After applying the changes above, you can optionally edit your Router's WiFi settings.
 * **SSID/Password:** You should set the SSID and password to something that you can easily remember for connecting RPi nodes as clients.
 * **Channel/Channel Width:** For experimental control, it is best to set a fixed channel that you know is not utilized (this is more easily done in the 5GHz band). Similarly, fixing the channel width can improve the control over your tests to avoid performance effects related to the AP dynamically adapting the channel width (as is done if channel width is set to Auto).
 * **WiFi Mode:** To avoid some variability, it can be helpful to clearly specify the WiFi mode.
+
 ![GitHub Logo](Images/wlan_wifi_settings.png)
 
 
@@ -44,6 +47,7 @@ Once the AP(s) and server nodes are configured, the remaining RPi nodes can be c
 * `bash set_wlan.sh -r 105,106 -s mySSID -p myPassword`
 
 When this script is run on the TC, it tells each RPi node to call a local script that has been stored in the RPi node's testbed directory during the setup process. The local script updates the wireless network configuration so that it connects to the specified WLAN. After calling executing the script, the RPi node(s) will reboot (causing the warning `Connection to 10.1.1.X closed by remote host.` to appear in the TC's terminal). The figure below highlights an instance where we first check the help menu for `set_wlan.sh` and then use the script to connect nodes 105 and 106 to our AP with SSID "UCaNLab_Research_5GHz". It then shows that we can use the `get_info_wifi.sh` script to verify that the nodes have been connected to the correct WLAN, while also displaying the channel in use for this WLAN and the RSSI at each RPi node.
+
 ![GitHub Logo](Images/set_wlan.png)
 
 
@@ -60,9 +64,11 @@ If you have already connected an RPi node to the AP as a server node, you can al
 * `bash get_mac.sh -l 101 -n eth1`
 
 The image below depicts an instance where we first use the help flag to learn about the `get_mac.sh` script. We then use the script to determine the WLAN MAC for each of the three nodes, and the MAC address of the adapter, which is connected to node 101.
+
 ![GitHub Logo](Images/get_mac.png)
 
 Now that you have the set of relevant MAC addresses, you can return to the router's configuration page, login, go back to the Local Network tab in the Connectivity page, and select "DHCP Reservations" (or follow a similar process for your specific router). Here, you can specify the desired IP address for each node by associating it with the MAC address for that node's wlan0 interface. Similarly, you can associate the address `192.168.Y.201` with the MAC address of the adapter. If you have a large number of RPi nodes, this can be tedious (and can potentially lead to incorrectly entered MAC addresses). One option to simplify the procedure is to first connect all RPi nodes to the AP with the `set_wlan.sh` script. After doing this, all of the devices will appear in the current DHCP list, as shown below. We can see here that the MAC addresses correspond to the addresses found above with the `get_mac.sh` script. The IP addresses shown here have already been assigned, but at this point they would typically show up as random device addresses from the DHCP range that you specified when setting up your WLAN. 
+
 ![GitHub Logo](Images/DHCP_Res1.png)
 
 From the list above, you can select all of the devices and click "Add DHCP Reservation" to associate their MAC addresses with their current IP addresses. Once the devices have been added to the Reserved list, you can simply edit each entry and update the IP address (and, optionally, the device name) as desired. When you complete the edits and select "OK" the router should reboot and the addresses should be assigned as specified.
@@ -73,6 +79,7 @@ Make sure to assign DHCP reservations for all of your RPi nodes (and for the ada
 
 ## Verify Test Network Settings
 Once you have configured your APs and setup DHCP reservations for all nodes on all APs, we can use the testbed scripts to verify that the network addressing is setup correctly. To check all of the settings, you can use the `set_wlan.sh` and 'get_ip.sh' scripts to iteratively connect all of the nodes to each AP, and check the IP assignments. The instance shown below demonstrates the results after assigning our DHCP reservations above. Here, we use the 'get_ip.sh' script and use the `-n` flag to indicate that we are requesting all addresses on the Test Network. In the first call of 'get_ip.sh', we see that node 101 has two addresses on the Test Network since it is connected wirelessly and via Ethernet with the adapter. Before repeating the call, we quickly connected to node 101 with VNC viewer and disabled the WLAN since it is being used as a server. Therefore, the second call shows that the Test Network is setup as desired with node 101 ready for configuration as an iperf server, and nodes 105/106 ready to be configured as iperf clients for analysis of the wireless network. The final call revisits the `get_info_wifi.sh` script to further verify that we are connected to the appropriate AP (in addition to the IP address verification from the previous call).
+
 ![GitHub Logo](Images/get_ip_verify.png)
 
 ## Previous Chapter
