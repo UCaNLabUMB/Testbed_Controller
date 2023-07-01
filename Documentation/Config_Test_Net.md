@@ -53,9 +53,19 @@ In the design of the testbed, the Test Network IP address for each of the client
 
 Similarly, the server nodes should be assigned the address `192.168.Y.201` so that client nodes know where to connect. This is unrelated to the node number of the RPi node that is used as the server, so we also setup a DHCP reservation for the MAC address associated with the USB to Ethernet adapter. This ensures that the address will always be assigned to the eth1 interface for whatever RPi node is connected to the specific adapter, and allows the nodes to be interchangeable as servers as long as the adapter is kept with the associated AP.
 
-In order to set the DHCP reservations at each AP, _OVERVIEW OF DHCP RESERVATIONS AND `get_mac.sh` SCRIPT COMING SOON_
-_Image Coming Soon_
+In order to set the DHCP reservations at each AP, we need to know the MAC addresses of the RPi nodes. This can be determined using the testbed's `get_mac.sh` script in the Configuration directory. This script uses the `-l` or `-r` flags to specify the set of nodes to be polled, and also uses the `-n` flag to specify which network interface you are interested in. By default, the script polls the specified RPi nodes to get the MAC address of their eth0 interface, but we are interested in the wlan0 interface MAC addresses so that they can be used for specifying DHCP reservations. The following command will list the wlan0 MAC addresses for nodes 101 through 110:
+* `bash get_mac.sh -r 101,110 -n wlan0`
 
+If you have already connected an RPi node to the AP as a server node, you can also use the get_mac.sh script to determine the adapters MAC address. For example, if node 101 is connected as a server you can run the following command:
+* `bash get_mac.sh -l 101 -n eth1`
+
+_Image Coming Soon (get_mac.sh)_
+
+Now that you have the set of relevant MAC addresses, you can return to the router's configuration page, login, go back to the Local Network tab in the Connectivity page, and select "DHCP Reservations" (or follow a similar process for your specific router). Here, you can specify the desired IP address for each node by associating it with the MAC address for that node's wlan0 interface. Similarly, you can associate the address `192.168.Y.201` with the MAC address of the adapter.
+
+_Image Coming Soon DHCP Reservations_
+
+Make sure to assign DHCP reservations for all of your RPi nodes (and for the adapter's Ethernet interface), and repeat this process for each AP in your testbed. This process only needs to be done once, and will ensure that the appropriate IP addresses are assigned whenever nodes are assigned to new WLANs.
 
 
 ## Verify Test Network Settings
