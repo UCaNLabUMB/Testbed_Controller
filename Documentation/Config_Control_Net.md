@@ -43,7 +43,7 @@ The code below is an example for configuring passwordless SSH for the 3 nodes ve
 
 ## Verify SSH Configuration
 If the passwordless ssh setup is successful, you should now be able to use the majority of the other testbed scripts to interact with the RPi nodes in your testbed. To verify that everything is setup correctly, we can test using the `get_info_pi.sh` script. This script has a set of optional flags related to potential information of interest for each node, and allows for users to easily aggregate the information about all nodes. The instance below shows how we have used the script to determine our nodes' microSD card memory, available RAM, installed OS, and hardware information. If this information is displayed for all of the nodes in your system without any errors (and without requiring that you enter a password), then the passwordless SSH is setup and you are almost ready to start testing!
-![GitHub Logo](Images/get_ip.png)
+![GitHub Logo](Images/get_info_pi.png)
 
 
 ## Install Testbed Software on RPi Nodes
