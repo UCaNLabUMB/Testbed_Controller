@@ -10,7 +10,7 @@ To describe the RPi node setup, we describe the following steps:
 
 
 ## Installing the Operating System (OS)
-The OS for an RPi microcontroller (Pi 3 B+ or Pi 4) is stored on a microSD card. Accordingly, we must first configure a microSD card with the relevant OS. We will describe the setup for using _Pi OS_, however we have also tested the system with RPis running Ubuntu OS. To configure the microSD card, we suggest using Raspberry Pi Imager as described here.
+The OS for an RPi microcontroller (Pi 3 B+ or Pi 4) is stored on a microSD card. Accordingly, we must first configure a microSD card with the relevant OS. We will describe the setup for using _Pi OS_, however we have also tested the system with RPis running Ubuntu OS (some minor modifications are needed). To configure the microSD card, we suggest using Raspberry Pi Imager as described here.
 * First, download the [Raspberry Pi Imager](https://www.raspberrypi.org/software/) software for the computer you will be using to setup your microSD card.
 * Next, run Raspberry Pi Imager (see image below)
   - Select the desired OS (ideally, `64 bit Pi OS`)
@@ -22,6 +22,7 @@ The OS for an RPi microcontroller (Pi 3 B+ or Pi 4) is stored on a microSD card.
   - Select "WRITE" to begin writing the OS onto the microSD card, and select "yes" to confirm that you want to format the microSD card.
 
 **NOTE** If you will be setting up multiple RPi nodes, it is helpful to change setting for Image custumization options to "Always Use" so that you do not need to update the settings for every node you are programming.
+
 ![](/Documentation/Images/RPi_Setup.png)
 
 
@@ -38,14 +39,14 @@ For simplicity, we describe how to setup the RPi node's static IP address with t
 * Set "configure" to _interface_ and _eth0_
 * Disable the option to "Automatically configure empty options"
 * Disable IPv6 
-* Set IP IPv4 Address (`10.1.1.X`) and add subnet mask by including /24 at the end of the address
-  - Note that the "X" in the address should be replaced with a unique number for each node, starting at 101 for the first node.
+* Set IPv4 Address (`10.1.1.X`) and add subnet mask by including /24 at the end of the address
+  - The "X" in the address should be replaced with a unique number for each node, starting at 101 for the first node.
 * Click Apply and then Close
-  - If the ethernet cable is connected when you change the IP address, it will not reflect until you disconnect and reconnect the cable!
+  - If the Ethernet cable is connected when you change the IP address, it will not reflect until you disconnect and reconnect the cable!
 
 
 ## Pi Wireless Setup
-After you have set the static IP, you can now disconnect the Ethernet cable (if using a wired connection to the Internet). To prepare the node for wireless connection in the testbed, click on the network icon again (from the Desktop) and select "Turn on WLAN". After this selection, if you click on the network icon again it will ask to "Click here to select wireless LAN country". Select this set your country (this will impact the available WLAN channels that the RPi node can use).
+After you have set the static IP, you can now disconnect the Ethernet cable (if using a wired connection to the Internet). To prepare the node for wireless connection in the testbed, click on the network icon again (from the Desktop) and select "Turn on WLAN". After this selection, if you click on the network icon again it will ask to "Click here to select wireless LAN country". Select this and specify your country (this will impact the available WLAN channels that the RPi node can use).
 
 Your pi is now configured, and you shouldn't need to connect it to a monitor again! You can shut down the Pi and repeat this process for the set of Pis you will be using in your testbed. Just remember to uniquely identify each node with a different device address (i.e., value of "X" in your IP address). If you have access to a label maker, it is helpful to indicate the number that you used for each node on the Pis.
 

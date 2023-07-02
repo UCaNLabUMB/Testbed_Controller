@@ -22,10 +22,11 @@ _Image Coming Soon_
 
 ### Network Verification
 We will first confirm that the TC can communicate with all devices on our local access network (LAN). To do this, we use the testbed's `verify_nodes.sh` script that should be in your local testbed repository. We have already seen this script briefly when ensuring that the testbed code was installed, but we will now use the script to verify that the TC can communicate with all RPi nodes. The help option, `bash verify_nodes.sh -h`, shows the two flags that we can use for this script. This convention is common across most scripts that we use for the testbed.
-*-l: This flag parameter allows the user to indicate a comma separated list of nodes that we should verify. For example, if we wanted to check the addresses 10.1.1.101, 10.1.1.104, and 10.1.1.107 we would use the command `bash verify_nodes.sh -l 101,104,107`.
-*-r: This flag parameter allows the user to input a range of nodes to be verified. For example, if we had 10 devices, ranging from 10.1.1.101 to 10.1.1.110, we would use the command `bash verify_nodes.sh -r 101,110`.
+* `-l`: This flag parameter allows the user to indicate a comma separated list of nodes that we should verify. For example, if we wanted to check the addresses 10.1.1.101, 10.1.1.104, and 10.1.1.107 we would use the command `bash verify_nodes.sh -l 101,104,107`.
+* `-r`: This flag parameter allows the user to input a range of nodes to be verified. For example, if we had 10 devices, ranging from 10.1.1.101 to 10.1.1.110, we would use the command `bash verify_nodes.sh -r 101,110`.
 
 When this script is run, it pings each requested node and determines if the TC receives a response. The example below shows an instance where we first request the help menu, and then use the script to check the status of nodes 101 through 106. In this case, we do not have nodes 102 through 104 connected. Accordingly, the script indicates that 101, 105, and 106 are "up" and the other nodes are "down" (i.e., the TC can not communicate with them). We then use the list flag so that only the connected devices are checked.
+
 ![GitHub Logo](Images/verify_nodes_full.png)
 
 
@@ -42,14 +43,18 @@ The code below is an example for configuring passwordless SSH for the 3 nodes ve
 
 
 ## Verify SSH Configuration
-If the passwordless ssh setup is successful, you should now be able to use the majority of the other testbed scripts to interact with the RPi nodes in your testbed. To verify that everything is setup correctly, we can test using the `get_info_pi.sh` script. This script has a set of optional flags related to potential information of interest for each node, and allows for users to easily aggregate the information about all nodes. The instance below shows how we have used the script to determine our nodes' microSD card memory, available RAM, installed OS, and hardware information. If this information is displayed for all of the nodes in your system without any errors (and without requiring that you enter a password), then the passwordless SSH is setup and you are almost ready to start testing!
+If the passwordless ssh setup is successful, you should now be able to use the majority of the other testbed scripts to interact with the RPi nodes in your testbed. To verify that everything is setup correctly, we can test using the `get_info_pi.sh` script. This script has a set of optional flags related to potential information of interest for each node, and allows for users to easily aggregate the information about all nodes. We also note that the `-u` flag has been included so that you can specify the username you have set for your clients. By default, this is set to ucanlab. You can also modify the bash script(s) directly and set the default username to the username that you have assigned for your RPi nodes (if you want to avoid the need to use the `-u` flag in your commands).
+
+The instance below shows how we have used the script to determine our nodes' microSD card memory, available RAM, installed OS, and hardware information. If this information is displayed for all of the nodes in your system without any errors (and without requiring that you enter a password), then the passwordless SSH is setup and you are almost ready to start testing!
+
 ![GitHub Logo](Images/get_info_pi.png)
 
 
 ## Install Testbed Software on RPi Nodes
-In this last step, we use the testbed's `setup_pis.sh` script to create the necessary directory structure on the RPi nodes, and to copy over some scripts that will eventually be run on the RPi nodes. This is done to provide autonomy of the nodes, allowing the TC to send a command to run a script rather that having the TC send the script's funcionality step-by-step via SSH. This script has the conventional `-l` and `-r` flags used in the testbed. For instance, we use the following command for the three node example:
+In this step, we use the testbed's `setup_pis.sh` script to create the necessary directory structure on the RPi nodes, and to copy over some scripts that will eventually be run on the RPi nodes. This is done to provide autonomy of the nodes, allowing the TC to send a command to run a script rather that having the TC send the script's funcionality step-by-step via SSH. This script has the conventional `-l` and `-r` flags used in the testbed. For instance, we use the following command for the three node example:
 * `bash setup_pis.sh -l 101,105,106`
 
+**NOTE:** The `setup_pis.sh` script also includes a `-c` flag that clears the testbed directory on the RPi nodes. This is helpful if you have collected data from multiple experiments and you've already aggregated the data at the TC. We intentionally leave local copies of collected data on the RPi nodes so that they can be pulled again in the future if needed, but you can always use the clear flag with `setup_pis.sh` if you want to remove all stored data on the RPi nodes.
 
 
 ## Setup VNC Viewer (Optional)
@@ -58,8 +63,9 @@ One of the reasons for using the Desktop version of Pi OS (rather than the "Lite
 * type `sudo raspi-config` to bring up a configuration menu for the Pi
 * Select "Interface Options" and then select "VNC Option" and then select "Yes" 
   - The raspi-config menu will disappear momentarily. Once it comes back it will tell you that VNC Server has been enabled. Select OK, and then scroll right to select "Finish" and close the raspi-config menu.
-* In the terminal, type "sudo reboot" to reboot the Pi and start the VNC server.
-  - Make sure that you are still seeing the Pi's terminal! If you have closed the SSH connection already, you will reboot the TC.
+* In the terminal, type `sudo reboot` to reboot the Pi and start the VNC server.
+  - Make sure that you are still seeing the Pi's terminal before entering the reboot command! 
+  - If you have already closed the SSH connection, `sudo reboot` will reboot the TC.
 
 After VNC is enabled on the RPi nodes, you can install the viewer on the TC. You can find the VNC Viewer software at the link below. If running Ubuntu Linux on your TC, you can download the .deb file.
 * Download from [www.realvnc.com/en/connect/download/viewer](www.realvnc.com/en/connect/download/viewer)
@@ -68,7 +74,7 @@ After VNC is enabled on the RPi nodes, you can install the viewer on the TC. You
   - Select "Install" and wait until the installation completes
 * Open VNC Viewer and select "Use VNC Viewer without signing in" 
 * For each RPi Node, enter the node's IP address (e.g., `10.1.1.101`) in the search menu.
-  - When connecting for the first time, you be asked to verify and enter the Pi's username/password. If you select "Remember Password" on this menu, you will be able to open VNC Viewer in the future and quickly view the RPi nodes's desktop by double clicking on the saved setting.
+  - When connecting for the first time, you be asked to verify and enter the Pi's username/password. If you select "Remember Password" on this menu, you will be able to open VNC Viewer in the future and quickly view the RPi node's desktop by double clicking on the saved setting.
 
 _Image Coming Soon_
 

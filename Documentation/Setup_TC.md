@@ -39,8 +39,10 @@ Once you have GitHub Desktop installed/setup, you can clone the Testbed Reposito
 * `Testbed_Scripts` that contains two subfolders, Configuration and Test.
   - `Configuration`: Holds scripts to get general information about the nodes, verify connection between the Testbed Controller, APs, clients and servers, and check for the AP information.
   - `Test`: Contains scripts to run the testbed by initiating the server (server_start.sh) and the clients (client_start.sh), and to aggregate / parse collected data.
+  - `Analysis:` Contains scripts for plotting and visualizing collected results (_To be added_)
 
 To verify that the TC is able to run the scripts, you can test by going to the `Testbed_Scripts/Configuration` directory in a terminal and running `bash verify_nodes.sh -h`. This should display help information about the first script that we will use after setting the RPi Nodes.
+
 ![GitHub Logo](Images/verify_nodes_help.png)
 
 

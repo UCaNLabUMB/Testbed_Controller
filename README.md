@@ -1,5 +1,5 @@
 # Overview
-This repository is developed and maintained by the Ubiquitous Communications and Networking Lab (UCaN Lab) at UMass Boston. The code provides a set of documentation and scripts for configuring distributed nodes from a central location, and offers test capabilities for analyzing throughput in dense multi-access point and multi-user environments.
+This repository is developed and maintained by the Ubiquitous Communications and Networking Lab (UCaN Lab) at UMass Boston. The code provides a set of documentation and scripts for configuring distributed nodes from a central location, and offers experimental test capabilities for analyzing throughput in dense multi-access point and multi-user environments.
 
 This tool is designed to analyze the impact of network configurations and traffic characteristics in a variety of scenarios. Rather than using real world devices with various internet based applications, device usage is emulated with Raspberry Pi (RPi) microcontrollers. All of the **RPi nodes** will be connected to a single computer acting as the **Testbed Controller (TC)**, allowing the network to be centrally configured and controlled.
 
@@ -17,6 +17,7 @@ This repository includes documentation that covers how to setup an instance of t
 
 
 # Equipment  
+For the baseline version of the testbed, you will need the following equipment. Other variations of the testbed (to be described later) require supplemental equipment.
 * Raspberry Pi microcontrollers (3B+ or 4, ideally 4G RAM or higher)
   - microSD cards  
   - Power cables
@@ -34,6 +35,6 @@ This repository includes documentation that covers how to setup an instance of t
 |  0  | [Testbed Architecture](https://github.com/UCaNLabUMB/Testbed_Controller/blob/main/Documentation/TB_Architecture.md)              | <img src="/Documentation/Images/TB_Architecture2.png" /> | Overview and Description of the testbed architecture and network conventions. 
 |  1  | [Setting Up the TC](https://github.com/UCaNLabUMB/Testbed_Controller/blob/main/Documentation/Setup_TC.md)                        | <img src="/Documentation/Images/TC.png" />              | Setup necessary software and network configuration settings for the TC to communicate with RPi Nodes and execute configuration / test commands.
 |  2  | [Setting Up RPi Nodes](https://github.com/UCaNLabUMB/Testbed_Controller/blob/main/Documentation/Setup_RPi_Node.md)               | <img src="/Documentation/Images/RPi_node.jpg" />        | Setup necessary software and network configuration settings for the RPi Nodes to communicate with the TC. 
-|  3  | [Control Network Configuration](https://github.com/UCaNLabUMB/Testbed_Controller/blob/main/Documentation/Config_Control_Net.md)  | <img src="/Documentation/Images/Control_Net.png" />     | Configure the control network to verify that IP conventions are correctly set and passwordless SSH is setup to interact with RPi nodes via scripts.
+|  3  | [Control Network Configuration](https://github.com/UCaNLabUMB/Testbed_Controller/blob/main/Documentation/Config_Control_Net.md)  | <img src="/Documentation/Images/Control_Net.png" />     | Configure the control network to verify that IP conventions are correctly set and passwordless SSH is setup to interact with RPi nodes via testbed scripts.
 |  4  | [Test Network Configuration](https://github.com/UCaNLabUMB/Testbed_Controller/blob/main/Documentation/Config_Test_Net.md)        | <img src="/Documentation/Images/Test_Net.png" />        | Configure the Test Network (i.e., wireless network connections, Tx power, etc.) via the TC.
 |  5  | [Testing and Analysis](https://github.com/UCaNLabUMB/Testbed_Controller/blob/main/Documentation/Testing.md)                      | (ADD IMAGE)                                             | Initialize iperf server(s) and client(s) to initiate performance analysis tests, and aggregate/analyze results from the distributed RPi nodes.
