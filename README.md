@@ -1,3 +1,6 @@
+For Citation/Reference:
+<a href="https://zenodo.org/badge/latestdoi/387873602"><img src="https://zenodo.org/badge/387873602.svg" alt="DOI"></a>
+
 # Overview
 This repository is developed and maintained by the Ubiquitous Communications and Networking Lab (UCaN Lab) at UMass Boston. The code provides a set of documentation and scripts for configuring distributed nodes from a central location, and offers experimental test capabilities for analyzing throughput in dense multi-access point and multi-user environments.
 
