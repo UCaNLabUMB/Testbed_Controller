@@ -28,7 +28,7 @@ import threading
 
 class Tx_Tone(gr.top_block):
 
-    def __init__(self, fc=915e6, node='101', tone_amp=0.5, tone_freq=0.5e6, tx_gain=40):
+    def __init__(self, fc=915e6, node='101', tone_amp=0.5, tone_freq=0.5e6, tx_gain=40, samp_rate=3e6):
         gr.top_block.__init__(self, "Transmit tone")
 
         ##################################################
@@ -39,11 +39,7 @@ class Tx_Tone(gr.top_block):
         self.tone_amp = tone_amp
         self.tone_freq = tone_freq
         self.tx_gain = tx_gain
-
-        ##################################################
-        # Variables
-        ##################################################
-        self.samp_rate = samp_rate = 5e6
+        self.samp_rate = samp_rate
 
         ##################################################
         # Blocks
@@ -138,13 +134,16 @@ def argument_parser():
     parser.add_argument(
         "-g", "--tx-gain", dest="tx_gain", type=eng_float, default="40.0",
         help="Set Transmitter Gain [default=%(default)r]")
+    parser.add_argument(
+        "-r", "--samp-rate", dest="samp_rate", type=eng_float, default="3.0M",
+        help="Set Sample Rate [default=%(default)r]")
     return parser
 
 
 def main(top_block_cls=Tx_Tone, options=None):
     if options is None:
         options = argument_parser().parse_args()
-    tb = top_block_cls(fc=options.fc, node=options.node, tone_amp=options.tone_amp, tone_freq=options.tone_freq, tx_gain=options.tx_gain)
+    tb = top_block_cls(fc=options.fc, node=options.node, tone_amp=options.tone_amp, tone_freq=options.tone_freq, tx_gain=options.tx_gain, samp_rate=options.samp_rate)
 
     def sig_handler(sig=None, frame=None):
         tb.stop()

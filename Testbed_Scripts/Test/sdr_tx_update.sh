@@ -25,6 +25,8 @@ help()
 	echo "	---------------------------------------------------------------------------------------"
 	echo "	-l = list of client node addresses (e.g., 'bash sdr_tx_update.sh -l 103,105,109')"
 	echo "	-r = range of client node addresses (e.g., 'bash sdr_tx_update.sh -r 103,107')"
+	echo "	-c = list of carrier frequencies for corresponding nodes "
+	echo "	          (e.g., 'bash sdr_tx_update.sh -l 101,103 -c 915e6,2.4e9')"
 	echo "	-f [OPTIONAL] = list of tone frequencies for corresponding nodes "
 	echo "	          (e.g., 'bash sdr_tx_update.sh -l 101,103 -f 1e5,2e5')"
 	echo "	-g [OPTIONAL] = list of gain values for corresponding nodes "
@@ -57,6 +59,15 @@ addresses_range()
 		my_addresses[$index]=$i
 		index=$((index+1))
 	done
+}
+
+#---------------------------------------------------------------------------------------------
+# Creates array from command line inputs
+carrier_freq_list()
+{
+	set_carrier_freqs=1
+	IFS=','
+	read -ra my_carrier_freqs <<< "$OPTARG"
 }
 
 #---------------------------------------------------------------------------------------------
@@ -95,6 +106,7 @@ sig_select_list()
 
 uname=ucanlab # default
 debug=0
+set_carrier_freqs=0
 set_sig_freqs=0
 set_gain_vals=0
 set_sig_vals=0
@@ -102,7 +114,7 @@ set_sig_vals=0
 #---------------------------------------------------------------------------------------------
 # Get arguments and set appropriate parameters
 
-while getopts 'hl:r:f:g:s:u:d' OPTION; do
+while getopts 'hl:r:c:f:g:s:u:d' OPTION; do
 	case "$OPTION" in
 		h)
 			help;;
@@ -110,6 +122,8 @@ while getopts 'hl:r:f:g:s:u:d' OPTION; do
 			addresses_list;;
 		r)
 			addresses_range;;
+		c)
+			carrier_freq_list;;
 		f)
 			sig_freq_list;;
 		g)
@@ -138,8 +152,10 @@ then
 	echo ""
 	echo "  ##### Debug Info: #####"
 	echo "  Nodes: ${my_addresses[@]}"
+	echo "  Carrier Frequencies: ${my_carrier_freqs[@]}"
 	echo "  Signal Frequencies: ${my_sig_freqs[@]}"
 	echo "  Gain Values: ${my_gain_vals[@]}"
+	echo "  Signal Select Values: ${my_sig_vals[@]}"
 	echo "  Testbed Folder: $top_dir"
 	echo "  UName: $uname"
 	echo ""
@@ -160,6 +176,15 @@ while [[ $i -lt ${#my_addresses[@]} ]]; do # loop through number of nodes
 		my_sig=${my_sig_vals[$i]}
 		temp="$temp to signal $my_sig ... "
 		python3 SDR_control/set_remote_params.py -n $my_addr -s $my_sig 
+	fi
+
+	#------------------
+	# check if updating carrier frequencies
+	if (( $set_carrier_freqs == 1 ))
+	then	
+		my_carrier=${my_carrier_freqs[$i]}
+		temp="$temp carrier: $my_carrier ... "
+		python3 SDR_control/set_remote_params.py -n $my_addr -c $my_carrier 
 	fi
 
 	#------------------

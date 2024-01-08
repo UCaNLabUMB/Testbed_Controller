@@ -32,18 +32,6 @@ options:
     state: enabled
 
 blocks:
-- name: samp_rate
-  id: variable
-  parameters:
-    comment: ''
-    value: 5e6
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [200, 12.0]
-    rotation: 0
-    state: enabled
 - name: analog_sig_source_x_0
   id: analog_sig_source_x
   parameters:
@@ -80,7 +68,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [312, 12.0]
+    coordinate: [336, 12.0]
     rotation: 0
     state: true
 - name: node
@@ -100,6 +88,23 @@ blocks:
     coordinate: [8, 140.0]
     rotation: 0
     state: true
+- name: samp_rate
+  id: parameter
+  parameters:
+    alias: ''
+    comment: ''
+    hide: none
+    label: Sample Rate
+    short_id: r
+    type: eng_float
+    value: 3e6
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [200, 12.0]
+    rotation: 0
+    state: true
 - name: tone_amp
   id: parameter
   parameters:
@@ -114,7 +119,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [456, 124.0]
+    coordinate: [480, 124.0]
     rotation: 0
     state: true
 - name: tone_freq
@@ -131,7 +136,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [456, 12.0]
+    coordinate: [480, 12.0]
     rotation: 0
     state: true
 - name: tx_gain
@@ -148,7 +153,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [312, 124.0]
+    coordinate: [336, 124.0]
     rotation: 0
     state: true
 - name: uhd_usrp_sink_0
