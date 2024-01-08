@@ -1,3 +1,5 @@
 *.csv
 *.DS_Store
 *$_*.pptx
+Testbed_Scripts/Test/GRC_Files/*.py
+Testbed_Scripts/Configuration/Pi_Scripts/GRC_Files/*.py

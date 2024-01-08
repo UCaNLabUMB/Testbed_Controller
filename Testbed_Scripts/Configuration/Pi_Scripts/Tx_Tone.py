@@ -19,29 +19,40 @@ from gnuradio.eng_arg import eng_float, intx
 from gnuradio import eng_notation
 from gnuradio import uhd
 import time
+try:
+    from xmlrpc.server import SimpleXMLRPCServer
+except ImportError:
+    from SimpleXMLRPCServer import SimpleXMLRPCServer
+import threading
 
 
 class Tx_Tone(gr.top_block):
 
-    def __init__(self, fc=915e6, sig_amp=0.5, sig_freq=0.5e6, tx_gain=40):
+    def __init__(self, fc=915e6, node='101', tone_amp=0.5, tone_freq=0.5e6, tx_gain=40):
         gr.top_block.__init__(self, "Transmit tone")
 
         ##################################################
         # Parameters
         ##################################################
         self.fc = fc
-        self.sig_amp = sig_amp
-        self.sig_freq = sig_freq
+        self.node = node
+        self.tone_amp = tone_amp
+        self.tone_freq = tone_freq
         self.tx_gain = tx_gain
 
         ##################################################
         # Variables
         ##################################################
-        self.samp_rate = samp_rate = 4e6
+        self.samp_rate = samp_rate = 5e6
 
         ##################################################
         # Blocks
         ##################################################
+        self.xmlrpc_server_0 = SimpleXMLRPCServer(("10.1.1." + node, 8080), allow_none=True)
+        self.xmlrpc_server_0.register_instance(self)
+        self.xmlrpc_server_0_thread = threading.Thread(target=self.xmlrpc_server_0.serve_forever)
+        self.xmlrpc_server_0_thread.daemon = True
+        self.xmlrpc_server_0_thread.start()
         self.uhd_usrp_sink_0 = uhd.usrp_sink(
             ",".join(("", "")),
             uhd.stream_args(
@@ -56,7 +67,7 @@ class Tx_Tone(gr.top_block):
         self.uhd_usrp_sink_0.set_antenna('TX/RX', 0)
         self.uhd_usrp_sink_0.set_samp_rate(samp_rate)
         # No synchronization enforced.
-        self.analog_sig_source_x_0 = analog.sig_source_c(samp_rate, analog.GR_COS_WAVE, sig_freq, sig_amp, 0, 0)
+        self.analog_sig_source_x_0 = analog.sig_source_c(samp_rate, analog.GR_COS_WAVE, tone_freq, tone_amp, 0, 0)
 
 
         ##################################################
@@ -72,19 +83,25 @@ class Tx_Tone(gr.top_block):
         self.fc = fc
         self.uhd_usrp_sink_0.set_center_freq(self.fc, 0)
 
-    def get_sig_amp(self):
-        return self.sig_amp
+    def get_node(self):
+        return self.node
 
-    def set_sig_amp(self, sig_amp):
-        self.sig_amp = sig_amp
-        self.analog_sig_source_x_0.set_amplitude(self.sig_amp)
+    def set_node(self, node):
+        self.node = node
 
-    def get_sig_freq(self):
-        return self.sig_freq
+    def get_tone_amp(self):
+        return self.tone_amp
 
-    def set_sig_freq(self, sig_freq):
-        self.sig_freq = sig_freq
-        self.analog_sig_source_x_0.set_frequency(self.sig_freq)
+    def set_tone_amp(self, tone_amp):
+        self.tone_amp = tone_amp
+        self.analog_sig_source_x_0.set_amplitude(self.tone_amp)
+
+    def get_tone_freq(self):
+        return self.tone_freq
+
+    def set_tone_freq(self, tone_freq):
+        self.tone_freq = tone_freq
+        self.analog_sig_source_x_0.set_frequency(self.tone_freq)
 
     def get_tx_gain(self):
         return self.tx_gain
@@ -110,11 +127,14 @@ def argument_parser():
         "-c", "--fc", dest="fc", type=eng_float, default="915.0M",
         help="Set Center Frequency [default=%(default)r]")
     parser.add_argument(
-        "-a", "--sig-amp", dest="sig_amp", type=eng_float, default="500.0m",
-        help="Set Signal Amplitude [default=%(default)r]")
+        "-n", "--node", dest="node", type=str, default='101',
+        help="Set Node Number [default=%(default)r]")
     parser.add_argument(
-        "-f", "--sig-freq", dest="sig_freq", type=eng_float, default="500.0k",
-        help="Set Signal Frequency (Relative to fc) [default=%(default)r]")
+        "-a", "--tone-amp", dest="tone_amp", type=eng_float, default="500.0m",
+        help="Set Signal Amplitude (tone) [default=%(default)r]")
+    parser.add_argument(
+        "-f", "--tone-freq", dest="tone_freq", type=eng_float, default="500.0k",
+        help="Set Tone Frequency (Relative to fc) [default=%(default)r]")
     parser.add_argument(
         "-g", "--tx-gain", dest="tx_gain", type=eng_float, default="40.0",
         help="Set Transmitter Gain [default=%(default)r]")
@@ -124,7 +144,7 @@ def argument_parser():
 def main(top_block_cls=Tx_Tone, options=None):
     if options is None:
         options = argument_parser().parse_args()
-    tb = top_block_cls(fc=options.fc, sig_amp=options.sig_amp, sig_freq=options.sig_freq, tx_gain=options.tx_gain)
+    tb = top_block_cls(fc=options.fc, node=options.node, tone_amp=options.tone_amp, tone_freq=options.tone_freq, tx_gain=options.tx_gain)
 
     def sig_handler(sig=None, frame=None):
         tb.stop()

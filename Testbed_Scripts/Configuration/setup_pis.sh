@@ -143,8 +143,12 @@ else
 		ssh $uname@10.1.1.$i mkdir $top_dir/TB_Scripts -p
 		
 		# Move any relevant python (or other) scripts to TB_Scripts directory	
-		scp -pr Pi_Scripts/set_wlan_local.sh $uname@10.1.1.$i:$top_dir/TB_Scripts > /dev/null		
+		scp -pr Pi_Scripts/set_wlan_local.sh $uname@10.1.1.$i:$top_dir/TB_Scripts > /dev/null	
+		# GNURadio Flowgraphs	
+		scp -pr Pi_Scripts/Tx_general.py $uname@10.1.1.$i:$top_dir/TB_Scripts > /dev/null		
 		scp -pr Pi_Scripts/Tx_Tone.py $uname@10.1.1.$i:$top_dir/TB_Scripts > /dev/null		
+		
+		echo "Setup Complete: Pi $i"
 	done
 fi
 

@@ -5,12 +5,13 @@ options:
     cmake_opt: ''
     comment: ''
     copyright: ''
-    description: ''
+    description: Continuously running transmitter with various parameters that can
+      be remotely configured
     gen_cmake: 'On'
     gen_linking: dynamic
     generate_options: no_gui
     hier_block_src_path: '.:'
-    id: Tx_Tone
+    id: Tx_general
     max_nouts: '0'
     output_language: python
     placement: (0,0)
@@ -21,7 +22,7 @@ options:
     run_options: run
     sizing_mode: fixed
     thread_safe_setters: ''
-    title: Transmit tone
+    title: Pi transmitter Script
     window_size: (1000,1000)
   states:
     bus_sink: false
@@ -32,11 +33,83 @@ options:
     state: enabled
 
 blocks:
+- name: fft_len
+  id: variable
+  parameters:
+    comment: ''
+    value: '64'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1168, 124.0]
+    rotation: 0
+    state: true
+- name: len_tag_key
+  id: variable
+  parameters:
+    comment: ''
+    value: packet_len
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1168, 68.0]
+    rotation: 0
+    state: true
+- name: occupied_carriers
+  id: variable
+  parameters:
+    comment: ''
+    value: (list(range(-22, -12)),list(range(13, 23)))
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1272, 124.0]
+    rotation: 180
+    state: enabled
+- name: packet_len
+  id: variable
+  parameters:
+    comment: ''
+    value: '50'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1168, 12.0]
+    rotation: 0
+    state: true
+- name: pilot_carriers
+  id: variable
+  parameters:
+    comment: ''
+    value: ((-15,-1),)
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1416, 68.0]
+    rotation: 0
+    state: enabled
+- name: pilot_symbols
+  id: variable
+  parameters:
+    comment: ''
+    value: ((-1,1),)
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1416, 12.0]
+    rotation: 0
+    state: enabled
 - name: samp_rate
   id: variable
   parameters:
     comment: ''
-    value: 5e6
+    value: 3e6
   states:
     bus_sink: false
     bus_source: false
@@ -44,6 +117,91 @@ blocks:
     coordinate: [200, 12.0]
     rotation: 0
     state: enabled
+- name: sig_select
+  id: variable_qtgui_chooser
+  parameters:
+    comment: ''
+    gui_hint: ''
+    label: Signal select
+    label0: No Signal
+    label1: Tone
+    label2: OFDM
+    label3: ''
+    label4: ''
+    labels: '[]'
+    num_opts: '3'
+    option0: '0'
+    option1: '1'
+    option2: '2'
+    option3: '3'
+    option4: '4'
+    options: '[0, 1, 2]'
+    orient: Qt.QVBoxLayout
+    type: int
+    value: '0'
+    widget: combo_box
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [728, 12.0]
+    rotation: 0
+    state: disabled
+- name: sync_word1
+  id: variable
+  parameters:
+    comment: ''
+    value: '[0., 0., 0., 0., 0., 0., 0., 1.41421356, 0., -1.41421356, 0., 1.41421356,
+      0., -1.41421356, 0., -1.41421356, 0., -1.41421356, 0., 1.41421356, 0., -1.41421356,
+      0., 1.41421356, 0., -1.41421356, 0., -1.41421356, 0., -1.41421356, 0., -1.41421356,
+      0., 1.41421356, 0., -1.41421356, 0., 1.41421356, 0., 1.41421356, 0., 1.41421356,
+      0., -1.41421356, 0., 1.41421356, 0., 1.41421356, 0., 1.41421356, 0., -1.41421356,
+      0., 1.41421356, 0., 1.41421356, 0., 1.41421356, 0., 0., 0., 0., 0., 0.]'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1272, 12.0]
+    rotation: 0
+    state: enabled
+- name: sync_word2
+  id: variable
+  parameters:
+    comment: ''
+    value: '[0j, 0j, 0j, 0j, 0j, 0j, (-1+0j), (-1+0j), (-1+0j), (-1+0j), (1+0j), (1+0j),
+      (-1+0j), (-1+0j), (-1+0j), (1+0j), (-1+0j), (1+0j), (1+0j), (1 +0j), (1+0j),
+      (1+0j), (-1+0j), (-1+0j), (-1+0j), (-1+0j), (-1+0j), (1+0j), (-1+0j), (-1+0j),
+      (1+0j), (-1+0j), 0j, (1+0j), (-1+0j), (1+0j), (1+0j), (1+0j), (-1+0j), (1+0j),
+      (1+0j), (1+0j), (-1+0j), (1+0j), (1+0j), (1+0j), (1+0j), (-1+0j), (1+0j), (-1+0j),
+      (-1+0j), (-1+0j), (1+0j), (-1+0j), (1+0j), (-1+0j), (-1+0j), (-1+0j), (-1+0j),
+      0j, 0j, 0j, 0j, 0j]'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1272, 68.0]
+    rotation: 0
+    state: enabled
+- name: analog_random_source_x_0
+  id: analog_random_source_x
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    max: '255'
+    maxoutbuf: '0'
+    min: '0'
+    minoutbuf: '0'
+    num_samps: '10000'
+    repeat: 'True'
+    type: byte
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [48, 444.0]
+    rotation: 0
+    state: true
 - name: analog_sig_source_x_0
   id: analog_sig_source_x
   parameters:
@@ -63,7 +221,115 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [216, 316.0]
+    coordinate: [280, 276.0]
+    rotation: 0
+    state: true
+- name: blocks_null_source_0
+  id: blocks_null_source
+  parameters:
+    affinity: ''
+    alias: ''
+    bus_structure_source: '[[0,],]'
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_outputs: '1'
+    type: complex
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [456, 288.0]
+    rotation: 0
+    state: true
+- name: blocks_selector_0
+  id: blocks_selector
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    enabled: 'True'
+    input_index: sig_select
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_inputs: '3'
+    num_outputs: '1'
+    output_index: '0'
+    showports: 'True'
+    type: complex
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [624, 284.0]
+    rotation: 0
+    state: true
+- name: blocks_stream_to_tagged_stream_0
+  id: blocks_stream_to_tagged_stream
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    len_tag_key: '"packet_len"'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    packet_len: packet_len
+    type: byte
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [240, 460.0]
+    rotation: 0
+    state: true
+- name: blocks_throttle_0
+  id: blocks_throttle
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    ignoretag: 'True'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    samples_per_second: samp_rate
+    type: complex
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [856, 316.0]
+    rotation: 0
+    state: disabled
+- name: digital_ofdm_tx_0_0
+  id: digital_ofdm_tx
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    cp_len: fft_len//4
+    fft_len: '64'
+    header_mod: '"BPSK"'
+    log: 'False'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    occupied_carriers: occupied_carriers
+    packet_len_key: packet_len
+    payload_mod: '"BPSK"'
+    pilot_carriers: pilot_carriers
+    pilot_symbols: pilot_symbols
+    rolloff: '0'
+    scramble_bits: 'False'
+    sync_word1: None
+    sync_word2: None
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [512, 396.0]
     rotation: 0
     state: true
 - name: fc
@@ -98,6 +364,52 @@ blocks:
     bus_source: false
     bus_structure: null
     coordinate: [8, 140.0]
+    rotation: 0
+    state: true
+- name: qtgui_sink_x_0
+  id: qtgui_sink_x
+  parameters:
+    affinity: ''
+    alias: ''
+    bw: samp_rate
+    comment: ''
+    fc: '0'
+    fftsize: '1024'
+    gui_hint: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    name: '""'
+    plotconst: 'True'
+    plotfreq: 'True'
+    plottime: 'True'
+    plotwaterfall: 'True'
+    rate: '10'
+    showports: 'False'
+    showrf: 'False'
+    type: complex
+    wintype: firdes.WIN_BLACKMAN_hARRIS
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1064, 284.0]
+    rotation: 0
+    state: disabled
+- name: sig_select
+  id: parameter
+  parameters:
+    alias: ''
+    comment: ''
+    hide: none
+    label: Signal Select
+    short_id: s
+    type: intx
+    value: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [608, 12.0]
     rotation: 0
     state: true
 - name: tone_amp
@@ -425,9 +737,9 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [488, 300.0]
+    coordinate: [880, 172.0]
     rotation: 0
-    state: true
+    state: enabled
 - name: xmlrpc_server_0
   id: xmlrpc_server
   parameters:
@@ -444,7 +756,14 @@ blocks:
     state: true
 
 connections:
-- [analog_sig_source_x_0, '0', uhd_usrp_sink_0, '0']
+- [analog_random_source_x_0, '0', blocks_stream_to_tagged_stream_0, '0']
+- [analog_sig_source_x_0, '0', blocks_selector_0, '1']
+- [blocks_null_source_0, '0', blocks_selector_0, '0']
+- [blocks_selector_0, '0', blocks_throttle_0, '0']
+- [blocks_selector_0, '0', uhd_usrp_sink_0, '0']
+- [blocks_stream_to_tagged_stream_0, '0', digital_ofdm_tx_0_0, '0']
+- [blocks_throttle_0, '0', qtgui_sink_x_0, '0']
+- [digital_ofdm_tx_0_0, '0', blocks_selector_0, '2']
 
 metadata:
   file_format: 1

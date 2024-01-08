@@ -1,11 +1,11 @@
 #!/bin/bash
 
 ##############################################################################################
-# sdr_tone_start.sh
+# sdr_tx_update.sh
 #
 # Author: MR
 #
-# Description: This script starts the sdr tone transmission set on a desired set of nodes
+# Description: This script updates the sdr transmission characteristics on set of nodes
 #
 # Input: 
 #
@@ -23,12 +23,15 @@ help()
 	echo ""
 	echo "	### Bash script to initiate tone transmissions at specified nodes ###"
 	echo "	---------------------------------------------------------------------------------------"
-	echo "	-l = list of client node addresses (e.g., 'bash sdr_tone_start.sh -l 103,105,109')"
-	echo "	-r = range of client node addresses (e.g., 'bash sdr_tone_start.sh -r 103,107')"
-	echo "	-f = list of tone frequencies for corresponding nodes "
-	echo "	          (e.g., 'bash sdr_tone_start.sh -l 101,103 -f 1e5,2e5')"
-	echo "	-g = list of gain values for corresponding nodes "
-	echo "	          (e.g., 'bash sdr_tone_start.sh -l 101,103 -f 25,40')"
+	echo "	-l = list of client node addresses (e.g., 'bash sdr_tx_update.sh -l 103,105,109')"
+	echo "	-r = range of client node addresses (e.g., 'bash sdr_tx_update.sh -r 103,107')"
+	echo "	-f [OPTIONAL] = list of tone frequencies for corresponding nodes "
+	echo "	          (e.g., 'bash sdr_tx_update.sh -l 101,103 -f 1e5,2e5')"
+	echo "	-g [OPTIONAL] = list of gain values for corresponding nodes "
+	echo "	          (e.g., 'bash sdr_tx_update.sh -l 101,103 -g 25,40')"
+	echo "	-s [OPTIONAL] = list of signal types for corresponding nodes "
+	echo "	          (e.g., 'bash sdr_tx_update.sh -l 101,103 -s 0,2')"
+	echo "	             (0: disable, 1: tone, 2: OFDM)"
 	echo "	-u [OPTIONAL] = input client's username if the deffault one (ucanlab) is not used"
 	echo ""
 	exit
@@ -60,6 +63,7 @@ addresses_range()
 # Creates array from command line inputs
 sig_freq_list()
 {
+	set_sig_freqs=1
 	IFS=','
 	read -ra my_sig_freqs <<< "$OPTARG"
 }
@@ -68,8 +72,18 @@ sig_freq_list()
 # Creates array from command line inputs
 gain_list()
 {
+	set_gain_vals=1
 	IFS=','
 	read -ra my_gain_vals <<< "$OPTARG"
+}
+
+#---------------------------------------------------------------------------------------------
+# Creates array from command line inputs
+sig_select_list()
+{
+	set_sig_vals=1
+	IFS=','
+	read -ra my_sig_vals <<< "$OPTARG"
 }
 
 
@@ -81,11 +95,14 @@ gain_list()
 
 uname=ucanlab # default
 debug=0
+set_sig_freqs=0
+set_gain_vals=0
+set_sig_vals=0
 
 #---------------------------------------------------------------------------------------------
 # Get arguments and set appropriate parameters
 
-while getopts 'hl:r:f:g:u:d' OPTION; do
+while getopts 'hl:r:f:g:s:u:d' OPTION; do
 	case "$OPTION" in
 		h)
 			help;;
@@ -97,6 +114,8 @@ while getopts 'hl:r:f:g:u:d' OPTION; do
 			sig_freq_list;;
 		g)
 			gain_list;;
+		s)
+			sig_select_list;;
 		u)
 			uname=$OPTARG;; # in case the username is not the default one, use this flag to user another username
 		d)
@@ -131,13 +150,38 @@ i=0
 while [[ $i -lt ${#my_addresses[@]} ]]; do # loop through number of nodes
 	# get desired values from list 
 	my_addr=${my_addresses[$i]}
-	my_f=${my_sig_freqs[$i]}
-	my_g=${my_gain_vals[$i]}
-	
-	
-	echo "Starting Pi $my_addr with frequency $my_f and gain $my_g"
-	ssh $uname@10.1.1.$my_addr python3 $top_dir/TB_Scripts/Tx_Tone.py -f $my_f -g $my_g 2> /dev/null &
+		
+	temp="Updating Pi $my_addr"
+		
+	#------------------
+	# check if updating signal types
+	if (( $set_sig_vals == 1 ))
+	then	
+		my_sig=${my_sig_vals[$i]}
+		temp="$temp to signal $my_sig ... "
+		python3 SDR_control/set_remote_params.py -n $my_addr -s $my_sig 
+	fi
 
+	#------------------
+	# check if updating frequencies
+	if (( $set_sig_freqs == 1 ))
+	then	
+		my_f=${my_sig_freqs[$i]}
+		temp="$temp frequency: $my_f,"
+		python3 SDR_control/set_remote_params.py -n $my_addr -f $my_f 
+	fi
+	
+	#------------------
+	# check if updating gains
+	if (( $set_gain_vals == 1 ))
+	then	
+		my_g=${my_gain_vals[$i]}
+		temp="$temp gain: $my_g,"
+		python3 SDR_control/set_remote_params.py -n $my_addr -g $my_g 
+	fi
+	
+	echo $temp
+	
 	i=$((i + 1))
 done
 
