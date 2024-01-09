@@ -24,6 +24,8 @@ help()
 	echo "	---------------------------------------------------------------------------------------"
 	echo "	-l = list of client node addresses (e.g., 'bash sdr_tone_start.sh -l 103,105,109')"
 	echo "	-r = range of client node addresses (e.g., 'bash sdr_tone_start.sh -r 103,107')"
+	echo "	-f = check for python3 processes (to show flowgraph status)"
+	echo "	-p = check for xmlrpc and zmq ports (at defined ports)"
 	echo "	-k [OPTIONAL] = kill processes with specified PID at corresponding nodes"
 	echo "	                  (e.g., bash sdr_status.sh -l 101,014 -k 1234,1235) "
 	echo "	                  CAUTION: can kill other processes if incorrect pid is given"
@@ -62,13 +64,19 @@ addresses_range()
 # Set default parameters
 
 uname=ucanlab # default
+fg_status=0
+port_status=0
 kill_procs=0
 debug=0
+
+tx_xmlrpc_port=':8080'
+rx_xmlrpc_port=':8081'
+zmq_port=':55555'
 
 #---------------------------------------------------------------------------------------------
 # Get arguments and set appropriate parameters
 
-while getopts 'hl:r:k:u:d' OPTION; do
+while getopts 'hl:r:fpk:u:d' OPTION; do
 	case "$OPTION" in
 		h)
 			help;;
@@ -76,6 +84,10 @@ while getopts 'hl:r:k:u:d' OPTION; do
 			addresses_list;;
 		r)
 			addresses_range;;
+		f)
+			fg_status=1;;
+		p)
+			port_status=1;;
 		k)
 			kill_procs=1;
 			IFS=','
@@ -99,6 +111,8 @@ then
 	echo ""
 	echo "  ##### Debug Info: #####"
 	echo "  Nodes: ${my_addresses[@]}"
+	echo "  Port Check: $port_status (TX xml: $tx_xmlrpc_port, RX xml: $rx_xmlrpc_port, ZMQ: $zmq_port )"
+	echo "  Flowgraph Check: $fg_status"
 	echo "  Kill Processes: $kill_procs"
 	echo "  PIDs: ${pids[@]}"
 	echo "  UName: $uname"
@@ -121,14 +135,24 @@ while [[ $i -lt ${#my_addresses[@]} ]]; do # loop through number of nodes
 	echo "  ------------"
 	echo "  Node $my_addr "
 	
+	if (( $port_status == 1 ))
+	then
+		ssh $uname@10.1.1.$my_addr netstat -aon | grep $tx_xmlrpc_port
+		ssh $uname@10.1.1.$my_addr netstat -aon | grep $rx_xmlrpc_port
+		ssh $uname@10.1.1.$my_addr netstat -aon | grep $zmq_port
+	fi
+
+	if (( $fg_status == 1 ))
+	then
+		ssh $uname@10.1.1.$my_addr ps | grep python3
+	fi
+
 	if (( $kill_procs == 1 ))
 	then
 		echo "  Killing process ${pids[$i]}"
 		ssh $uname@10.1.1.$my_addr kill -9 $my_pid
 		sleep 1
 	fi
-
-	ssh $uname@10.1.1.$my_addr ps | grep python3
 	
 	i=$((i + 1))
 done
