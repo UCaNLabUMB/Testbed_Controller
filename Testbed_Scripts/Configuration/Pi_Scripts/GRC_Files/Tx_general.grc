@@ -85,7 +85,7 @@ blocks:
   id: variable
   parameters:
     comment: ''
-    value: ((-15,-1),)
+    value: ((-10,-1,1,10),)
   states:
     bus_sink: false
     bus_source: false
@@ -97,7 +97,7 @@ blocks:
   id: variable
   parameters:
     comment: ''
-    value: ((-1,1),)
+    value: ((-1,1,1,-1),)
   states:
     bus_sink: false
     bus_source: false
@@ -204,7 +204,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [48, 444.0]
+    coordinate: [40, 668.0]
     rotation: 0
     state: true
 - name: analog_sig_source_x_0
@@ -226,7 +226,25 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [280, 276.0]
+    coordinate: [256, 452.0]
+    rotation: 0
+    state: true
+- name: blocks_multiply_const_vxx_0
+  id: blocks_multiply_const_vxx
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    const: ofdm_scale
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    type: complex
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [760, 692.0]
     rotation: 0
     state: true
 - name: blocks_selector_0
@@ -268,7 +286,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [240, 460.0]
+    coordinate: [232, 684.0]
     rotation: 0
     state: true
 - name: blocks_throttle_0
@@ -315,7 +333,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [512, 396.0]
+    coordinate: [504, 620.0]
     rotation: 0
     state: true
 - name: fc
@@ -350,6 +368,23 @@ blocks:
     bus_source: false
     bus_structure: null
     coordinate: [8, 140.0]
+    rotation: 0
+    state: true
+- name: ofdm_scale
+  id: parameter
+  parameters:
+    alias: ''
+    comment: ''
+    hide: none
+    label: OFDM Scaling Factor
+    short_id: m
+    type: eng_float
+    value: '0.1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [640, 124.0]
     rotation: 0
     state: true
 - name: qtgui_sink_x_0
@@ -414,7 +449,7 @@ blocks:
     bus_structure: null
     coordinate: [632, 12.0]
     rotation: 0
-    state: true
+    state: enabled
 - name: tone_amp
   id: parameter
   parameters:
@@ -743,6 +778,58 @@ blocks:
     coordinate: [880, 172.0]
     rotation: 0
     state: enabled
+- name: virtual_sink_0
+  id: virtual_sink
+  parameters:
+    alias: ''
+    comment: ''
+    stream_id: sig_ofdm
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [928, 692.0]
+    rotation: 0
+    state: true
+- name: virtual_sink_0_0
+  id: virtual_sink
+  parameters:
+    alias: ''
+    comment: ''
+    stream_id: sig_tone
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [928, 492.0]
+    rotation: 0
+    state: true
+- name: virtual_source_0
+  id: virtual_source
+  parameters:
+    alias: ''
+    comment: ''
+    stream_id: sig_tone
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [416, 308.0]
+    rotation: 0
+    state: true
+- name: virtual_source_0_0
+  id: virtual_source
+  parameters:
+    alias: ''
+    comment: ''
+    stream_id: sig_ofdm
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [416, 356.0]
+    rotation: 0
+    state: true
 - name: xmlrpc_server_0
   id: xmlrpc_server
   parameters:
@@ -756,17 +843,20 @@ blocks:
     bus_structure: null
     coordinate: [8, 244.0]
     rotation: 0
-    state: true
+    state: enabled
 
 connections:
 - [analog_const_source_x_0, '0', blocks_selector_0, '0']
 - [analog_random_source_x_0, '0', blocks_stream_to_tagged_stream_0, '0']
-- [analog_sig_source_x_0, '0', blocks_selector_0, '1']
+- [analog_sig_source_x_0, '0', virtual_sink_0_0, '0']
+- [blocks_multiply_const_vxx_0, '0', virtual_sink_0, '0']
 - [blocks_selector_0, '0', blocks_throttle_0, '0']
 - [blocks_selector_0, '0', uhd_usrp_sink_0, '0']
 - [blocks_stream_to_tagged_stream_0, '0', digital_ofdm_tx_0_0, '0']
 - [blocks_throttle_0, '0', qtgui_sink_x_0, '0']
-- [digital_ofdm_tx_0_0, '0', blocks_selector_0, '2']
+- [digital_ofdm_tx_0_0, '0', blocks_multiply_const_vxx_0, '0']
+- [virtual_source_0, '0', blocks_selector_0, '1']
+- [virtual_source_0_0, '0', blocks_selector_0, '2']
 
 metadata:
   file_format: 1

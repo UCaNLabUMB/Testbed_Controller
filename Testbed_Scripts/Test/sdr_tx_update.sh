@@ -29,6 +29,8 @@ help()
 	echo "	          (e.g., 'bash sdr_tx_update.sh -l 101,103 -c 915e6,2.4e9')"
 	echo "	-f [OPTIONAL] = list of tone frequencies for corresponding nodes "
 	echo "	          (e.g., 'bash sdr_tx_update.sh -l 101,103 -f 1e5,2e5')"
+	echo "	-m [OPTIONAL] = list of scaling factors for OFDM transmission"
+	echo "	          (e.g., 'bash sdr_tx_update.sh -l 101,103 -m 0.1,0.05')"
 	echo "	-g [OPTIONAL] = list of gain values for corresponding nodes "
 	echo "	          (e.g., 'bash sdr_tx_update.sh -l 101,103 -g 25,40')"
 	echo "	-s [OPTIONAL] = list of signal types for corresponding nodes "
@@ -81,6 +83,15 @@ sig_freq_list()
 
 #---------------------------------------------------------------------------------------------
 # Creates array from command line inputs
+scaling_list()
+{
+	set_ofdm_scale_vals=1
+	IFS=','
+	read -ra my_scale_vals <<< "$OPTARG"
+}
+
+#---------------------------------------------------------------------------------------------
+# Creates array from command line inputs
 gain_list()
 {
 	set_gain_vals=1
@@ -108,13 +119,14 @@ uname=ucanlab # default
 debug=0
 set_carrier_freqs=0
 set_sig_freqs=0
+set_ofdm_scale_vals=0
 set_gain_vals=0
 set_sig_vals=0
 
 #---------------------------------------------------------------------------------------------
 # Get arguments and set appropriate parameters
 
-while getopts 'hl:r:c:f:g:s:u:d' OPTION; do
+while getopts 'hl:r:c:f:m:g:s:u:d' OPTION; do
 	case "$OPTION" in
 		h)
 			help;;
@@ -126,6 +138,8 @@ while getopts 'hl:r:c:f:g:s:u:d' OPTION; do
 			carrier_freq_list;;
 		f)
 			sig_freq_list;;
+		m)
+			scaling_list;;
 		g)
 			gain_list;;
 		s)
@@ -154,6 +168,7 @@ then
 	echo "  Nodes: ${my_addresses[@]}"
 	echo "  Carrier Frequencies: ${my_carrier_freqs[@]}"
 	echo "  Signal Frequencies: ${my_sig_freqs[@]}"
+	echo "  Scaling Values: ${my_scale_vals[@]}"
 	echo "  Gain Values: ${my_gain_vals[@]}"
 	echo "  Signal Select Values: ${my_sig_vals[@]}"
 	echo "  Testbed Folder: $top_dir"
@@ -194,6 +209,15 @@ while [[ $i -lt ${#my_addresses[@]} ]]; do # loop through number of nodes
 		my_f=${my_sig_freqs[$i]}
 		temp="$temp frequency: $my_f,"
 		python3 SDR_control/set_remote_params.py -n $my_addr -f $my_f 
+	fi
+	
+	#------------------
+	# check if updating ofdm scaling values
+	if (( $set_ofdm_scale_vals == 1 ))
+	then	
+		my_m=${my_scale_vals[$i]}
+		temp="$temp scaling: $my_m,"
+		python3 SDR_control/set_remote_params.py -n $my_addr -m $my_m 
 	fi
 	
 	#------------------

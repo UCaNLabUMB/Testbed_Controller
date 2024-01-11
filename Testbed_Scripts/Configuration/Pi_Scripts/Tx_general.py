@@ -32,7 +32,7 @@ import threading
 
 class Tx_general(gr.top_block):
 
-    def __init__(self, fc=915e6, node='101', samp_rate=3e6, sig_select=1, tone_amp=0.5, tone_freq=0.5e6, tx_gain=40):
+    def __init__(self, fc=915e6, node='101', ofdm_scale=0.1, samp_rate=3e6, sig_select=1, tone_amp=0.5, tone_freq=0.5e6, tx_gain=40):
         gr.top_block.__init__(self, "Pi transmitter Script")
 
         ##################################################
@@ -40,6 +40,7 @@ class Tx_general(gr.top_block):
         ##################################################
         self.fc = fc
         self.node = node
+        self.ofdm_scale = ofdm_scale
         self.samp_rate = samp_rate
         self.sig_select = sig_select
         self.tone_amp = tone_amp
@@ -52,8 +53,8 @@ class Tx_general(gr.top_block):
         self.packet_len = packet_len = 50
         self.sync_word2 = sync_word2 = [0j, 0j, 0j, 0j, 0j, 0j, (-1+0j), (-1+0j), (-1+0j), (-1+0j), (1+0j), (1+0j), (-1+0j), (-1+0j), (-1+0j), (1+0j), (-1+0j), (1+0j), (1+0j), (1 +0j), (1+0j), (1+0j), (-1+0j), (-1+0j), (-1+0j), (-1+0j), (-1+0j), (1+0j), (-1+0j), (-1+0j), (1+0j), (-1+0j), 0j, (1+0j), (-1+0j), (1+0j), (1+0j), (1+0j), (-1+0j), (1+0j), (1+0j), (1+0j), (-1+0j), (1+0j), (1+0j), (1+0j), (1+0j), (-1+0j), (1+0j), (-1+0j), (-1+0j), (-1+0j), (1+0j), (-1+0j), (1+0j), (-1+0j), (-1+0j), (-1+0j), (-1+0j), 0j, 0j, 0j, 0j, 0j]
         self.sync_word1 = sync_word1 = [0., 0., 0., 0., 0., 0., 0., 1.41421356, 0., -1.41421356, 0., 1.41421356, 0., -1.41421356, 0., -1.41421356, 0., -1.41421356, 0., 1.41421356, 0., -1.41421356, 0., 1.41421356, 0., -1.41421356, 0., -1.41421356, 0., -1.41421356, 0., -1.41421356, 0., 1.41421356, 0., -1.41421356, 0., 1.41421356, 0., 1.41421356, 0., 1.41421356, 0., -1.41421356, 0., 1.41421356, 0., 1.41421356, 0., 1.41421356, 0., -1.41421356, 0., 1.41421356, 0., 1.41421356, 0., 1.41421356, 0., 0., 0., 0., 0., 0.]
-        self.pilot_symbols = pilot_symbols = ((-1,1),)
-        self.pilot_carriers = pilot_carriers = ((-15,-1),)
+        self.pilot_symbols = pilot_symbols = ((-1,1,1,-1),)
+        self.pilot_carriers = pilot_carriers = ((-10,-1,1,10),)
         self.occupied_carriers = occupied_carriers = (list(range(-22, -12)),list(range(13, 23)))
         self.len_tag_key = len_tag_key = packet_len
         self.fft_len = fft_len = 64
@@ -97,6 +98,7 @@ class Tx_general(gr.top_block):
         self.blocks_stream_to_tagged_stream_0 = blocks.stream_to_tagged_stream(gr.sizeof_char, 1, packet_len, "packet_len")
         self.blocks_selector_0 = blocks.selector(gr.sizeof_gr_complex*1,sig_select,0)
         self.blocks_selector_0.set_enabled(True)
+        self.blocks_multiply_const_vxx_0 = blocks.multiply_const_cc(ofdm_scale)
         self.analog_sig_source_x_0 = analog.sig_source_c(samp_rate, analog.GR_COS_WAVE, tone_freq, tone_amp, 0, 0)
         self.analog_random_source_x_0 = blocks.vector_source_b(list(map(int, numpy.random.randint(0, 255, 10000))), True)
         self.analog_const_source_x_0 = analog.sig_source_c(0, analog.GR_CONST_WAVE, 0, 0, 0)
@@ -108,9 +110,10 @@ class Tx_general(gr.top_block):
         self.connect((self.analog_const_source_x_0, 0), (self.blocks_selector_0, 0))
         self.connect((self.analog_random_source_x_0, 0), (self.blocks_stream_to_tagged_stream_0, 0))
         self.connect((self.analog_sig_source_x_0, 0), (self.blocks_selector_0, 1))
+        self.connect((self.blocks_multiply_const_vxx_0, 0), (self.blocks_selector_0, 2))
         self.connect((self.blocks_selector_0, 0), (self.uhd_usrp_sink_0, 0))
         self.connect((self.blocks_stream_to_tagged_stream_0, 0), (self.digital_ofdm_tx_0_0, 0))
-        self.connect((self.digital_ofdm_tx_0_0, 0), (self.blocks_selector_0, 2))
+        self.connect((self.digital_ofdm_tx_0_0, 0), (self.blocks_multiply_const_vxx_0, 0))
 
 
     def get_fc(self):
@@ -125,6 +128,13 @@ class Tx_general(gr.top_block):
 
     def set_node(self, node):
         self.node = node
+
+    def get_ofdm_scale(self):
+        return self.ofdm_scale
+
+    def set_ofdm_scale(self, ofdm_scale):
+        self.ofdm_scale = ofdm_scale
+        self.blocks_multiply_const_vxx_0.set_k(self.ofdm_scale)
 
     def get_samp_rate(self):
         return self.samp_rate
@@ -226,6 +236,9 @@ def argument_parser():
         "-n", "--node", dest="node", type=str, default='101',
         help="Set Node Number [default=%(default)r]")
     parser.add_argument(
+        "-m", "--ofdm-scale", dest="ofdm_scale", type=eng_float, default="100.0m",
+        help="Set OFDM Scaling Factor [default=%(default)r]")
+    parser.add_argument(
         "-r", "--samp-rate", dest="samp_rate", type=eng_float, default="3.0M",
         help="Set Sample Rate [default=%(default)r]")
     parser.add_argument(
@@ -246,7 +259,7 @@ def argument_parser():
 def main(top_block_cls=Tx_general, options=None):
     if options is None:
         options = argument_parser().parse_args()
-    tb = top_block_cls(fc=options.fc, node=options.node, samp_rate=options.samp_rate, sig_select=options.sig_select, tone_amp=options.tone_amp, tone_freq=options.tone_freq, tx_gain=options.tx_gain)
+    tb = top_block_cls(fc=options.fc, node=options.node, ofdm_scale=options.ofdm_scale, samp_rate=options.samp_rate, sig_select=options.sig_select, tone_amp=options.tone_amp, tone_freq=options.tone_freq, tx_gain=options.tx_gain)
 
     def sig_handler(sig=None, frame=None):
         tb.stop()
