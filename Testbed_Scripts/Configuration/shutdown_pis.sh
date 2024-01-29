@@ -118,6 +118,8 @@ do
 		echo " Shutting Down Node $i"
 		
 	fi
+	
+	sleep 1
 
 done
 

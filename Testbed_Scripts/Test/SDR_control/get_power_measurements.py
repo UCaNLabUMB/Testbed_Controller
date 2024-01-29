@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 #Author: UCaN Lab UMB
 #Umass Boston, MA,USA
 
@@ -42,19 +43,25 @@ def main(argv):
    # Script Configuration     #
    ############################
    node_id      = '101'
+   reps         = 1
+   delay        = 2
    debug = 0
    
    try:
-      opts, args = getopt.getopt(argv,"hn:d",["node_id="])
+      opts, args = getopt.getopt(argv,"hn:r:t:d",["node_id=","repetitions=","time_delay="])
    except getopt.GetoptError:
-      print ('  get_power_measurements.py -n <node ID> ')
+      print ('  get_power_measurements.py -n <node ID> -r <repetitions> -t <time delay> ')
       sys.exit(2)   
    for opt, arg in opts:
       if opt == '-h':
-         print ('  get_power_measurements.py -n <node ID> ')
+         print ('  get_power_measurements.py -n <node ID> -r <repetitions> -t <time delay> ')
          sys.exit()
       elif opt in ("-n", "--node_id"):
          node_id = arg
+      elif opt in ("-r", "--repetitions"):
+         reps = arg
+      elif opt in ("-t", "--time_delay"):
+         delay = arg
       elif opt in ("-d", "--debug"):
          debug = 1
          
@@ -80,10 +87,12 @@ def main(argv):
    ############################
    # Measurement     #
    ############################
-   # Noise Power Measurement
-   P_noise = zmq_measure(socket1)
-   print(f"Noise Power: {P_noise}")
-   time.sleep(1)
+   for iter in range(int(reps)):
+      # Power Measurements
+      P_measure = zmq_measure(socket1)
+      print(f"{P_measure}")
+      #print(f"Power Measurement: {P_measure}")
+      time.sleep(int(delay))
 
    
    
