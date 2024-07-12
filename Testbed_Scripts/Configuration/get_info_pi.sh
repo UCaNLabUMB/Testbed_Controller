@@ -30,6 +30,7 @@ help()
 	echo "	-m [OPTIONAL] = List the RAM size for each specified node"
 	echo "	-p [OPTIONAL] = List the WiFi Tx power for each specified node"
 	echo "	-o [OPTIONAL] = List the installed OS for each specified node"
+	echo "	-t [OPTIONAL] = List the current temperature reading for each specified node"
 	echo "	-v [OPTIONAL] = List the Pi type or software version for each specified node"
 	echo "                    (e.g., '-v Pi' for Pi type or '-v python3' for python3 version)"
 	echo "	-u [OPTIONAL] = client's username (e.g., '-u uname') (default: ucanlab)"
@@ -111,6 +112,13 @@ setup_col_titles()
 	fi
 		
 	#------------------
+	if (( $temp_check == 1 ))
+	then
+		temp1="$temp1    Temp  "
+		temp2="$temp2  --------"
+	fi
+		
+	#------------------
 	if (( $ver_check == 1 ))
 	then
 		temp1="$temp1   $ver_option Version "
@@ -132,6 +140,7 @@ ver_check=0
 mem_check=0
 ram_check=0
 os_check=0	
+temp_check=0	
 power_check=0
 uname=ucanlab # default
 debug=0
@@ -139,7 +148,7 @@ debug=0
 #-------------------------------------------------------------------
 # Get arguments and set appropriate parameters
 
-while getopts 'hl:r:dmpov:u:' OPTION; do
+while getopts 'hl:r:dmpotv:u:' OPTION; do
 	case "$OPTION" in
 		h)
 			help;;
@@ -155,6 +164,8 @@ while getopts 'hl:r:dmpov:u:' OPTION; do
 			power_check=1;;
 		o)
 			os_check=1;;			
+		t)
+			temp_check=1;;			
 		v)
 			version_check;;
 		u)
@@ -183,6 +194,13 @@ do
 	if (( $mem_check == 1 ))
 	then
 		my_mem=$(ssh $uname@"10.1.1.$i" df -H | grep "root" | awk '{print $2}')
+		
+		# Adding this as a temp fix since the rootfs partition doesn't seem to show in (newer?) Pi OS versions
+		# (This fix is confirmed for Pi 3B+) 
+		if [ -z "$my_mem" ] # Check for empty string
+		then
+			my_mem=$(ssh $uname@"10.1.1.$i" df -H | grep "/dev/mmcblk0p2" | awk '{print $2}')
+		fi
 		temp="$temp     $my_mem"
 	fi
 
@@ -200,7 +218,7 @@ do
 	then
 		#NOTE: Requires sudo to access iwconfig
 		my_power=$(ssh $uname@"10.1.1.$i" sudo iwconfig wlan0 | grep "Tx-Power" | awk -F[\=] '{print $3}')
-		if [ -z "$my_power" ]
+		if [ -z "$my_power" ] # Check for empty string
 		then
 			my_power="WiFi Off "
 		fi
@@ -216,6 +234,13 @@ do
 		temp="$temp $(ssh $uname@"10.1.1.$i" getconf LONG_BIT)"
 	fi
 		
+	#------------------
+	# check for current temperature
+	if (( $temp_check == 1 ))
+	then
+		temp="$temp    $(ssh $uname@"10.1.1.$i" vcgencmd measure_temp | awk -F'[/=]' '{print $2}')"
+	fi
+
 	#------------------
 	# check for version
 	if (( $ver_check == 1 ))
