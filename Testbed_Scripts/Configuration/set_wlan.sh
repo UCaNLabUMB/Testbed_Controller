@@ -107,8 +107,13 @@ fi
 
 for i in "${addresses[@]}"
 do
-	ssh $uname@10.1.1.$i bash $top_dir/TB_Scripts/set_wlan_local.sh -s $SSID -p $pw
-	ssh $uname@10.1.1.$i sudo reboot
+	echo "  Connecting Node $i to $SSID ..."
+	ssh $uname@10.1.1.$i sudo nmcli radio wifi on
+	ssh $uname@10.1.1.$i sudo nmcli dev wifi connect $SSID password $pw
+	
+	# Legacy - used for older versions of Pi OS requiring wpa_supplicant updates
+	#ssh $uname@10.1.1.$i bash $top_dir/TB_Scripts/set_wlan_local.sh -s $SSID -p $pw
+	#ssh $uname@10.1.1.$i sudo reboot
 done
 
 
