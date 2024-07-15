@@ -26,6 +26,7 @@ help()
 	echo "	-r = range of testbed node addresses (e.g., 'bash get_info.sh -r 103,107')"
 	echo "	-s = Specify SSID of desired WLAN (e.g., set_wlan.sh -s UCaNLab_5G)"
 	echo "	-p = Specify passphrase for desired WLAN (e.g., set_wlan.sh -p password123)"
+	echo "	-c [OPTIONAL] = check (i.e., scan) for available WLANs before connecting"
 	echo "	-u [OPTIONAL] = input client's username (default: ucanlab)"
 	echo ""
 	exit
@@ -62,12 +63,13 @@ addresses_range()
 #-------------------------------------------------------------------
 # Set default parameters
 uname=ucanlab   # default
+scan=0
 debug=0
 
 
 #-------------------------------------------------------------------
 # Get arguments and set appropriate parameters
-while getopts 'hl:r:s:p:d' OPTION; do
+while getopts 'hl:r:s:p:cd' OPTION; do
 	case "$OPTION" in
 		h)
 			help;;
@@ -79,6 +81,8 @@ while getopts 'hl:r:s:p:d' OPTION; do
 			SSID=$OPTARG;;			
 		p)
 			pw=$OPTARG;;
+		c)
+			scan=1;;
 		d)
 			debug=1;;
 	esac
@@ -100,6 +104,7 @@ then
 	echo "  Nodes: ${addresses[@]}"
 	echo "  SSID: $SSID"
 	echo "  Password: $pw"
+	echo "  Scan: $scan"
 	echo "  UName: $uname"
 	echo ""
 	exit
@@ -109,6 +114,13 @@ for i in "${addresses[@]}"
 do
 	echo "  Connecting Node $i to $SSID ..."
 	ssh $uname@10.1.1.$i sudo nmcli radio wifi on
+	
+	if [ $scan -gt 0 ]
+	then
+		# Scan first to make sure node is aware of all networks... 
+		ssh $uname@10.1.1.$i sudo iw dev wlan0 scan 1> /dev/null
+	fi
+	
 	ssh $uname@10.1.1.$i sudo nmcli dev wifi connect $SSID password $pw
 	
 	# Legacy - used for older versions of Pi OS requiring wpa_supplicant updates
