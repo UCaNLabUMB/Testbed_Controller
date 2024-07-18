@@ -22,6 +22,7 @@ The OS for an RPi microcontroller (Pi 3 B+ or Pi 4) is stored on a microSD card.
   - Select "WRITE" to begin writing the OS onto the microSD card, and select "yes" to confirm that you want to format the microSD card.
 
 **NOTE** If you will be setting up multiple RPi nodes, it is helpful to change setting for Image custumization options to "Always Use" so that you do not need to update the settings for every node you are programming.
+  - If for any reason the custom settings are not setup, you can set the username/password and locale when the Pi is booted for the first time. In this case, do not enable Raspberry Pi connect during the setup process. Instead, you will also need to enable ssh via raspi-config once the Pi boots up.
 
 ![](/Documentation/Images/RPi_Setup.png)
 
@@ -31,22 +32,32 @@ Now that the OS is installed, put your microSD card into the slot of the Raspber
 * `sudo apt install iperf`
 * `sudo apt install iperf3`
 
+**NOTE** When installing iperf3, you should select NO when asked about running iperf3 as a Daemon on startup.
+
 You can verify the installations are successful by typing `iperf -v` and/or `iperf3 -v` to get the software version that you have just installed.
+
+If you plan to use the testbed for SDR activities, you should also install the relevant GNURadio and UHD software using the following commands. The first two commands install GNURadio and the UHD, respectively. The third command uses the UHD library to download relevant FPGA images for available USRP hardware.
+* `sudo apt install gnuradio`
+* `sudo apt install libuhd-dev uhd-host`
+* `sudo uhd_images_downloader`
 
 
 ## RPi Node Configuration 
-For simplicity, we describe how to setup the RPi node's static IP address with the Pi OS graphical interface, although this can also be done in the terminal. To start, _right click_ on the arrows in the top right corner of the Desktop, then select "Wireless & Wired Network Settings" and enter the following settings:
-* Set "configure" to _interface_ and _eth0_
-* Disable the option to "Automatically configure empty options"
-* Disable IPv6 
-* Set IPv4 Address (`10.1.1.X`) and add subnet mask by including /24 at the end of the address
-  - The "X" in the address should be replaced with a unique number for each node, starting at 101 for the first node.
-* Click Apply and then Close
+We will now describe how to _enable WiFi_ and setup the RPi node's _static IP_ address. For simplicity, we describe how to do this using the Pi OS graphical interface; however, this can also be done in the terminal.  
+
+To start, _click_ on the network icon (i.e., the arrows in the top right corner of the Desktop). If the WLAN is not enabled, you might need to select "Turn on WLAN". After this selection, if you click on the network icon again it will ask to "Click here to select wireless LAN country". Select this and specify your country (this will impact the available WLAN channels that the RPi node can use). If you click on the network icon again and the option to "select wireless LAN country" is still there, you might need to reboot the Pi.
+
+When you click on the network icon again, you should be able to select _Advanced Options_ -> _Edit Connections_ to bring up the menu below. From here
+* Select _Wireless Connection 1_ and click on the gear icon at the bottom.
+* Select the _IPv6 Settings_ tab and change the Method selection to _Disabled_.
+* Select the _IPv4 Settings_ tab and change the Method selection to _Manual_.
+* Select _Add_ to add a static IP address for the network interface.
+* Set the Address to `10.1.1.X` and the Netmask to `24`.
+  - The "X" in the address should be replaced with a _unique number for each node_, starting at 101 for the first node.
+* Click Save and then Close
   - If the Ethernet cable is connected when you change the IP address, it will not reflect until you disconnect and reconnect the cable!
 
-
-## Pi Wireless Setup
-After you have set the static IP, you can now disconnect the Ethernet cable (if using a wired connection to the Internet). To prepare the node for wireless connection in the testbed, click on the network icon again (from the Desktop) and select "Turn on WLAN". After this selection, if you click on the network icon again it will ask to "Click here to select wireless LAN country". Select this and specify your country (this will impact the available WLAN channels that the RPi node can use).
+![](/Documentation/Images/RPi_Setup2.png)
 
 Your pi is now configured, and you shouldn't need to connect it to a monitor again! You can shut down the Pi and repeat this process for the set of Pis you will be using in your testbed. Just remember to uniquely identify each node with a different device address (i.e., value of "X" in your IP address). If you have access to a label maker, it is helpful to indicate the number that you used for each node on the Pis.
 
