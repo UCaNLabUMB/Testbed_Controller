@@ -57,7 +57,7 @@ When you click on the network icon again, you should be able to select _Advanced
 * Click Save and then Close
   - If the Ethernet cable is connected when you change the IP address, it will not reflect until you disconnect and reconnect the cable!
 
-![](/Documentation/Images/RPi_Setup2.png)
+![](/Documentation/Images/RPi_Setup_2.png)
 
 Your pi is now configured, and you shouldn't need to connect it to a monitor again! You can shut down the Pi and repeat this process for the set of Pis you will be using in your testbed. Just remember to uniquely identify each node with a different device address (i.e., value of "X" in your IP address). If you have access to a label maker, it is helpful to indicate the number that you used for each node on the Pis.
 
