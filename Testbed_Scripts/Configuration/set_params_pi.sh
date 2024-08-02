@@ -1,13 +1,13 @@
 #!/bin/bash
 
 #################################################################### 
-# set_wifi_power.sh
+# set_params.sh
 #
-# Author: Victoria Planchart
+# Author: Victoria Planchart (Original)
 #
-# Description: Script to change the wlan power for a given node
+# Description: Script to change parameters on specified Pi(s)
 #
-# Input: bash set_wifi_power.sh -l <node number> -p <power value>
+# Input: bash set_params_pi.sh -l <node number> -p <power value>
 #
 ####################################################################
 
@@ -18,11 +18,11 @@
 help()
 {
 	echo ""
-	echo "	### Bash script to set the wlan power for a given testbed node ###"
+	echo "	### Bash script to set parameters for a given testbed node ###"
 	echo "	----------------------------------------------------------------------------"
-	echo "	-l = list of testbed node addresses (e.g., 'bash get_info.sh -l 103,105,109')"
-	echo "	-r = range of testbed node addresses (e.g., 'bash get_info.sh -r 103,107')"
-	echo "	-p = specify wifi power"
+	echo "	-l = list of testbed node addresses (e.g., 'bash set_params_pi.sh -l 103,105,109')"
+	echo "	-r = range of testbed node addresses (e.g., 'bash set_params_pi.sh -r 103,107')"
+	echo "	-p = Set wifi power for specied nodes (e.g., 'bash set_params_pi.sh -l 101 -p 20')"
 	echo "	-u [OPTIONAL] = input client's username (default: ucanlab)"
 	echo ""
 	exit
