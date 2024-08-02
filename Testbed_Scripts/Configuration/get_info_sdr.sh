@@ -21,8 +21,8 @@ help()
 	echo ""
 	echo "	###        Bash script to list SDR capabilitiesfor testbed nodes         ###"
 	echo "	----------------------------------------------------------------------------"
-	echo "	-l = list of testbed node addresses (e.g., get_info_wifi.sh -l 103,105,109)"
-	echo "	-r = range of testbed node addresses (e.g., get_info_wifi.sh -r 103,107)"
+	echo "	-l = list of testbed node addresses (e.g., get_info_sdr.sh -l 103,105,109)"
+	echo "	-r = range of testbed node addresses (e.g., get_info_sdr.sh -r 103,107)"
 	echo "	-g [OPTIONAL] = List the version of GNURadio installed"
 	echo "	-s [OPTIONAL] = List the available SDR hardware for each node"
 	echo "	-a [OPTIONAL] = List the available SDR hardware's address"
@@ -153,7 +153,7 @@ do
 	# check for GNURadio Version
 	if (( $gnuradio_check == 1 ))
 	then
-		my_gnuradio=$(ssh $uname@"10.1.1.$i" gnuradio-config-info -v)
+		my_gnuradio=$(ssh $uname@"10.1.1.$i" gnuradio-config-info -v 2> /dev/null || echo "   NA   ")
 		temp="$temp     $my_gnuradio"
 	fi
 	
