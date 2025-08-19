@@ -33,7 +33,7 @@ help()
 	echo "	-t [OPTIONAL] = List the current temperature reading for each specified node"
 	echo "	-v [OPTIONAL] = List the Pi type or software version for each specified node"
 	echo "                    (e.g., 'bash get_info_pi.sh -l 103 -v <software>' "
-	echo "                                                    for <Pi,python3,iperf3> )"
+	echo "                                                    for <Pi,python3,iperf3,sudo> )"
 	echo "                    (e.g., '-v Pi' for Pi type or '-v python3' for python3 version)"
 	echo "	-u [OPTIONAL] = client's username (e.g., '-u uname') (default: ucanlab)"
 	echo ""
@@ -261,6 +261,12 @@ do
 		then
 			temp="$temp    $(ssh $uname@"10.1.1.$i" iperf3 -v | grep "iperf" | awk '{print $2" "$3" "$4}')"
 		fi
+
+		if [ $ver_option = "sudo" ] #NOTE: Use 'if [ ]' for string comparison
+		then
+			temp="$temp    $(ssh $uname@"10.1.1.$i" sudo -V | grep "Sudo version" | awk '{print $3}')"
+		fi
+
 	fi
 	
 	# Print information for each Pi on a single Row
