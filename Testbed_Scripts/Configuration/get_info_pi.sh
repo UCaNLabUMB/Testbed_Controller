@@ -30,6 +30,7 @@ help()
 	echo "	-m [OPTIONAL] = List the RAM size for each specified node"
 	echo "	-p [OPTIONAL] = List the WiFi Tx power for each specified node"
 	echo "	-o [OPTIONAL] = List the installed OS for each specified node"
+	echo "	-s [OPTIONAL] = List the VNC Status for each specified node"
 	echo "	-t [OPTIONAL] = List the current temperature reading for each specified node"
 	echo "	-v [OPTIONAL] = List the Pi type or software version for each specified node"
 	echo "                    (e.g., 'bash get_info_pi.sh -l 103 -v <software>' "
@@ -112,6 +113,13 @@ setup_col_titles()
 		temp1="$temp1      OS    "
 		temp2="$temp2  ----------"
 	fi
+	
+	#------------------
+	if (( $vnc_check == 1 ))
+	then
+		temp1="$temp1  VNC Status"
+		temp2="$temp2  ----------"
+	fi
 		
 	#------------------
 	if (( $temp_check == 1 ))
@@ -142,6 +150,7 @@ ver_check=0
 mem_check=0
 ram_check=0
 os_check=0	
+vnc_check=0	
 temp_check=0	
 power_check=0
 uname=ucanlab # default
@@ -150,7 +159,7 @@ debug=0
 #-------------------------------------------------------------------
 # Get arguments and set appropriate parameters
 
-while getopts 'hl:r:dmpotv:u:' OPTION; do
+while getopts 'hl:r:dmpostv:u:' OPTION; do
 	case "$OPTION" in
 		h)
 			help;;
@@ -166,6 +175,8 @@ while getopts 'hl:r:dmpotv:u:' OPTION; do
 			power_check=1;;
 		o)
 			os_check=1;;			
+		s)
+			vnc_check=1;;			
 		t)
 			temp_check=1;;			
 		v)
@@ -234,6 +245,13 @@ do
 	then
 		temp="$temp    $(ssh $uname@"10.1.1.$i" cat /etc/os-release | grep "^ID=" | awk -F'[/=]' '{print $2}')"
 		temp="$temp $(ssh $uname@"10.1.1.$i" getconf LONG_BIT)"
+	fi
+		
+	#------------------
+	# check for VNC Status
+	if (( $vnc_check == 1 ))
+	then
+		temp="$temp      $(ssh $uname@"10.1.1.$i" netstat -tuln | grep 5900 | awk '{print $6}')"
 	fi
 		
 	#------------------
