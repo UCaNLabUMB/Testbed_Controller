@@ -32,6 +32,7 @@ help()
 	echo "	-o [OPTIONAL] = List the installed OS for each specified node"
 	echo "	-t [OPTIONAL] = List the current temperature reading for each specified node"
 	echo "	-v [OPTIONAL] = List the Pi type or software version for each specified node"
+	echo "	-w [OPTIONAL] = List the write speed for each specified node"
 	echo "                    (e.g., 'bash get_info_pi.sh -l 103 -v <software>' "
 	echo "                                                    for <Pi,python3,iperf3,sudo> )"
 	echo "                    (e.g., '-v Pi' for Pi type or '-v python3' for python3 version)"
@@ -127,6 +128,13 @@ setup_col_titles()
 		temp2="$temp2  ------------------"
 	fi
 	
+	#------------------
+	if (( $write_check == 1 ))
+	then
+		temp1="$temp1    Write Speed    "
+		temp2="$temp2  ---------------"
+	fi
+	
 	echo ""
 	echo $temp1
 	echo $temp2
@@ -144,13 +152,14 @@ ram_check=0
 os_check=0	
 temp_check=0	
 power_check=0
+write_check=0
 uname=ucanlab # default
 debug=0
 
 #-------------------------------------------------------------------
 # Get arguments and set appropriate parameters
 
-while getopts 'hl:r:dmpotv:u:' OPTION; do
+while getopts 'hl:r:dmpotwv:u:' OPTION; do
 	case "$OPTION" in
 		h)
 			help;;
@@ -167,7 +176,9 @@ while getopts 'hl:r:dmpotv:u:' OPTION; do
 		o)
 			os_check=1;;			
 		t)
-			temp_check=1;;			
+			temp_check=1;;	
+		w) 
+			write_check=1;;		
 		v)
 			version_check;;
 		u)
@@ -241,6 +252,15 @@ do
 	if (( $temp_check == 1 ))
 	then
 		temp="$temp    $(ssh $uname@"10.1.1.$i" vcgencmd measure_temp | awk -F'[/=]' '{print $2}')"
+	fi
+
+	#------------------
+	# check for write speed 
+	if (( $write_check == 1 )) 
+	then 
+		TEST="test_file.tmp"
+		write_speed=$(ssh $uname@"10.1.1.$i" dd if=/dev/zero of=$TEST bs=100M count=1 conv=fdatasync 2>&1 | grep --color=never -o '[0-9.]* MB/s' && rm -f test_file.tmp)
+		temp="$temp       $write_speed"
 	fi
 
 	#------------------

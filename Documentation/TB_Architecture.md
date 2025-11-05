@@ -50,6 +50,7 @@ Specific Addresses
 ## Software Tools
 * **SSH:** We use the Secure Shell network protocol to communicate remotely from the TC to the RPi nodes for control and data exchange
 * **IPerf3:** IPerf software works in a client-server mode. On server nodes, iperf will run in server mode and wait for traffic from the iperf client. On client nodes, iperf will run in client mode, generate traffic, and measure the maximum data transfer rate and the maximum network bandwidth (throughput). We use iperf3 as the primary testing tool for higher layer throughput analysis within the testbed.
+* **GNURadio:** (Optional) The GNURadio software is a used for signal processing on the Raspberry Pis. While some default flowgraphs are already generated and ready to be deployed to the RPi nodes, installing GNURadio on the TC is necessary in order to create custom flowgraphs that can be deployed to the RPi nodes.
 
 ## Data Collection Procedure
 Once the testbed is setup, data collection is implemented as follows. The steps below are defined in more detail in the [Testing and Analysis](https://github.com/UCaNLabUMB/Testbed_Controller/blob/main/Documentation/Testing.md) documentation.

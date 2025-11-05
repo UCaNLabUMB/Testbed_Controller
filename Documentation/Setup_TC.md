@@ -10,11 +10,11 @@ To describe the TC setup, we describe the following steps:
 
 
 ## Ubuntu Installation
-We suggest installing Ubuntu OS rather than using a virtual machine. For current testing, we use Ubuntu version 22.04 LTS. To do this, follow the [Ubuntu Installation tutorial](https://ubuntu.com/tutorials/install-ubuntu-desktop#1-overview) for Ubuntu Desktop.
+We suggest installing Ubuntu OS rather than using a virtual machine. For current testing, we use Ubuntu version 24.04 LTS. To do this, follow the [Ubuntu Installation tutorial](https://ubuntu.com/tutorials/install-ubuntu-desktop#1-overview) for Ubuntu Desktop.
 
 
 ## IP Assignment
-Once you have a computer with Ubuntu installed, you should assign a static IP address to the Ethernet interface that you will use to connect to the testbed control network. In Ubuntu 22.04, you can do this as follows:
+Once you have a computer with Ubuntu installed, you should assign a static IP address to the Ethernet interface that you will use to connect to the testbed control network. In Ubuntu 24.04, you can do this as follows:
 * Go to Settings -> Network and click on the gear symbol next to the desired network interface.
 * Select the "IP v4" tab and assign "IPv4 Method" to "Manual"
 * Enter the TC's IP address as `10.1.1.1` with a Netmask of `255.255.255.0`
@@ -24,7 +24,12 @@ Once you have a computer with Ubuntu installed, you should assign a static IP ad
 
 
 ## Testbed Code Setup
-While the testbed code can be directly downloaded from the Github repository, we suggest using GitHub Desktop to clone the testbed repository so that you can easily pull future updates into your local repository. Since Github Desktop is not officially supported by Github, it needs to be installed with the GDebi Package Installer. Follow these steps to install GitHub Desktop on Ubuntu:
+While the testbed code can be directly downloaded from the Github repository, we suggest using GitHub Desktop to clone the testbed repository so that you can easily pull future updates into your local repository. Since Github Desktop is not officially supported by Github, it needs to be installed with the GDebi Package Installer. You can follow the instructions at the link below:
+* [https://github.com/shiftkey/desktop](https://github.com/shiftkey/desktop)
+
+
+(Older Instructions for GitHub Desktop... only use if you run into issues with the method above)
+Follow these steps to install GitHub Desktop on Ubuntu:
 * Open the "Ubuntu Software" and install _GDebi Package Installer_.
 * Download the most recent GitHub desktop release as a .deb file from:
   - [https://github.com/shiftkey/desktop/releases/](https://github.com/shiftkey/desktop/releases/)

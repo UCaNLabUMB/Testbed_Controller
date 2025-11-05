@@ -33,13 +33,13 @@ When this script is run, it pings each requested node and determines if the TC r
 ## Setup Passwordless SSH
 In order to establish a trusted passwordless connection between the TC and the RPi nodes, we use the secure shell (SSH) protocol. In this setup stage, we establish the association between the TC and all RPi nodes. Once established, the TC will be able to communicate with and control the RPi nodes more freely, and we will be able to execute the other testbed scripts. 
 
-To setup passwordless SSH, you should first generate a public/private key pair. In a terminal on the TC, you can do this with the `ssh-keygen` command. When generating the key, you will be asked for the file to save the key in and a passphrase for the key. You can press enter through each of these options to use defaults (i.e., no passphrase and store the key in the directory `~/.ssh/id_rsa` where ~ represents your home directory). After the key is generated at the TC, it needs to be shared with the RPi nodes. This is done with the `ssh-copy-id` command, which can be run with the command `ssh-copy-id -i ~/.ssh/id_rsa.pub <pi address>` where `<pi address>` represents the username and IP address for the specific node to be configured. When copying to the RPi node, you will need to select "yes" to connect and you will need to enter the RPi nodes password one last time (this is whatever password you set when creating the RPi node's microSD card). 
+To setup passwordless SSH, you should first generate a public/private key pair. In a terminal on the TC, you can do this with the `ssh-keygen` command. When generating the key, you will be asked for the file to save the key in and a passphrase for the key. You can press enter through each of these options to use defaults (i.e., no passphrase and store the key in the directory `~/.ssh/id_ed25519` where ~ represents your home directory). After the key is generated at the TC, it needs to be shared with the RPi nodes. This is done with the `ssh-copy-id` command, which can be run with the command `ssh-copy-id -i ~/.ssh/id_ed25519 <pi address>` where `<pi address>` represents the username and IP address for the specific node to be configured. When copying to the RPi node, you will need to select "yes" to connect and you will need to enter the RPi nodes password one last time (this is whatever password you set when creating the RPi node's microSD card). 
 
 The code below is an example for configuring passwordless SSH for the 3 nodes verified in the image above. Note that the key only needs to be generated once, but should be copied to ALL of the RPi nodes in your testbed. Also, note that we have specified `ucanlab` as the username when setting up our RPi nodes, but this should be replaced with whatever you have indicated for the username on the nodes in your testbed.
 * `ssh-keygen`
-* `ssh-copy-id -i ~/.ssh/id_rsa.pub ucanlab@10.1.1.101`
-* `ssh-copy-id -i ~/.ssh/id_rsa.pub ucanlab@10.1.1.105`
-* `ssh-copy-id -i ~/.ssh/id_rsa.pub ucanlab@10.1.1.106`
+* `ssh-copy-id -i ~/.ssh/id_ed25519 ucanlab@10.1.1.101`
+* `ssh-copy-id -i ~/.ssh/id_ed25519 ucanlab@10.1.1.105`
+* `ssh-copy-id -i ~/.ssh/id_ed25519 ucanlab@10.1.1.106`
 
 
 ## Verify SSH Configuration

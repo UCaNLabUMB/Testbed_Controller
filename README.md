@@ -2,11 +2,13 @@ For Citation/Reference:
 <a href="https://zenodo.org/badge/latestdoi/387873602"><img src="https://zenodo.org/badge/387873602.svg" alt="DOI"></a>
 
 # Overview
-This repository is developed and maintained by the Ubiquitous Communications and Networking Lab (UCaN Lab) at UMass Boston. The code provides a set of documentation and scripts for configuring distributed nodes from a central location, and offers experimental test capabilities for analyzing throughput in dense multi-access point and multi-user environments.
+This repository is developed and maintained by the Ubiquitous Communications and Networking Lab (UCaN Lab) at UMass Boston. The code provides a set of documentation and scripts for configuring distributed nodes from a central location, and offers experimental test capabilities for analyzing throughput in dense multi-access point and multi-user environments. Beyond this, the codebase includes functionality to extend the analysis to the signal level via software defined radio (SDR).
 
-This tool is designed to analyze the impact of network configurations and traffic characteristics in a variety of scenarios. Rather than using real world devices with various internet based applications, device usage is emulated with Raspberry Pi (RPi) microcontrollers. All of the **RPi nodes** will be connected to a single computer acting as the **Testbed Controller (TC)**, allowing the network to be centrally configured and controlled.
+At the _network level_, this testbed framework is designed to analyze the impact of network configurations and traffic characteristics in a variety of scenarios. Rather than using real world devices with various internet based applications, device usage is emulated with Raspberry Pi (RPi) microcontrollers. All of the **RPi nodes** will be connected to a single computer acting as the **Testbed Controller (TC)**, allowing the network to be centrally configured and controlled. 
 
-The testbed architecture consists of a _Control Network_ and _Test Network(s)_ as shown below. The control network connects all RPi nodes to the TC. The Test Network(s) consist of WiFi router(s) that the RPi nodes can connect to. The iperf network performance analysis tool is used to generate traffic and analyze performance of the Test Network(s). RPi nodes on the Test Network(s) can be configured as iperf servers (connected to APs via Ethernet) or iperf clients (connected wirelessly to the APs).
+In order to extend analysis to the _signal level_, the testbed includes functionality to enable GNURadio signal processing flowgraphs on the RPi nodes. To interact with the physical environment, the framework is setup to utilize SDR hardware (e.g., universal software radio peripherals or **USRPs**) connected to the RPi nodes in order to generate custom waveforms and observe received signal characteristics. When implementing signal level analysis, the TC can deploy custom flowgraphs to the RPi nodes, remotely initiate the flowgraphs, modify parameters on running flowgraphs, and aggregate signal measurements from the set of nodes.
+
+The baseline testbed architecture consists of a _Control Network_ and _Test Network(s)_ as shown below. The control network connects all RPi nodes to the TC. The Test Network(s) consist of WiFi router(s) that the RPi nodes can connect to. The iperf network performance analysis tool is used to generate traffic and analyze performance of the Test Network(s). RPi nodes on the Test Network(s) can be configured as iperf servers (connected to APs via Ethernet) or iperf clients (connected wirelessly to the APs).
 ![GitHub Logo](Documentation/Images/TB_Architecture.png) 
 
 
@@ -21,7 +23,7 @@ This repository includes documentation that covers how to setup an instance of t
 
 # Equipment  
 For the baseline version of the testbed, you will need the following equipment. Other variations of the testbed (to be described later) require supplemental equipment.
-* Raspberry Pi microcontrollers (3B+ or 4, ideally 4G RAM or higher)
+* Raspberry Pi microcontrollers (3B+, 4, or 5, ideally 4G RAM or higher)
   - microSD cards  
   - Power cables
 * PC for Testbed Controller (Ideally, running Ubuntu Linux) 
@@ -30,6 +32,7 @@ For the baseline version of the testbed, you will need the following equipment. 
   - Network Switches 
   - Ethernet cables
   - USB to Ethernet Adapter
+* SDR Equipment (Optional)
 
 
 # Chapters
