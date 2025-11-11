@@ -30,12 +30,14 @@ help()
 	echo "	-m [OPTIONAL] = List the RAM size for each specified node"
 	echo "	-p [OPTIONAL] = List the WiFi Tx power for each specified node"
 	echo "	-o [OPTIONAL] = List the installed OS for each specified node"
+	echo "	-s [OPTIONAL] = List the VNC Status for each specified node" 
 	echo "	-t [OPTIONAL] = List the current temperature reading for each specified node"
 	echo "	-v [OPTIONAL] = List the Pi type or software version for each specified node"
-	echo "	-w [OPTIONAL] = List the write speed for each specified node"
 	echo "                    (e.g., 'bash get_info_pi.sh -l 103 -v <software>' "
 	echo "                                                    for <Pi,python3,iperf3,sudo> )"
 	echo "                    (e.g., '-v Pi' for Pi type or '-v python3' for python3 version)"
+	echo "	-w [OPTIONAL] = List the write speed for each specified node"
+	echo "	-a [OPTIONAL] = List the available space for each specified node"
 	echo "	-u [OPTIONAL] = client's username (e.g., '-u uname') (default: ucanlab)"
 	echo ""
 	exit
@@ -113,6 +115,13 @@ setup_col_titles()
 		temp1="$temp1      OS    "
 		temp2="$temp2  ----------"
 	fi
+	
+	#------------------
+	if (( $vnc_check == 1 ))
+	then
+		temp1="$temp1  VNC Status"
+		temp2="$temp2  ----------"
+	fi
 		
 	#------------------
 	if (( $temp_check == 1 ))
@@ -135,6 +144,13 @@ setup_col_titles()
 		temp2="$temp2  ---------------"
 	fi
 	
+	#------------------
+	if (( $space_check == 1 ))
+	then
+		temp1="$temp1  Available Space"
+		temp2="$temp2  ---------------"
+	fi
+	
 	echo ""
 	echo $temp1
 	echo $temp2
@@ -150,16 +166,18 @@ ver_check=0
 mem_check=0
 ram_check=0
 os_check=0	
+vnc_check=0
 temp_check=0	
 power_check=0
 write_check=0
+space_check=0
 uname=ucanlab # default
 debug=0
 
 #-------------------------------------------------------------------
 # Get arguments and set appropriate parameters
 
-while getopts 'hl:r:dmpotwv:u:' OPTION; do
+while getopts 'hl:r:dmpostv:wau:' OPTION; do
 	case "$OPTION" in
 		h)
 			help;;
@@ -174,11 +192,15 @@ while getopts 'hl:r:dmpotwv:u:' OPTION; do
 		p)
 			power_check=1;;
 		o)
-			os_check=1;;			
+			os_check=1;;
+		s) 
+			vnc_check=1;;			
 		t)
 			temp_check=1;;	
 		w) 
-			write_check=1;;		
+			write_check=1;;	
+		a) 
+			space_check=1;; 	
 		v)
 			version_check;;
 		u)
@@ -246,7 +268,14 @@ do
 		temp="$temp    $(ssh $uname@"10.1.1.$i" cat /etc/os-release | grep "^ID=" | awk -F'[/=]' '{print $2}')"
 		temp="$temp $(ssh $uname@"10.1.1.$i" getconf LONG_BIT)"
 	fi
-		
+	
+	#------------------
+	# check for vnc status 
+	if (( $vnc_check == 1 ))
+	then
+		temp="$temp    $(ssh $uname@"10.1.1.$i" netstat -tuln | grep 5900 | awk '{print $6}')"
+	fi
+	
 	#------------------
 	# check for current temperature
 	if (( $temp_check == 1 ))
@@ -263,6 +292,13 @@ do
 		temp="$temp       $write_speed"
 	fi
 
+	#------------------
+	# check for available space 
+	if (( $space_check == 1 )) 
+	then 
+		temp="$temp         $(ssh $uname@"10.1.1.$i" df -h | grep "/dev/mmcblk0p2" | awk '{print $3}')"
+	fi
+	
 	#------------------
 	# check for version
 	if (( $ver_check == 1 ))
