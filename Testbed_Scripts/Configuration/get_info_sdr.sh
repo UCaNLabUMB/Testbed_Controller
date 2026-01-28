@@ -25,6 +25,8 @@ help()
 	echo "	-r = range of testbed node addresses (e.g., get_info_sdr.sh -r 103,107)"
 	echo "	-g [OPTIONAL] = List the version of GNURadio installed"
 	echo "	-s [OPTIONAL] = List the available SDR hardware for each node"
+	echo "                    (e.g., 'bash get_info_sdr.sh -l 103 -v <hardware>' "
+	echo "                                                    for <USRP, RTL, Pluto> )"
 	echo "	-a [OPTIONAL] = List the available SDR hardware's address"
 	echo "	-u [OPTIONAL] = client's username (e.g., '-u uname') (default: ucanlab)"
 	echo ""
@@ -46,6 +48,14 @@ addresses_range()
 
 }
 
+sdr_hardware()
+{
+	sdr_check=1
+	sdr_option=$OPTARG
+	#TODO: Add a warning/error for invalid options
+	
+}
+
 # function to setup the top row of the output
 setup_col_titles()
 {
@@ -64,8 +74,8 @@ setup_col_titles()
 	#------------------
 	if (( $sdr_check == 1 ))
 	then
-		temp1="$temp1     Hardware  "
-		temp2="$temp2  -------------"
+		temp1="$temp1   $sdr_option Hardware  "
+		temp2="$temp2  --------------------"
 	fi
 			
 	#------------------
@@ -95,7 +105,7 @@ addr_check=0
 
 #-------------------------------------------------------------------
 # Get arguments and set appropriate parameters
-while getopts 'hl:r:gsau:d' OPTION; do
+while getopts 'hl:r:s:gau:d' OPTION; do
 	case "$OPTION" in
 		h)
 			help;;
@@ -108,7 +118,7 @@ while getopts 'hl:r:gsau:d' OPTION; do
 		g)
 			gnuradio_check=1;;
 		s)
-			sdr_check=1;;
+			sdr_hardware;;
 		a)
 			addr_check=1;;
 		u)
@@ -161,9 +171,23 @@ do
 	# check for connected SDR hardware
 	if (( $sdr_check == 1 ))
 	then
-		# NOTE: The "2> /dev/null" after uhd_find_devices will suppress the info message from uhd 
-		my_sdr=$(ssh $uname@"10.1.1.$i" uhd_find_devices 2> /dev/null | grep "name:" | awk '{print $2}')
-		temp="$temp      $my_sdr"
+		if [ $sdr_option = "USRP" ] #NOTE: Use 'if [ ]' for string comparison
+		then
+			my_sdr1=$(ssh $uname@"10.1.1.$i" uhd_find_devices 2> /dev/null | grep "name:" | awk '{print $2}')
+			temp="$temp      $my_sdr1" # NOTE: The "2> /dev/null" after uhd_find_devices will suppress the info message from uhd 
+		fi
+		
+		if [ $sdr_option = "RTL" ] 
+		then 
+			my_sdr2=$(ssh $uname@"10.1.1.$i" rtl_test -t 2>&1 | grep 'Realtek' | awk -F',' '{print $2}')
+			temp="$temp      $my_sdr2"	
+		fi
+		
+		if [ $sdr_option = "Pluto" ] 
+		then 
+			my_sdr3=$(ssh $uname@"10.1.1.$i" iio_info -s 2>&1 | grep -o 'PlutoSDR' | awk '{print $1; exit}')
+			temp="$temp      $my_sdr3"
+		fi
 	fi
 
 	#------------------
