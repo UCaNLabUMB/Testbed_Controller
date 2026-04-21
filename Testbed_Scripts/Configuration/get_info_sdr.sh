@@ -51,8 +51,8 @@ addresses_range()
 sdr_hardware()
 {
 	sdr_check=1
-	sdr_option=$OPTARG
-	#TODO: Add a warning/error for invalid options
+	IFS=','
+	read -ra my_sdr_arg <<< "$OPTARG"
 	
 }
 
@@ -74,8 +74,8 @@ setup_col_titles()
 	#------------------
 	if (( $sdr_check == 1 ))
 	then
-		temp1="$temp1   $sdr_option Hardware  "
-		temp2="$temp2  --------------------"
+		temp1="$temp1    Hardware  "
+		temp2="$temp2  ------------"
 	fi
 			
 	#------------------
@@ -171,23 +171,30 @@ do
 	# check for connected SDR hardware
 	if (( $sdr_check == 1 ))
 	then
-		if [ $sdr_option = "USRP" ] #NOTE: Use 'if [ ]' for string comparison
-		then
-			my_sdr1=$(ssh $uname@"10.1.1.$i" uhd_find_devices 2> /dev/null | grep "name:" | awk '{print $2}')
-			temp="$temp      $my_sdr1" # NOTE: The "2> /dev/null" after uhd_find_devices will suppress the info message from uhd 
-		fi
-		
-		if [ $sdr_option = "RTL" ] 
-		then 
-			my_sdr2=$(ssh $uname@"10.1.1.$i" rtl_test -t 2>&1 | grep 'Realtek' | awk -F',' '{print $2}')
-			temp="$temp      $my_sdr2"	
-		fi
-		
-		if [ $sdr_option = "Pluto" ] 
-		then 
-			my_sdr3=$(ssh $uname@"10.1.1.$i" iio_info -s 2>&1 | grep -o 'PlutoSDR' | awk '{print $1; exit}')
-			temp="$temp      $my_sdr3"
-		fi
+		for sdr in "${my_sdr_arg[@]}" 
+		do 
+			case "$sdr" in 
+				USRP)
+					my_sdr=$(ssh $uname@"10.1.1.$i" uhd_find_devices 2> /dev/null | grep "name:" | awk '{print $2}')
+					[ -n "$my_sdr" ] && temp="$temp      $my_sdr" 
+					;; 
+				
+				RTL) 
+					my_sdr=$(ssh $uname@"10.1.1.$i" rtl_test -t rtl_test -t 2>&1 | grep 'Generic' | awk '{print $5}')
+					[ -n "$my_sdr" ] && temp="$temp      $my_sdr"	
+					;; 
+					
+				Pluto)  
+					my_sdr=$(ssh $uname@"10.1.1.$i" iio_info -s 2>&1 | grep -o 'PlutoSDR' | awk '{print $1; exit}')
+					[ -n "$my_sdr" ] && temp="$temp      $my_sdr"
+					;; 
+					
+				HackRF)  
+					my_sdr=$(ssh $uname@"10.1.1.$i" hackrf_info | grep 'Board ID Number' | awk '{print $5,$6}' | sed 's/[()]/''/g')
+					[ -n "$my_sdr" ] && temp="$temp      $my_sdr"
+					;; 	
+			esac 
+		done 
 	fi
 
 	#------------------
