@@ -38,6 +38,8 @@ You can verify the installations are successful by typing `iperf -v` and/or `ipe
 
 If you plan to use the testbed for SDR activities, you should also install the relevant GNURadio and UHD software using the following commands. The first two commands install GNURadio and the UHD, respectively. The third command uses the UHD library to download relevant FPGA images for available USRP hardware.
 * `sudo apt install gnuradio`
+* `sudo apt install rtl-sdr`
+* `sudo apt install libiio-utils`
 * `sudo apt install libuhd-dev uhd-host`
 * `sudo uhd_images_downloader`
 
