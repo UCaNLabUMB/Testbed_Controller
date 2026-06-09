@@ -19,8 +19,9 @@ help()
 	echo ""
 	echo "	### Bash script for shutting down the testbed's RPi nodes ###"
 	echo "	---------------------------------------------------------------------------------------"
-	echo "	-l = list of testbed node addresses (e.g., 'bash get_mac.sh -l 103,105,109')"
-	echo "	-r = range of testbed node addresses (e.g., 'bash get_mac.sh -r 103,107')"
+	echo "	-l = list of testbed node addresses (e.g., 'bash shutdown_pis.sh -l 103,105,109')"
+	echo "	-r = range of testbed node addresses (e.g., 'bash shutdown_pis.sh -r 103,107')"
+	echo "	-p = password for the testbed nodes (e.g., 'bash shutdown_pis.sh -r 103,107 -p <pw>')"
 	echo "	-b [OPTIONAL] = reboot rather than shutdown"
 	echo "	-u [OPTIONAL] = client's username (e.g., '-u uname') (default: ucanlab)"
 	echo ""
@@ -60,13 +61,14 @@ addresses_range()
 # Set default parameters
 
 uname=ucanlab # default
+my_password=default_pw # default
 reboot=0
 debug=0
 
 #-------------------------------------------------------------------
 # Get arguments and set appropriate parameters
 
-while getopts 'hl:r:bu:d' OPTION; do
+while getopts 'hl:r:p:bu:d' OPTION; do
 	case "$OPTION" in
 		h)
 			help;;
@@ -74,6 +76,8 @@ while getopts 'hl:r:bu:d' OPTION; do
 			addresses_list;;
 		r)
 			addresses_range;;
+		p)
+			my_password=$OPTARG;;
 		b)
 			reboot=1;;
 		u)
@@ -95,6 +99,7 @@ then
 	echo "  ##### Debug Info: #####"
 	echo "  Nodes: ${addresses[@]}"
 	echo "  Reboot: $reboot"
+	echo "  Password: $my_password"
 	echo "  UName: $uname"
 	echo ""
 	exit
@@ -111,10 +116,10 @@ do
 	# check for reboot flag
 	if (( $reboot == 1 ))
 	then
-		ssh $uname@10.1.1.$i sudo reboot
+		ssh $uname@10.1.1.$i "echo $my_password | sudo -S shutdown -r now"
 		echo " Rebooting Node $i"
 	else
-		ssh $uname@10.1.1.$i sudo shutdown -h now
+		ssh $uname@10.1.1.$i "echo $my_password | sudo -S shutdown now"
 		echo " Shutting Down Node $i"
 		
 	fi
