@@ -36,12 +36,13 @@ Now that the OS is installed, put your microSD card into the slot of the Raspber
 
 You can verify the installations are successful by typing `iperf -v` and/or `iperf3 -v` to get the software version that you have just installed.
 
-If you plan to use the testbed for SDR activities, you should also install the relevant GNURadio and UHD software using the following commands. The first two commands install GNURadio and the UHD, respectively. The third command uses the UHD library to download relevant FPGA images for available USRP hardware.
+If you plan to use the testbed for SDR activities, you should also install the relevant GNURadio and UHD software using the following commands. The first two commands install GNURadio and the UHD, respectively. The third command uses the UHD library to download relevant FPGA images for available USRP hardware. And the last three commands install the associated software for RTL, Pluto, and HackRF hardware, respectively. 
 * `sudo apt install gnuradio`
-* `sudo apt install rtl-sdr`
-* `sudo apt install libiio-utils`
 * `sudo apt install libuhd-dev uhd-host`
 * `sudo uhd_images_downloader`
+* `sudo apt install rtl-sdr`
+* `sudo apt install libiio-utils`
+* `sudo apt install hackrf`
 
 
 ## RPi Node Configuration 
@@ -50,7 +51,7 @@ We will now describe how to _enable WiFi_ and setup the RPi node's _static IP_ a
 To start, _click_ on the network icon (i.e., the arrows in the top right corner of the Desktop). If the WLAN is not enabled, you might need to select "Turn on WLAN". After this selection, if you click on the network icon again it will ask to "Click here to select wireless LAN country". Select this and specify your country (this will impact the available WLAN channels that the RPi node can use). If you click on the network icon again and the option to "select wireless LAN country" is still there, you might need to reboot the Pi.
 
 When you click on the network icon again, you should be able to select _Advanced Options_ -> _Edit Connections_ to bring up the menu below. From here
-* Select _Wireless Connection 1_ and click on the gear icon at the bottom.
+* Select _Wired Connection 1_ and click on the gear icon at the bottom.
 * Select the _IPv6 Settings_ tab and change the Method selection to _Disabled_.
 * Select the _IPv4 Settings_ tab and change the Method selection to _Manual_.
 * Select _Add_ to add a static IP address for the network interface.
