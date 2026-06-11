@@ -109,7 +109,7 @@ setup_col_titles
 # Loop through addresses and ping nodes to verify status
 for i in "${addresses[@]}"
 do
-	ping -c 1 -W 0.1 "10.1.1.$i" > /dev/null
+	ping -c 1 -W 1 "10.1.1.$i" > /dev/null
 	if [ $? -eq 0 ]; then
 		echo "    $i       up"
 	else 
