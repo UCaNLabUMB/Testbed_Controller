@@ -26,7 +26,7 @@ help()
 	echo "	-g [OPTIONAL] = List the version of GNURadio installed"
 	echo "	-s [OPTIONAL] = List the available SDR hardware for each node"
 	echo "                    (e.g., 'bash get_info_sdr.sh -l 103 -v <hardware>' "
-	echo "                                                    for <USRP, RTL, Pluto> )"
+	echo "                                                    for <USRP, RTL, Pluto, HackRF> )"
 	echo "	-a [OPTIONAL] = List the available SDR hardware's address"
 	echo "	-u [OPTIONAL] = client's username (e.g., '-u uname') (default: ucanlab)"
 	echo ""
