@@ -141,13 +141,22 @@ else
 	do
 		ssh $uname@10.1.1.$i mkdir $top_dir/TB_Results -p
 		ssh $uname@10.1.1.$i mkdir $top_dir/TB_Scripts -p
+                # Copy all files from Pi_Scripts directory to TB_Script
+                for file in Pi_Scripts/*
+                do 
+                    if [ -f "$file" ]; then
+                    scp -pr "$file" $uname@10.1.1.$i:$top_dir/TB_Scripts > /dev/null
+                    fi
+                done 
 		
 		# Move any relevant python (or other) scripts to TB_Scripts directory	
-		scp -pr Pi_Scripts/set_wlan_local.sh $uname@10.1.1.$i:$top_dir/TB_Scripts > /dev/null	
+		#scp -pr Pi_Scripts/set_wlan_local.sh $uname@10.1.1.$i:$top_dir/TB_Scripts > /dev/null	
 		# GNURadio Flowgraphs	
-		scp -pr Pi_Scripts/Rx_general.py $uname@10.1.1.$i:$top_dir/TB_Scripts > /dev/null		
-		scp -pr Pi_Scripts/Tx_general.py $uname@10.1.1.$i:$top_dir/TB_Scripts > /dev/null		
-		scp -pr Pi_Scripts/Tx_Tone.py $uname@10.1.1.$i:$top_dir/TB_Scripts > /dev/null		
+		#scp -pr Pi_Scripts/Rx_general.py $uname@10.1.1.$i:$top_dir/TB_Scripts > /dev/null		
+		#scp -pr Pi_Scripts/Tx_general.py $uname@10.1.1.$i:$top_dir/TB_Scripts > /dev/null		
+		#scp -pr Pi_Scripts/Tx_Tone.py $uname@10.1.1.$i:$top_dir/TB_Scripts > /dev/null
+		#scp -pr Pi_Scripts/USRP_Tx.py $uname@10.1.1.$i:$top_dir/TB_Scripts > /dev/null
+                #scp -pr Pi_Scripts/Rx_GUI.py $uname@10.1.1.$i:$top_dir/TB_Scripts > /dev/null
 		
 		echo "Setup Complete: Pi $i"
 	done
