@@ -31,6 +31,8 @@ help()
 	echo "	          (e.g., 'bash sdr_rx_start.sh -l 101,103 -c 915e6,2.4e9')"
 	echo "	-g = list of gain values for corresponding nodes "
 	echo "	          (e.g., 'bash sdr_rx_start.sh -l 101,103 -g 25,40')"
+	echo "	-H = list of gain values for corresponding nodes "
+	echo "	          (e.g., 'bash sdr_rx_start.sh -l 101,103 -H USRP,RTL')"
 	echo "	-u [OPTIONAL] = input client's username if the deffault one (ucanlab) is not used"
 	echo ""
 	exit
@@ -82,6 +84,13 @@ gain_list()
 	read -ra my_gain_vals <<< "$OPTARG"
 }
 
+#---------------------------------------------------------------------------------------------
+hardware_list()
+{
+    IFS=','
+    read -ra my_hw_types <<< "$OPTARG"
+}
+
 
 #############################
 #####   Setup Params    #####
@@ -95,7 +104,7 @@ debug=0
 #---------------------------------------------------------------------------------------------
 # Get arguments and set appropriate parameters
 
-while getopts 'hl:r:a:c:g:u:d' OPTION; do
+while getopts 'hl:r:a:c:g:H:u:d' OPTION; do
 	case "$OPTION" in
 		h)
 			help;;
@@ -109,6 +118,8 @@ while getopts 'hl:r:a:c:g:u:d' OPTION; do
 			carrier_freq_list;;
 		g)
 			gain_list;;
+		H) 
+			hardware_list;;
 		u)
 			uname=$OPTARG;; # in case the username is not the default one, use this flag to user another username
 		d)
@@ -135,6 +146,7 @@ then
 	echo "  Carrier Frequencies: ${my_carrier_freqs[@]}"
 	echo "  Gain Values: ${my_gain_vals[@]}"
 	echo "  Testbed Folder: $top_dir"
+	echo "  Hardward Type: $my_hw_types"
 	echo "  UName: $uname"
 	echo ""
 	exit
@@ -147,11 +159,27 @@ while [[ $i -lt ${#my_addresses[@]} ]]; do # loop through number of nodes
 	my_r=${my_samp_rates[$i]}
 	my_c=${my_carrier_freqs[$i]}
 	my_g=${my_gain_vals[$i]}
+	my_hw=${my_hw_types[$i]}
 	
-	echo "Starting General Rx Script on Pi $my_addr at $my_c Hz with rate $my_r and gain $my_g"
-	ssh $uname@10.1.1.$my_addr python3 $top_dir/TB_Scripts/Rx_general.py -r $my_r -c $my_c -g $my_g -n $my_addr 2> /dev/null &
+	echo "Starting General $my_hw Rx Script on Pi $my_addr at $my_c Hz with rate $my_r and gain $my_g"
+	case "$my_hw" in 
+		Pluto)
+			ssh $uname@10.1.1.$my_addr python3 $top_dir/TB_Scripts/Rx_general_Pluto.py -a $my_r -c $my_c -g $my_g -n $my_addr 2> /dev/null &
+			;;
 	
+		RTL) 
+			ssh $uname@10.1.1.$my_addr python3 $top_dir/TB_Scripts/Rx_general_RTL.py -a $my_r -c $my_c -g $my_g -n $my_addr 2> /dev/null &
+			;; 
+			
+		HackRF) 
+			ssh $uname@10.1.1.$my_addr python3 $top_dir/TB_Scripts/Rx_general_HackRF.py -a $my_r -c $my_c -g $my_g -n $my_addr 2> /dev/null &
+			;; 
+		
+		USRP) 
+			ssh $uname@10.1.1.$my_addr python3 $top_dir/TB_Scripts/Rx_general.py -a $my_r -c $my_c -g $my_g -n $my_addr 2> /dev/null &
+			;; 
+
+	esac
 	i=$((i + 1))
 done
-
 
