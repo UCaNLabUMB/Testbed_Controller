@@ -36,6 +36,8 @@ help()
 	echo "	-g = list of gain values for corresponding nodes "
 	echo "	          (e.g., 'bash sdr_tx_start.sh -l 101,103 -g 25,40')"
 	echo "	-s = specify script to run on Pi (0: general, 1: tone only)"
+	echo "	-H = list of hardware for corresponding nodes "
+	echo "	          (e.g., 'bash sdr_rx_start.sh -l 101,103 -H USRP,Pluto')"
 	echo "	-u [OPTIONAL] = input client's username if the deffault one (ucanlab) is not used"
 	echo ""
 	exit
@@ -103,6 +105,12 @@ gain_list()
 	read -ra my_gain_vals <<< "$OPTARG"
 }
 
+#---------------------------------------------------------------------------------------------
+hardware_list()
+{
+    IFS=','
+    read -ra my_hw_types <<< "$OPTARG"
+}
 
 #############################
 #####   Setup Params    #####
@@ -117,7 +125,7 @@ my_script=0
 #---------------------------------------------------------------------------------------------
 # Get arguments and set appropriate parameters
 
-while getopts 'hl:r:a:c:f:m:g:s:u:d' OPTION; do
+while getopts 'hl:r:a:c:f:m:g:s:H:u:d' OPTION; do
 	case "$OPTION" in
 		h)
 			help;;
@@ -135,8 +143,10 @@ while getopts 'hl:r:a:c:f:m:g:s:u:d' OPTION; do
 			scaling_list;;
 		g)
 			gain_list;;
+		H) 
+			hardware_list;;
 		s)
-			my_script=$OPTARG;;
+			my_script=$OPTARG;; 
 		u)
 			uname=$OPTARG;; # in case the username is not the default one, use this flag to user another username
 		d)
@@ -165,6 +175,7 @@ then
 	echo "  Scaling Values: ${my_scale_vals[@]}"
 	echo "  Gain Values: ${my_gain_vals[@]}"
 	echo "  Script Selection: $my_script"
+	echo "  Hardward Type: $my_hw_types"
 	echo "  Testbed Folder: $top_dir"
 	echo "  UName: $uname"
 	echo ""
@@ -180,6 +191,7 @@ while [[ $i -lt ${#my_addresses[@]} ]]; do # loop through number of nodes
 	my_f=${my_sig_freqs[$i]}
 	my_m=${my_scale_vals[$i]}
 	my_g=${my_gain_vals[$i]}
+	my_hw=${my_hw_types[$i]}
 	
 	case $my_script in
 	
@@ -189,9 +201,21 @@ while [[ $i -lt ${#my_addresses[@]} ]]; do # loop through number of nodes
 	  ;;
 	
 	1)
-	  echo "Starting Tone Script on Pi $my_addr at $my_carrier Hz with rate $my_r, frequency $my_f, and gain $my_g"
-	  ssh $uname@10.1.1.$my_addr python3 $top_dir/TB_Scripts/Tx_Tone.py -r $my_r -c $my_c -f $my_f -g $my_g -n $my_addr 2> /dev/null &
+	  echo "Starting $my_hw Tone Script on Pi $my_addr at $my_c Hz with rate $my_r, frequency $my_f, and gain $my_g"
+	  
+	  if [ "$my_hw" = "Pluto" ]; then 
+	  	ssh $uname@10.1.1.$my_addr python3 $top_dir/TB_Scripts/Tx_Tone_Pluto.py -a $my_r -c $my_c -f $my_f -g $my_g -n $my_addr 2> /dev/null &
+	  fi 
+	  
+	  if [ "$my_hw" = "HackRF" ]; then  
+	  	ssh $uname@10.1.1.$my_addr python3 $top_dir/TB_Scripts/Tx_Tone_HackRF.py -a $my_r -c $my_c -f $my_f -g $my_g -n $my_addr 2> /dev/null &
+	  fi 
+	  
+	  if [ "$my_hw" = "USRP" ]; then  
+	  	ssh $uname@10.1.1.$my_addr python3 $top_dir/TB_Scripts/Tx_Tone.py -a $my_r -c $my_c -f $my_f -g $my_g -n $my_addr 2> /dev/null &
+	  fi 
 	  ;;
+	 
 	
 	*)
 	  echo "Incorrect Script Setting"
