@@ -21,7 +21,7 @@ The OS for an RPi microcontroller (Pi 3 B+ or Pi 4) is stored on a microSD card.
   - Select "Save" to save the settings
   - Select "WRITE" to begin writing the OS onto the microSD card, and select "yes" to confirm that you want to format the microSD card.
 
-**NOTE** If you will be setting up multiple RPi nodes, it is helpful to change setting for Image custumization options to "Always Use" so that you do not need to update the settings for every node you are programming.
+**NOTE** If you will be setting up multiple RPi nodes, it is helpful to change setting for Image customization options to "Always Use" so that you do not need to update the settings for every node you are programming.
   - If for any reason the custom settings are not setup, you can set the username/password and locale when the Pi is booted for the first time. In this case, do not enable Raspberry Pi connect during the setup process. Instead, you will also need to enable ssh via raspi-config once the Pi boots up.
 
 ![](/Documentation/Images/RPi_Setup.png)
