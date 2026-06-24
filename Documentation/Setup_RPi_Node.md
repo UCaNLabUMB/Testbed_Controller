@@ -64,6 +64,20 @@ When you click on the network icon again, you should be able to select _Advanced
 
 Your pi is now configured, and you shouldn't need to connect it to a monitor again! You can shut down the Pi and repeat this process for the set of Pis you will be using in your testbed. Just remember to uniquely identify each node with a different device address (i.e., value of "X" in your IP address). If you have access to a label maker, it is helpful to indicate the number that you used for each node on the Pis.
 
+## [OPTIONAL: SD Card Copied]
+
+To ensure that the RPI’s nodes are consistent and don't introduce errors based on mismatched Pi OS versions, etc., for our testbed system. We can use the SD card copier in the Pi’s OS to copy the current RPi node from our system to a new SD card. This allows us to have similar settings that only require us to change the static IP address for an additional node. 
+
+To start, grab a new microSD card and plug it into the microSD card reader via a USB 2.0 or 3.0 port on the RPi’s node. Then go to the Application menu (i.e., Raspberry Pi logo) on the top left corner to use the SD card copied setting they have, from here. 
+
+* Select _Accessories_ -> _SD Card Copier_ 
+* Inside _SD Card Copier_,  for _Copy From Device_ select /dev/mmcblk0 for internal SD or /dev/sda for USB
+* For _Copy To Device_, select the MicroSD card reader via USB (e.g., /dev/sda) 
+* Then click _Start_, the cloning or copying process takes a few minutes depending on the size of the drive
+
+**NOTE** Post-Clone Steps:
+- When cloning an entire system, the new device becomes a carbon copy of the old one. To prevent network and security conflicts on your local network, it is highly recommended to regenerate SSH Keys. Run `sudo rm /etc/ssh/ssh_host_*`, then reboot to securely generate new, unique encryption keys. Update eth0 IP Address (i.e., follow RPI Node Configuration) for the correct network address of the specific node of interest.
+
 ## Previous Chapter
 [Setting Up the TC](https://github.com/UCaNLabUMB/Testbed_Controller/blob/main/Documentation/Setup_TC.md)
 
