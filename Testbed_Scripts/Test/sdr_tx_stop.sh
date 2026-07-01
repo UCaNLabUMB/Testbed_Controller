@@ -1,0 +1,116 @@
+#!/bin/bash
+#############################################################################
+# Author: MR
+#
+# Description: This script shuts down the sdr flowgraph of a desired set of nodes
+#              
+#
+# Input: 
+#
+# **For Help, enter -h**
+#
+#############################################################################
+#	
+#############################
+#####     Functions     #####
+#############################
+#-------------------------------------------------------------------
+
+help()
+{
+	echo ""
+	echo "	### Bash script for shutting down the nodes' flowgraph ###"
+	echo "	---------------------------------------------------------------------------------------"
+	echo "	-l = list of testbed node addresses (e.g., 'bash shutdown_pis.sh -l 103,105,109')"
+	echo "	-r = range of testbed node addresses (e.g., 'bash shutdown_pis.sh -r 103,107')"
+	echo "	-u [OPTIONAL] = client's username (e.g., '-u uname') (default: ucanlab)"
+	echo ""
+	exit
+}
+
+#-------------------------------------------------------------------
+
+# Creates array from command line inputs
+addresses_list()
+{
+	IFS=','
+	read -ra addresses <<< "$OPTARG"
+}
+
+#-------------------------------------------------------------------
+
+# Parse input and create ip array from arg1 through arg2
+addresses_range()
+{
+	IFS=','
+	read -ra temp <<< "$OPTARG"
+	index=0
+	for (( i=${temp[0]}; i<=${temp[1]}; i++ ))
+	do
+		addresses[$index]=$i
+		index=$((index+1))
+	done
+}
+
+
+
+#############################
+#####   Setup Params    #####
+#############################
+#-------------------------------------------------------------------
+# Set default parameters
+
+uname=ucanlab # default
+delay=2
+debug=0
+
+#-------------------------------------------------------------------
+# Get arguments and set appropriate parameters
+
+while getopts 'hl:r:t:u:d' OPTION; do
+	case "$OPTION" in
+		h)
+			help;;
+		l)
+			addresses_list;;
+		r)
+			addresses_range;;
+		t) 
+			delay=$OPTARG;;
+		u)
+			uname=$OPTARG;;
+		d)
+			debug=1;;	
+	esac
+done
+
+#############################
+#####     Main Code     #####
+#############################
+#-------------------------------------------------------------------
+
+if [ $debug -gt 0 ]
+then
+	# for debugging... use -d flag
+	echo ""
+	echo "  ##### Debug Info: #####"
+	echo "  Nodes: ${addresses[@]}"
+	echo "  Delay: $delay"
+	echo "  UName: $uname"
+	echo ""
+	exit
+fi
+
+# Main code to shut down desired RPis
+#-------------------------------------------------------------------
+
+# Loop through and setup Pis
+for i in "${addresses[@]}"
+do
+	echo " Shutting down flowgraph on Node $i"
+	python3 SDR_control/set_remote_tx_stop.py -n $i -t $delay
+	sleep 1  
+
+done
+
+
