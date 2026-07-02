@@ -16,13 +16,41 @@
 #############################
 #-------------------------------------------------------------------
 
+
+
+############################
+#######     NOTE     #######
+############################
+#-------------------------------------------------------------------
+# Make sure to modify the shutdown_flag function inside the .py file from the .grc file with the same name
+# basically include another variable block called 'shutdown_flag' and initialize it to 0 when we save the grc file 
+# There will be a copy version of the .py file, from which we can modify the function from the block just included. # The script # to modify is pasted below:
+# ```
+#  def get_shutdown_flag(self):
+#        return self.shutdown_flag
+#
+#    def set_shutdown_flag(self, shutdown_flag):
+#       self.shutdown_flag = shutdown_flag
+#
+#        def stop_thread():
+#            self.stop()
+#            self.wait()
+#            sys.exit(0)
+#
+#        if shutdown_flag:
+#            threading.Thread(target=stop_thread).start()
+#
+#        return True
+#```
+
 help()
 {
 	echo ""
 	echo "	### Bash script for shutting down the nodes' flowgraph ###"
 	echo "	---------------------------------------------------------------------------------------"
-	echo "	-l = list of testbed node addresses (e.g., 'bash shutdown_pis.sh -l 103,105,109')"
-	echo "	-r = range of testbed node addresses (e.g., 'bash shutdown_pis.sh -r 103,107')"
+	echo "	-l = list of testbed node addresses (e.g., 'bash sdr_tx_stop.sh -l 103,105,109')"
+	echo "	-r = range of testbed node addresses (e.g., 'bash sdr_tx_stop.sh -r 103,107')"
+	echo "  -t = time delay or sleep for the flow graph (e.g., 'bash sdr_tx_stop.sh -t 1) (default: 2)" 
 	echo "	-u [OPTIONAL] = client's username (e.g., '-u uname') (default: ucanlab)"
 	echo ""
 	exit
