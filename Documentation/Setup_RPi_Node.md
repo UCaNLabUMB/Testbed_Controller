@@ -78,7 +78,12 @@ To start, grab a new microSD card and plug it into the microSD card reader via a
 ![](/Documentation/Images/RPi_SDcard_Copied.png)
 
 **NOTE** Post-Clone Steps:
-- When cloning an entire system, the new device becomes a carbon copy of the old one. To prevent network and security conflicts on your local network, it is highly recommended to regenerate SSH Keys. Run `sudo rm /etc/ssh/ssh_host_*`, then reboot to securely generate new, unique encryption keys. Update eth0 IP Address (i.e., follow RPI Node Configuration) for the correct network address of the specific node of interest.
+
+When cloning an entire system, the new device becomes a carbon copy of the old one. To prevent network and security conflicts on your local network, it is highly recommended to. 
+
+* Regenerate SSH Keys (i.e., follow [/Documentation/Con](https://github.com/UCaNLabUMB/Testbed_Controller/blob/main/Documentation/Config_Control_Net.md)) and run `sudo rm /etc/ssh/ssh_host_*`, 
+* Reboot to securely generate new, unique encryption keys. 
+* Update eth0 IP Address (i.e., follow RPI Node Configuration) for the correct network address of the specific node of interest.
 
 ## Previous Chapter
 [Setting Up the TC](https://github.com/UCaNLabUMB/Testbed_Controller/blob/main/Documentation/Setup_TC.md)
