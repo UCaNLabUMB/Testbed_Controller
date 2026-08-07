@@ -57,14 +57,26 @@ addresses_list()
 # Parse input and create ip array from arg1 through arg2
 addresses_range()
 {
-	IFS=','
-	read -ra temp <<< "$OPTARG"
-	index=0
-	for (( i=${temp[0]}; i<=${temp[1]}; i++ ))
-	do
-		addresses[$index]=$i
-		index=$((index+1))
-	done
+    IFS=','
+    read -ra temp <<< "$OPTARG"
+
+    index=0
+
+    # First range
+    for (( i=${temp[0]}; i<=${temp[1]}; i++ ))
+    do
+        addresses[$index]=$i
+        index=$((index+1))
+    done
+
+    # If 4 values were provided, add the second range
+    if [ ${#temp[@]} -eq 4 ]; then
+        for (( i=${temp[2]}; i<=${temp[3]}; i++ ))
+        do
+            addresses[$index]=$i
+            index=$((index+1))
+        done
+    fi
 }
 
 #-------------------------------------------------------------------
