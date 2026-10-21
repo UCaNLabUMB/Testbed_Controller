@@ -1,6 +1,6 @@
 #!/bin/bash
 #############################################################################
-# Author: MR
+# Author: Austin Trinh
 #
 # Description: This script shuts down the sdr flowgraph of a desired set of nodes
 #              
@@ -16,32 +16,6 @@
 #############################
 #-------------------------------------------------------------------
 
-
-
-############################
-#######     NOTE     #######
-############################
-#-------------------------------------------------------------------
-# Make sure to modify the shutdown_flag function inside the .py file from the .grc file with the same name
-# basically include another variable block called 'shutdown_flag' and initialize it to 0 when we save the grc file 
-# There will be a copy version of the .py file, from which we can modify the function from the block just included. # The script # to modify is pasted below:
-# ```
-#  def get_shutdown_flag(self):
-#        return self.shutdown_flag
-#
-#    def set_shutdown_flag(self, shutdown_flag):
-#       self.shutdown_flag = shutdown_flag
-#
-#        def stop_thread():
-#            self.stop()
-#            self.wait()
-#            sys.exit(0)
-#
-#        if shutdown_flag:
-#            threading.Thread(target=stop_thread).start()
-#
-#        return True
-#```
 
 help()
 {
@@ -87,7 +61,6 @@ addresses_range()
 #############################
 #-------------------------------------------------------------------
 # Set default parameters
-
 uname=ucanlab # default
 delay=2
 debug=0
