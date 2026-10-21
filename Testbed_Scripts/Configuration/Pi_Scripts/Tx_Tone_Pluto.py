@@ -7,9 +7,12 @@
 # GNU Radio Python Flow Graph
 # Title: Transmit Tone
 # Author: MR
-# GNU Radio version: 3.10.11.0
+# GNU Radio version: 3.10.12.0
 
 from gnuradio import analog
+from gnuradio import iio
+from xmlrpc.server import SimpleXMLRPCServer
+import threading
 from gnuradio import gr
 from gnuradio.filter import firdes
 from gnuradio.fft import window
@@ -18,9 +21,6 @@ import signal
 from argparse import ArgumentParser
 from gnuradio.eng_arg import eng_float, intx
 from gnuradio import eng_notation
-from gnuradio import iio
-from xmlrpc.server import SimpleXMLRPCServer
-import threading
 
 
 
@@ -29,7 +29,6 @@ class Tx_Tone_Pluto(gr.top_block):
 
     def __init__(self, fc=int(915e6), node='101', samp_rate=3e6, tone_amp=0.02, tone_freq=500e3, tx_gain=40):
         gr.top_block.__init__(self, "Transmit Tone ", catch_exceptions=True)
-        self.flowgraph_started = threading.Event()
 
         ##################################################
         # Parameters
@@ -40,6 +39,11 @@ class Tx_Tone_Pluto(gr.top_block):
         self.tone_amp = tone_amp
         self.tone_freq = tone_freq
         self.tx_gain = tx_gain
+
+        ##################################################
+        # Variables
+        ##################################################
+        self.shutdown_flag = shutdown_flag = 0
 
         ##################################################
         # Blocks
@@ -108,7 +112,21 @@ class Tx_Tone_Pluto(gr.top_block):
         self.tx_gain = tx_gain
         self.iio_pluto_sink_0.set_attenuation(0,(self.tx_gain*1.001) - self.tx_gain)
 
+    def get_shutdown_flag(self):
+        return self.shutdown_flag
 
+    def set_shutdown_flag(self, shutdown_flag):
+        self.shutdown_flag = shutdown_flag
+
+        def stop_thread():
+            self.stop()
+            self.wait()
+            sys.exit(0)
+
+        if shutdown_flag:
+            threading.Thread(target=stop_thread).start()
+
+        return True
 
 def argument_parser():
     parser = ArgumentParser()
@@ -148,7 +166,6 @@ def main(top_block_cls=Tx_Tone_Pluto, options=None):
     signal.signal(signal.SIGTERM, sig_handler)
 
     tb.start()
-    tb.flowgraph_started.set()
 
     tb.wait()
 
