@@ -7,9 +7,13 @@
 # GNU Radio Python Flow Graph
 # Title: Pi receiver script
 # Author: MR
-# GNU Radio version: 3.10.11.0
+# GNU Radio version: 3.10.12.0
 
 from gnuradio import blocks
+from gnuradio import soapy
+from gnuradio import zeromq
+from xmlrpc.server import SimpleXMLRPCServer
+import threading
 from gnuradio import gr
 from gnuradio.filter import firdes
 from gnuradio.fft import window
@@ -18,10 +22,6 @@ import signal
 from argparse import ArgumentParser
 from gnuradio.eng_arg import eng_float, intx
 from gnuradio import eng_notation
-from gnuradio import soapy
-from gnuradio import zeromq
-from xmlrpc.server import SimpleXMLRPCServer
-import threading
 
 
 
@@ -30,7 +30,6 @@ class Rx_general_RTL(gr.top_block):
 
     def __init__(self, fc=915000000, node='101', rx_gain=40, samp_rate=3000000):
         gr.top_block.__init__(self, "Pi receiver script ", catch_exceptions=True)
-        self.flowgraph_started = threading.Event()
 
         ##################################################
         # Parameters
@@ -44,7 +43,7 @@ class Rx_general_RTL(gr.top_block):
         # Blocks
         ##################################################
 
-        self.zeromq_pub_sink_0 = zeromq.pub_sink(gr.sizeof_float, 1, "tcp://10.1.1."+node+":55555", 100, False, 1)
+        self.zeromq_pub_sink_0 = zeromq.pub_sink(gr.sizeof_float, 1, "tcp://10.1.1."+node+":55555", 100, False, 1, '', True, True)
         self.xmlrpc_server_0 = SimpleXMLRPCServer(("10.1.1." + node, 8081), allow_none=True)
         self.xmlrpc_server_0.register_instance(self)
         self.xmlrpc_server_0_thread = threading.Thread(target=self.xmlrpc_server_0.serve_forever)
@@ -100,8 +99,7 @@ class Rx_general_RTL(gr.top_block):
     def get_fc(self):
         return self.fc
 
-    # def set_fc(self, fc): # OLD SCRIPTS 
-    def set_carrier_frequency(self, fc):
+    def set_fc(self, fc):
         self.fc = fc
         self.soapy_rtlsdr_source_0.set_frequency(0, self.fc)
 
@@ -158,7 +156,6 @@ def main(top_block_cls=Rx_general_RTL, options=None):
     signal.signal(signal.SIGTERM, sig_handler)
 
     tb.start()
-    tb.flowgraph_started.set()
 
     tb.wait()
 
